@@ -10,8 +10,13 @@
 
 	#include <math.h>
 	#include <limits.h>
+	#include <float.h>
 
-	long int checkPowOverflow( int a, int b);
+	/* Checks for Pow operation Overflow beetween intergers */ 
+	long int checkPowOverflowInt( int a, int b);
+
+	/* Checks for Pow operation Overflow between floats */ 
+	double checkPowOverflowFloat( double a, double b);
 %}
 
 
@@ -80,6 +85,8 @@ regex_var (?i:"var")
 regex_verdadero (?i:"verdadero")
 regex_y (?i:"y")
 
+
+	/* Otros Tokens */
 regex_asignacion :=
 regex_comp_seq ;
 regex_separador ,
@@ -90,11 +97,25 @@ regex_entonces (->)
 regex_sinosi \[\]
 regex_ini_array \[
 regex_fin_array \]
-
+	
+	/* Comentarios */
 regex_comentario "{"[^}\n]"}"
 
 	/* Identificadores */
 regex_identificador {letra}({letra}|{cifra})*
+
+	/* Operadores Aritmeticos */
+regex_suma \+
+regex_resta -
+regex_multiplicacion \*
+
+	/* Operadores Relacionales */
+regex_igualdad ==
+regex_distinto <>
+regex_mayor >
+regex_menor <
+regex_mayor_igual >=
+regex_menor_igual <=
 
 %%
 
@@ -105,43 +126,64 @@ regex_identificador {letra}({letra}|{cifra})*
 	//printf("Sizeof yytext: %d\n", sizeof(yytext));
 	//printf("Strlen yytext: %zu\n", strlen(yytext));
 	
-	printf("%s - Numero entero\n", yytext);
+
+	//printf("%s - Literal entero\n", yytext);
 	
 	char *p;
-	/* 	strchr() returns the memory address of the first 
-	 	ocurrence of the given char in str*/
-
-	if ( ( p = strchr( yytext, 'e' ) ) || ( p = strchr( yytext, 'E' ) ) ) {
 	
+	char *str = (char*) malloc( sizeof( yytext ) );
+	strcpy(str, yytext);
+
+	if ( ( p = strchr( str, 'e' ) ) || ( p = strchr( str, 'E' ) ) ) {
+
 		*p = 0;
-		printf("Primera Parte: %s\n", yytext);
 		p++;
-		printf("HAck: %s\n", p);
 		
-		if ( checkPowOverflow(10, atoi(p) ) != -1)
+		long int exp;
+		if (  ( exp = checkPowOverflowInt( 10, atoi( p ) ) ) == -1 )
 		{
-			printf("Pow NO OVERFLOW\n");
+			printf("Literal integer exponent Overflow: %s\n", yytext);
 		} else {
-			printf("Pow OVERFLOW\n");
+			printf("Lietral entero: %ld\n", ( atoi( str ) * exp ) );	
 		}
 
-		long int exp_cal = pow( 10, (int) atoi(p) );
-		printf("Exponente Calculado: %ld\n", exp_cal);
-
-		printf("Lietral entero: %ld\n", ( atoi( yytext ) * exp_cal ) );
-	
 	} else {
 	
-	 	printf("Exp is not \n");
+	 	printf("Literal entero: %d\n", atoi( yytext ) );
+
+	}
+}
+
+{regex_literal_real} {
+
+	//printf("%s - Numero real\n", yytext);
+	printf("\n");
+
+	char *p;
+	
+	char *str = (char*) malloc( sizeof( yytext ) );
+	strcpy(str, yytext);
+
+	if ( ( p = strchr( str, 'e' ) ) || ( p = strchr( str, 'E' ) ) ) {
+
+		*p = 0;
+		p++;
+		
+		double exp;
+		if (  ( exp = checkPowOverflowFloat( 10, atof( p ) ) ) == -1 )
+		{
+			printf("Literal real exponent Overflow: %s\n", yytext);
+		} else {
+			printf("Lietral real: %.2f\n", ( atof( str ) * exp ) );	
+		}
+
+	} else {
+	
+	 	printf("Literal real: %f\n", atof( yytext ) );
 
 	}
 
-
-	printf("*************\n");
-
 }
-
-{regex_literal_real} {printf("%s - Numero real\n", yytext);}
 
 {regex_literal_booleano} {printf("%s - Booleano\n", yytext);}
 
@@ -258,19 +300,47 @@ regex_identificador {letra}({letra}|{cifra})*
 
 {regex_identificador} {printf("%s - Identificador\n", yytext);}
 
+
+{regex_suma} {printf("Operador Aritmetico de Suma: %s\n", yytext);}
+
+{regex_resta} {printf("Operador Aritmetico de Resta: %s\n", yytext);}
+
+{regex_multiplicacion} {printf("Operador Aritmetico de Multiplicacion: %s\n", yytext);}
+
+
+{regex_igualdad} {printf("Operador Relacional Igualdad: %s\n", yytext);}
+
+{regex_distinto} {printf("Operador Relacional Distinto: %s\n", yytext);}
+
+{regex_mayor} {printf("Operador Relacional Mayor: %s\n", yytext);}
+
+{regex_menor} {printf("Operador Relacional Menor: %s\n", yytext);}
+
+{regex_mayor_igual} {printf("Operador Relacional Mayor o Igual: %s\n", yytext);}
+
+{regex_menor_igual} {printf("Operador Relacional Menor o Igual: %s\n", yytext);}
+
+
 \n|. {}
 
 %%
 
-long int checkPowOverflow( int a, int b) {
+long int checkPowOverflowInt( int a, int b) {
 
-	for (int i = 0; i < b; ++i) {
-	    if ( (i * log(a)) >= log(LONG_MAX)) {
+	for (int i = 0; i < b; ++i)
+	    if ( (i * log(a)) >= log(LONG_MAX))
 			return -1;
-		}
-	}
 
-	return (long) pow(a, b);
+	return (long int) pow(a, b);
+}
+
+double checkPowOverflowFloat( double a, double b) {
+
+	for (int i = 0; i < b; ++i)
+	    if ( ( i * log( a ) ) >= log( DBL_MAX ) )
+			return -1;
+
+	return (double) pow(a, b);
 }
 
 int yywrap(){}
