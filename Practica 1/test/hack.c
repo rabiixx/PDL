@@ -1,13 +1,23 @@
 
 
+regex_asignacion :=
+regex_comp_seq ;
+regex_separador ,
+regex_subrango ..
+regex_def_typevar :
+regex_entonces ->
+regex_creacion_tipo =
+regex_sinosi \[\]
+regex_ini_array \[
+regex_fin_array \]
+
+
 {regex_entonces} {printf("%s - *Token entonces (->) detectdada \n", yytext);}
 
 {regex_ini_array} {printf("%s - *Token inicio array ([) detectdada \n", yytext);}
 
 {regex_fin_array} {printf("%s - *Token fin array (]) detectdada \n", yytext);}
 
-
-{regex_asignacion} {printf("%s - *Token asignacion(:=) detectdada \n", yytext);}
 
 
 {regex_comp_seq} {printf("%s - *Token composicion sequencial(;) detectdada \n", yytext);}
