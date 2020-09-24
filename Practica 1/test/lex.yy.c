@@ -636,13 +636,18 @@ char *yytext;
   * [+] Version
   */
 #line 10 "test.l"
-#line 640 "lex.yy.c"
-#line 14 "test.l"
+
+	#include <math.h>
+	#include <limits.h>
+
+	long int checkPowOverflow( int a, int b);
+#line 645 "lex.yy.c"
+#line 21 "test.l"
 	/* Special Characters */
 	/* Alfabeto */
 	/* Literales */
 	/* Identificadores */
-#line 646 "lex.yy.c"
+#line 651 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -859,11 +864,11 @@ YY_DECL
 		}
 
 	{
-#line 93 "test.l"
+#line 100 "test.l"
 
 
 
-#line 867 "lex.yy.c"
+#line 872 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -922,335 +927,346 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 96 "test.l"
+#line 103 "test.l"
 {
-	printf("\n");
-	printf("+++++++++++++++++\n");
+
+	//printf("yytext memory address: %p\n", &yytext);
+	//printf("Sizeof yytext: %d\n", sizeof(yytext));
+	//printf("Strlen yytext: %zu\n", strlen(yytext));
+	
 	printf("%s - Numero entero\n", yytext);
-
+	
 	char *p;
+	/* 	strchr() returns the memory address of the first 
+	 	ocurrence of the given char in str*/
 
-	printf("yytext memory address: %p\n", &yytext);
-	printf("Sizeof yytext: %d\n", sizeof(yytext));
-	printf("Strlen yytext: %zu\n", strlen(yytext));
-	for (int i = 0; i < sizeof(yytext); ++i)
-	{
-		printf("Iter %d: %s\n", i, yytext[i]);
-		//printf("sizeof %d: %d\n", i, sizeof(yytext[i]));
-	}
-	if ( !(p = strchr(yytext, 'e') ) ) {
-	 	printf("Exp is not \n");
-	} else {
+	if ( ( p = strchr( yytext, 'e' ) ) || ( p = strchr( yytext, 'E' ) ) ) {
+	
+		*p = 0;
+		printf("Primera Parte: %s\n", yytext);
 		p++;
-		int exp = *p;
 		printf("HAck: %s\n", p);
-		//printf("Suma dir memoria %p\n", &yytext);
-		printf("Direccion memoria: %p\n", p);
+		
+		if ( checkPowOverflow(10, atoi(p) ) != -1)
+		{
+			printf("Pow NO OVERFLOW\n");
+		} else {
+			printf("Pow OVERFLOW\n");
+		}
 
-}
+		long int exp_cal = pow( 10, (int) atoi(p) );
+		printf("Exponente Calculado: %ld\n", exp_cal);
 
-	printf("+++++++++++++++++\n");
-	printf("\n");
+		printf("Lietral entero: %ld\n", ( atoi( yytext ) * exp_cal ) );
+	
+	} else {
+	
+	 	printf("Exp is not \n");
+
+	}
+
+
+	printf("*************\n");
 
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 127 "test.l"
+#line 145 "test.l"
 {printf("%s - Numero real\n", yytext);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 129 "test.l"
+#line 147 "test.l"
 {printf("%s - Booleano\n", yytext);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 131 "test.l"
+#line 149 "test.l"
 {printf("%s - Caracter\n", yytext);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 133 "test.l"
+#line 151 "test.l"
 {printf("%s - String\n", yytext);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 136 "test.l"
+#line 154 "test.l"
 {printf("%s - Palabra reservada accion detectdada \n", yytext);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 138 "test.l"
+#line 156 "test.l"
 {printf("%s - Palabra reservada algoritmo detectdada \n", yytext);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 140 "test.l"
+#line 158 "test.l"
 {printf("%s - Palabra reservada boolenao detectdada \n", yytext);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 142 "test.l"
+#line 160 "test.l"
 {printf("%s - Palabra reservada cadena detectdada \n", yytext);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 144 "test.l"
+#line 162 "test.l"
 {printf("%s - Palabra reservada caracter detectdada \n", yytext);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 146 "test.l"
+#line 164 "test.l"
 {printf("%s - Palabra reservada const detectdada \n", yytext);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 148 "test.l"
+#line 166 "test.l"
 {printf("%s - Palabra reservada continuar detectdada \n", yytext);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 150 "test.l"
+#line 168 "test.l"
 {printf("%s - Palabra reservada de detectdada \n", yytext);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 152 "test.l"
+#line 170 "test.l"
 {printf("%s - Palabra reservada dev detectdada \n", yytext);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 154 "test.l"
+#line 172 "test.l"
 {printf("%s - Palabra reservada div detectdada \n", yytext);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 156 "test.l"
+#line 174 "test.l"
 {printf("%s - Palabra reservada ent detectdada \n", yytext);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 158 "test.l"
+#line 176 "test.l"
 {printf("%s - Palabra reservada entero detectdada \n", yytext);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 160 "test.l"
+#line 178 "test.l"
 {printf("%s - Palabra reservada e/s detectdada \n", yytext);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 162 "test.l"
+#line 180 "test.l"
 {printf("%s - Palabra reservada faccion detectdada \n", yytext);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 164 "test.l"
+#line 182 "test.l"
 {printf("%s - Palabra reservada falgoritmo detectdada \n", yytext);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 166 "test.l"
+#line 184 "test.l"
 {printf("%s - Palabra reservada falso detectdada \n", yytext);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 168 "test.l"
+#line 186 "test.l"
 {printf("%s - Palabra reservada fconst detectdada \n", yytext);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 170 "test.l"
+#line 188 "test.l"
 {printf("%s - Palabra reservada ffuncion detectdada \n", yytext);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 172 "test.l"
+#line 190 "test.l"
 {printf("%s - Palabra reservada fmientras detectdada \n", yytext);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 174 "test.l"
+#line 192 "test.l"
 {printf("%s - Palabra reservada fpara detectdada \n", yytext);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 176 "test.l"
+#line 194 "test.l"
 {printf("%s - Palabra reservada fsi detectdada \n", yytext);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 178 "test.l"
+#line 196 "test.l"
 {printf("%s - Palabra reservada ftipo detectdada \n", yytext);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 180 "test.l"
+#line 198 "test.l"
 {printf("%s - Palabra reservada ftupla detectdada \n", yytext);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 182 "test.l"
+#line 200 "test.l"
 {printf("%s - Palabra reservada funcion detectdada \n", yytext);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 184 "test.l"
+#line 202 "test.l"
 {printf("%s - Palabra reservada fvar detectdada \n", yytext);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 186 "test.l"
+#line 204 "test.l"
 {printf("%s - Palabra reservada hacer detectdada \n", yytext);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 188 "test.l"
+#line 206 "test.l"
 {printf("%s - Palabra reservada hasta detectdada \n", yytext);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 190 "test.l"
+#line 208 "test.l"
 {printf("%s - Palabra reservada mientras detectdada \n", yytext);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 192 "test.l"
+#line 210 "test.l"
 {printf("%s - Palabra reservada mod detectdada \n", yytext);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 194 "test.l"
+#line 212 "test.l"
 {printf("%s - Palabra reservada no detectdada \n", yytext);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 196 "test.l"
+#line 214 "test.l"
 {printf("%s - Palabra reservada o detectdada \n", yytext);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 198 "test.l"
+#line 216 "test.l"
 {printf("%s - Palabra reservada para detectdada \n", yytext);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 200 "test.l"
+#line 218 "test.l"
 {printf("%s - Palabra reservada real detectdada \n", yytext);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 202 "test.l"
+#line 220 "test.l"
 {printf("%s - Palabra reservada ref detectdada \n", yytext);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 204 "test.l"
+#line 222 "test.l"
 {printf("%s - Palabra reservada sal detectdada \n", yytext);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 206 "test.l"
+#line 224 "test.l"
 {printf("%s - Palabra reservada si detectdada \n", yytext);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 208 "test.l"
+#line 226 "test.l"
 {printf("%s - Palabra reservada tabla detectdada \n", yytext);}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 210 "test.l"
+#line 228 "test.l"
 {printf("%s - Palabra reservada tipo detectdada \n", yytext);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 212 "test.l"
+#line 230 "test.l"
 {printf("%s - Palabra reservada tupla detectdada \n", yytext);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 214 "test.l"
+#line 232 "test.l"
 {printf("%s - Palabra reservada var detectdada \n", yytext);}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 216 "test.l"
+#line 234 "test.l"
 {printf("%s - Palabra reservada verdadero detectdada \n", yytext);}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 218 "test.l"
+#line 236 "test.l"
 {printf("%s - Palabra reservada y detectdada \n", yytext);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 222 "test.l"
+#line 240 "test.l"
 {printf("%s - *Token asignacion(:=) detectdada \n", yytext);}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 224 "test.l"
+#line 242 "test.l"
 {printf("%s - *Token composicion sequencial(;) detectdada \n", yytext);}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 226 "test.l"
+#line 244 "test.l"
 {printf("%s - *Token separador(,) detectdada \n", yytext);}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 228 "test.l"
+#line 246 "test.l"
 {printf("%s - *Token subrango(..) detectdada \n", yytext);}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 230 "test.l"
+#line 248 "test.l"
 {printf("%s - *Token definicion de tipo de variable (:) detectdada \n", yytext);}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 232 "test.l"
+#line 250 "test.l"
 {printf("%s - *Token entonces (->) detectdada \n", yytext);}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 234 "test.l"
+#line 252 "test.l"
 {printf("%s - *Token creacion de tipo (=) detectdada \n", yytext);}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 236 "test.l"
+#line 254 "test.l"
 {printf("%s - *Token si no si ([]) detectdada \n", yytext);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 238 "test.l"
+#line 256 "test.l"
 {printf("%s - *Token inicio array ([) detectdada \n", yytext);}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 240 "test.l"
+#line 258 "test.l"
 {printf("%s - *Token fin array (]) detectdada \n", yytext);}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 242 "test.l"
+#line 260 "test.l"
 {printf("%s - Identificador\n", yytext);}
 	YY_BREAK
 case 59:
 /* rule 59 can match eol */
 YY_RULE_SETUP
-#line 244 "test.l"
+#line 262 "test.l"
 {}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 246 "test.l"
+#line 264 "test.l"
 ECHO;
 	YY_BREAK
-#line 1254 "lex.yy.c"
+#line 1270 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2255,8 +2271,19 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 246 "test.l"
+#line 264 "test.l"
 
+
+long int checkPowOverflow( int a, int b) {
+
+	for (int i = 0; i < b; ++i) {
+	    if ( (i * log(a)) >= log(LONG_MAX)) {
+			return -1;
+		}
+	}
+
+	return (long) pow(a, b);
+}
 
 int yywrap(){}
 int main(){

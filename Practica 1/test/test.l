@@ -7,7 +7,14 @@
   */
 
 %{
+
+	#include <math.h>
+	#include <limits.h>
+
+	long int checkPowOverflow( int a, int b);
 %}
+
+
 
 
 	/* Special Characters */
@@ -93,33 +100,44 @@ regex_identificador {letra}({letra}|{cifra})*
 
 
 {regex_literal_entero} {
-	printf("\n");
-	printf("+++++++++++++++++\n");
+
+	//printf("yytext memory address: %p\n", &yytext);
+	//printf("Sizeof yytext: %d\n", sizeof(yytext));
+	//printf("Strlen yytext: %zu\n", strlen(yytext));
+	
 	printf("%s - Numero entero\n", yytext);
-
+	
 	char *p;
+	/* 	strchr() returns the memory address of the first 
+	 	ocurrence of the given char in str*/
 
-	printf("yytext memory address: %p\n", &yytext);
-	printf("Sizeof yytext: %d\n", sizeof(yytext));
-	printf("Strlen yytext: %zu\n", strlen(yytext));
-	for (int i = 0; i < sizeof(yytext); ++i)
-	{
-		printf("Iter %d: %c\n", i, yytext[i]);
-		//printf("sizeof %d: %d\n", i, sizeof(yytext[i]));
-	}
-	if ( !(p = strchr(yytext, 'e') ) ) {
-	 	printf("Exp is not \n");
-	} else {
+	if ( ( p = strchr( yytext, 'e' ) ) || ( p = strchr( yytext, 'E' ) ) ) {
+	
+		*p = 0;
+		printf("Primera Parte: %s\n", yytext);
 		p++;
-		int exp = *p;
 		printf("HAck: %s\n", p);
-		//printf("Suma dir memoria %p\n", &yytext);
-		printf("Direccion memoria: %p\n", p);
+		
+		if ( checkPowOverflow(10, atoi(p) ) != -1)
+		{
+			printf("Pow NO OVERFLOW\n");
+		} else {
+			printf("Pow OVERFLOW\n");
+		}
 
-}
+		long int exp_cal = pow( 10, (int) atoi(p) );
+		printf("Exponente Calculado: %ld\n", exp_cal);
 
-	printf("+++++++++++++++++\n");
-	printf("\n");
+		printf("Lietral entero: %ld\n", ( atoi( yytext ) * exp_cal ) );
+	
+	} else {
+	
+	 	printf("Exp is not \n");
+
+	}
+
+
+	printf("*************\n");
 
 }
 
@@ -243,6 +261,17 @@ regex_identificador {letra}({letra}|{cifra})*
 \n|. {}
 
 %%
+
+long int checkPowOverflow( int a, int b) {
+
+	for (int i = 0; i < b; ++i) {
+	    if ( (i * log(a)) >= log(LONG_MAX)) {
+			return -1;
+		}
+	}
+
+	return (long) pow(a, b);
+}
 
 int yywrap(){}
 int main(){
