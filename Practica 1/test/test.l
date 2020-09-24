@@ -27,20 +27,26 @@ regex_special_char (\n|\t|)
 
 
 	/* Alfabeto */
+
 cifra [0-9]
 
 letra [A-Za-z]
 
+
 	/* Literales */
+
 regex_literal_entero [+-]?{cifra}+([e|E]?{cifra}+)?
 
 regex_literal_real [+-]?{cifra}+(\.{cifra}+)?([e|E]?{cifra}+)?
 
-regex_literal_booleano verdadero|falso
+regex_literal_booleano regex_falso|regex_verdadero
 
 regex_literal_caracter \"{letra}\"
 
 regex_literal_cadena \'[^\n|^\']+\'
+
+
+	/* Palabras Reservadas */
 
 regex_accion (?i:"accion")
 regex_algoritmo (?i:"algoritmo")
@@ -87,6 +93,7 @@ regex_y (?i:"y")
 
 
 	/* Otros Tokens */
+
 regex_asignacion :=
 regex_comp_seq ;
 regex_separador ,
@@ -98,18 +105,26 @@ regex_sinosi \[\]
 regex_ini_array \[
 regex_fin_array \]
 	
+
 	/* Comentarios */
+
 regex_comentario "{"[^}\n]"}"
 
+
 	/* Identificadores */
+
 regex_identificador {letra}({letra}|{cifra})*
 
+
 	/* Operadores Aritmeticos */
+
 regex_suma \+
 regex_resta -
 regex_multiplicacion \*
 
+
 	/* Operadores Relacionales */
+
 regex_igualdad ==
 regex_distinto <>
 regex_mayor >
@@ -155,9 +170,6 @@ regex_menor_igual <=
 }
 
 {regex_literal_real} {
-
-	//printf("%s - Numero real\n", yytext);
-	printf("\n");
 
 	char *p;
 	
