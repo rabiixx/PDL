@@ -15,7 +15,7 @@ Procesadores del Lenguaje
 ``` 
 
 ## Usage
-./scanner < programaX.alg
+```./scanner < programaX.alg```
 
 
 ## Explicacion
