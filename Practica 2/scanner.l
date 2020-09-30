@@ -103,7 +103,8 @@ regex_creacion_tipo =
 regex_entonces (->)
 regex_sinosi \[\]
 regex_ini_array \[
-regex_fin_array \]	
+regex_fin_array \]
+	
 
 	/* Comentarios */
 regex_comentario \{([^}]|(\/\}))*\}
@@ -330,6 +331,7 @@ regex_menor_igual <=
 {regex_mayor_igual} {printf("Operador Relacional Mayor o Igual: %s\n", yytext);}
 
 {regex_menor_igual} {printf("Operador Relacional Menor o Igual: %s\n", yytext);}
+
 
 \n|. {}
 
