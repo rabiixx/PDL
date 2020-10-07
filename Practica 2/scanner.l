@@ -104,6 +104,7 @@ regex_entonces (->)
 regex_sinosi \[\]
 regex_ini_array \[
 regex_fin_array \]
+regex_punto \.
 	
 
 	/* Comentarios */
@@ -119,6 +120,7 @@ regex_identificador {letra}({letra}|{cifra})*
 regex_suma \+
 regex_resta -
 regex_multiplicacion \*
+regex_division \/
 
 
 	/* Operadores Relacionales */
