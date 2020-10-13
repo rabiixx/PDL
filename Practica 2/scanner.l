@@ -289,7 +289,7 @@ regex_menor_igual <=
 
 {regex_asignacion} 			{printf("%s - *Token asignacion(:=) detectada \n", yytext); return (BI_ASIGNACION);}
 
-{regex_comp_seq} 			{printf("%s - *Token composicion sequencial(;) detectada \n", yytext) return (BI_COM_SEQ);}
+{regex_comp_seq} 			{printf("%s - *Token composicion sequencial(;) detectada \n", yytext) return (BI_COMP_SEQ);}
 
 {regex_separador} 			{printf("%s - *Token separador(,) detectada \n", yytext); return (BI_SEPARADOR);}
 	
@@ -316,6 +316,7 @@ regex_menor_igual <=
 
 {regex_multiplicacion} 		{printf("Operador Aritmetico de Multiplicacion: %s\n", yytext); return (BI_MULTIPLICACION);}
 
+{regex_division}			{printf("Operador Aritmetico de Division: %s\n", yytext); return (BI_DIVISION);}
 
 {regex_igualdad} 			{printf("Operador Relacional Igualdad: %s\n", yytext); return (BI_IGUALDAD);}
 

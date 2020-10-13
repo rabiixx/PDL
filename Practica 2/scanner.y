@@ -46,7 +46,6 @@
 %token BI_VAR
 %token BI_FVAR
 
-
 %token BI_CONTINUAR
 %token BI_DE
 %token BI_DEV
@@ -56,43 +55,29 @@
 %token BI_FALSO
 %token BI_HACER
 %token BI_HASTA
-%token BI_MOD
-%token BI_NO
-%token BI_O
 %token BI_REF
 %token BI_SAL
 %token BI_TABLA
 %token BI_VERDADERO
-%token BI_Y
+%left  BI_Y BI_O
+%left BI_NO
 
-
-%token BI_ASIGNACION
-%token BI_IGUAL
-%token BI_COMA
-%token BI_PUNTO
-%token BI_PUNTO_COMA
+%right BI_ASIGNACION
+%token BI_COMP_SEQ
+%token BI_SEPARADOR
 %token BI_SUBRANGO
-%token BI_DOSPUNTOS
-%token BI_CORCHETE_AP
-%token BI_CORCHETE_CI
-%token BI_PARENTESIS_AP
-%token BI_PARENTESIS_CI
-%token BI_LLAVE_AP
-%token BI_LLAVE_CI
-
+%token BI_DEF_TYPEVAR
 %token BI_ENTONCES
-
-%left  BI_MAYOR
-%left  BI_MENOR
-%left  BI_MAYOR_IGUAL
-%left  BI_MENOR_IGUAL
-%left  BI_DISTINTO
+%token BI_CREACION_TIPO
+%token BI_SINOSI
+%token BI_INI_ARRAY
+%token BI_FIN_ARRAY
+%token BI_IDENTIFICADOR
 
 
 %left  BI_SUMA BI_RESTA
 %left  BI_MULT BI_DIVISION BI_MOD BI_DIV
-%left  BI_Y BI_O
-%right BI_MENOS_UNARIO
+%left  BI_MENOR BI_MAYOR BI_MENOR_IGUAL BI_MAYOR_IGUAL BI_IGUALDAD BI_DISTINTO
 
 
 
