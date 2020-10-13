@@ -134,17 +134,10 @@ regex_menor_igual <=
 
 %%
 
-{regex_comentario} {printf("%s - Comentario detectado\n", yytext);}
+{regex_comentario} {printf("%s - Comentario detectado\n", yytext); return (BI_COMENTARIO);}
 
 {regex_literal_entero} {
 
-	//printf("yytext memory address: %p\n", &yytext);
-	//printf("Sizeof yytext: %d\n", sizeof(yytext));
-	//printf("Strlen yytext: %zu\n", strlen(yytext));
-	
-
-	//printf("%s - Literal entero\n", yytext);
-	
 	char *p;
 	
 	char *str = (char*) malloc( sizeof( yytext ) );
@@ -168,6 +161,8 @@ regex_menor_igual <=
 	 	printf("Literal entero: %d\n", atoi( yytext ) );
 
 	}
+
+	return (BI_LIT_ENTERO);
 }
 
 {regex_literal_real} {
@@ -196,143 +191,143 @@ regex_menor_igual <=
 
 	}
 
+	return (BI_LIT_REAL);
+
 }
 
+{regex_literal_booleano} 	{printf("%s - Booleano\n", yytext); return (BI_LIT_BOOLEANO);}
 
-{regex_literal_booleano} {printf("%s - Booleano\n", yytext);}
+{regex_literal_caracter} 	{printf("%s - Caracter\n", yytext); return (BI_LIT_CARACTER);}
 
-{regex_literal_caracter} {printf("%s - Caracter\n", yytext);}
-
-{regex_literal_cadena} {printf("%s - String\n", yytext);}
+{regex_literal_cadena} 		{printf("%s - String\n", yytext); return (BI_LIT_CADENA);}
 
 
-{regex_accion} {printf("%s - Palabra reservada accion detectada \n", yytext);}
+{regex_entero} 				{printf("%s - Palabra reservada entero detectada \n", yytext); return (BI_ENTERO);}
 
-{regex_algoritmo} {printf("%s - Palabra reservada algoritmo detectada \n", yytext);}
+{regex_real} 				{printf("%s - Palabra reservada real detectada \n", yytext); return (BI_REAL);}
 
-{regex_booleano} {printf("%s - Palabra reservada boolenao detectada \n", yytext);}
+{regex_booleano} 			{printf("%s - Palabra reservada boolenao detectada \n", yytext); return (BI_PR_BOOLEANO);}
 
-{regex_cadena} {printf("%s - Palabra reservada cadena detectada \n", yytext);}
+{regex_caracter} 			{printf("%s - Palabra reservada caracter detectada \n", yytext); return (BI_PR_CARACTER);}
 
-{regex_caracter} {printf("%s - Palabra reservada caracter detectada \n", yytext);}
-
-{regex_const} {printf("%s - Palabra reservada const detectada \n", yytext);}
-
-{regex_continuar} {printf("%s - Palabra reservada continuar detectada \n", yytext);}
-
-{regex_de} {printf("%s - Palabra reservada de detectada \n", yytext);}
-
-{regex_dev} {printf("%s - Palabra reservada dev detectada \n", yytext);}
-
-{regex_div} {printf("%s - Palabra reservada div detectada \n", yytext);}
-
-{regex_ent} {printf("%s - Palabra reservada ent detectada \n", yytext);}
-
-{regex_entero} {printf("%s - Palabra reservada entero detectada \n", yytext);}
-
-{regex_e_s} {printf("%s - Palabra reservada e/s detectada \n", yytext);}
-
-{regex_faccion} {printf("%s - Palabra reservada faccion detectada \n", yytext);}
-
-{regex_falgoritmo} {printf("%s - Palabra reservada falgoritmo detectada \n", yytext);}
-
-{regex_falso} {printf("%s - Palabra reservada falso detectada \n", yytext);}
-
-{regex_fconst} {printf("%s - Palabra reservada fconst detectada \n", yytext);}
-
-{regex_ffuncion} {printf("%s - Palabra reservada ffuncion detectada \n", yytext);}
-
-{regex_fmientras} {printf("%s - Palabra reservada fmientras detectada \n", yytext);}
-
-{regex_fpara} {printf("%s - Palabra reservada fpara detectada \n", yytext);}
-
-{regex_fsi} {printf("%s - Palabra reservada fsi detectada \n", yytext);}
-
-{regex_ftipo} {printf("%s - Palabra reservada ftipo detectada \n", yytext);}
-
-{regex_ftupla} {printf("%s - Palabra reservada ftupla detectada \n", yytext);}
-
-{regex_funcion} {printf("%s - Palabra reservada funcion detectada \n", yytext);}
-
-{regex_fvar} {printf("%s - Palabra reservada fvar detectada \n", yytext);}
-
-{regex_hacer} {printf("%s - Palabra reservada hacer detectada \n", yytext);}
-
-{regex_hasta} {printf("%s - Palabra reservada hasta detectada \n", yytext);}
-
-{regex_mientras} {printf("%s - Palabra reservada mientras detectada \n", yytext);}
-
-{regex_mod} {printf("%s - Palabra reservada mod detectada \n", yytext);}
-
-{regex_no} {printf("%s - Palabra reservada no detectada \n", yytext);}
-
-{regex_o} {printf("%s - Palabra reservada o detectada \n", yytext);}
-
-{regex_para} {printf("%s - Palabra reservada para detectada \n", yytext);}
-
-{regex_real} {printf("%s - Palabra reservada real detectada \n", yytext);}
-
-{regex_ref} {printf("%s - Palabra reservada ref detectada \n", yytext);}
-
-{regex_sal} {printf("%s - Palabra reservada sal detectada \n", yytext);}
-
-{regex_si} {printf("%s - Palabra reservada si detectada \n", yytext);}
-
-{regex_tabla} {printf("%s - Palabra reservada tabla detectada \n", yytext);}
-
-{regex_tipo} {printf("%s - Palabra reservada tipo detectada \n", yytext);}
-
-{regex_tupla} {printf("%s - Palabra reservada tupla detectada \n", yytext);}
-
-{regex_var} {printf("%s - Palabra reservada var detectada \n", yytext);}
-
-{regex_verdadero} {printf("%s - Palabra reservada verdadero detectada \n", yytext);}
-
-{regex_y} {printf("%s - Palabra reservada y detectada \n", yytext);}
+{regex_cadena} 				{printf("%s - Palabra reservada cadena detectada \n", yytext); return (BI_PR_CADENA);}
 
 
 
-{regex_asignacion} {printf("%s - *Token asignacion(:=) detectada \n", yytext);}
+{regex_accion} 				{printf("%s - Palabra reservada accion detectada \n", yytext); return (BI_ACCION);}
+{regex_faccion} 			{printf("%s - Palabra reservada faccion detectada \n", yytext); return (BI_FACCION);}
 
-{regex_comp_seq} {printf("%s - *Token composicion sequencial(;) detectada \n", yytext);}
+{regex_algoritmo} 			{printf("%s - Palabra reservada algoritmo detectada \n", yytext); return (BI_ALGORITMO);}
+{regex_falgoritmo} 			{printf("%s - Palabra reservada falgoritmo detectada \n", yytext); return (BI_FALGORITMO);}
 
-{regex_separador} {printf("%s - *Token separador(,) detectada \n", yytext);}
+{regex_const} 				{printf("%s - Palabra reservada const detectada \n", yytext); return (BI_CONST);}
+{regex_fconst} 				{printf("%s - Palabra reservada fconst detectada \n", yytext); return (BI_FCONST);}
+
+{regex_funcion} 			{printf("%s - Palabra reservada funcion detectada \n", yytext); return (BI_FUNCION);}
+{regex_ffuncion} 			{printf("%s - Palabra reservada ffuncion detectada \n", yytext); return (BI_FFUNCION);}
+
+{regex_mientras} 			{printf("%s - Palabra reservada mientras detectada \n", yytext); return (BI_MIENTRAS);}
+{regex_fmientras} 			{printf("%s - Palabra reservada fmientras detectada \n", yytext); return (BI_FMIENTRAS);}
+
+{regex_para} 				{printf("%s - Palabra reservada para detectada \n", yytext); return (BI_PARA);}
+{regex_fpara} 				{printf("%s - Palabra reservada fpara detectada \n", yytext); return (BI_FPARA);}
+
+{regex_si} 					{printf("%s - Palabra reservada si detectada \n", yytext); return (BI_SI);}
+{regex_fsi} 				{printf("%s - Palabra reservada fsi detectada \n", yytext); return (BI_FSI);}
+
+{regex_tipo} 				{printf("%s - Palabra reservada tipo detectada \n", yytext); return (BI_TIPO);}
+{regex_ftipo} 				{printf("%s - Palabra reservada ftipo detectada \n", yytext); return (BI_FTIPO);}
+
+{regex_tupla} 				{printf("%s - Palabra reservada tupla detectada \n", yytext); return (BI_TUPLA);}
+{regex_ftupla} 				{printf("%s - Palabra reservada ftupla detectada \n", yytext); return (BI_FTUPLAS);}
+
+{regex_var} 				{printf("%s - Palabra reservada var detectada \n", yytext); return (BI_VAR);}
+{regex_fvar} 				{printf("%s - Palabra reservada fvar detectada \n", yytext); return (BI_FVAR);}
+
+
+
+
+
+
+
+
+{regex_continuar} 			{printf("%s - Palabra reservada continuar detectada \n", yytext); return (BI_CONTINUAR);}
+
+{regex_de} 					{printf("%s - Palabra reservada de detectada \n", yytext); return (BI_DE);}
+
+{regex_dev} 				{printf("%s - Palabra reservada dev detectada \n", yytext); return (BI_DEV);}
+
+{regex_div} 				{printf("%s - Palabra reservada div detectada \n", yytext); return (BI_DIV);}
+
+{regex_ent} 				{printf("%s - Palabra reservada ent detectada \n", yytext); return (BI_ENT);}
+
+{regex_e_s} 				{printf("%s - Palabra reservada e/s detectada \n", yytext); return (BI_E_S);}
+
+{regex_falso} 				{printf("%s - Palabra reservada falso detectada \n", yytext); return (BI_FALSO);}
+
+{regex_hacer} 				{printf("%s - Palabra reservada hacer detectada \n", yytext); return (BI_HACER);}
+
+{regex_hasta} 				{printf("%s - Palabra reservada hasta detectada \n", yytext); return (BI_HASTA);}
+
+{regex_mod} 				{printf("%s - Palabra reservada mod detectada \n", yytext); return (BI_MOD);}
+
+{regex_no} 					{printf("%s - Palabra reservada no detectada \n", yytext); return (BI_NO);}
+
+{regex_o} 					{printf("%s - Palabra reservada o detectada \n", yytext); return (BI_O);}
+
+{regex_ref} 				{printf("%s - Palabra reservada ref detectada \n", yytext); return (BI_REF);}
+
+{regex_sal} 				{printf("%s - Palabra reservada sal detectada \n", yytext); return (BI_SAL);}
+
+{regex_tabla} 				{printf("%s - Palabra reservada tabla detectada \n", yytext); return (BI_TABLA);}
+
+{regex_verdadero} 			{printf("%s - Palabra reservada verdadero detectada \n", yytext); return (BI_VERDADERO);}
+
+{regex_y} 					{printf("%s - Palabra reservada y detectada \n", yytext); return (BI_Y);}
+
+
+
+{regex_asignacion} 			{printf("%s - *Token asignacion(:=) detectada \n", yytext); return (BI_ASIGNACION);}
+
+{regex_comp_seq} 			{printf("%s - *Token composicion sequencial(;) detectada \n", yytext) return (BI_COM_SEQ);}
+
+{regex_separador} 			{printf("%s - *Token separador(,) detectada \n", yytext); return (BI_SEPARADOR);}
 	
-{regex_subrango} {printf("%s - *Token subrango(..) detectada \n", yytext);}
+{regex_subrango} 			{printf("%s - *Token subrango(..) detectada \n", yytext); return (BI_SUBRANGO);}
 
-{regex_def_typevar} {printf("%s - *Token definicion de tipo de variable (:) detectada \n", yytext);}
+{regex_def_typevar} 		{printf("%s - *Token definicion de tipo de variable (:) detectada \n", yytext); return (BI_DEF_TYPEVAR);}
 
-{regex_entonces} {printf("%s - *Token entonces (->) detectada \n", yytext);}
+{regex_entonces} 			{printf("%s - *Token entonces (->) detectada \n", yytext); return (BI_ENTONCES);}
 
-{regex_creacion_tipo} {printf("%s - *Token creacion de tipo (=) detectada \n", yytext);}
+{regex_creacion_tipo} 		{printf("%s - *Token creacion de tipo (=) detectada \n", yytext); return (BI_CREACION_TIPO);}
 
-{regex_sinosi} {printf("%s - *Token si no si ([]) detectada \n", yytext);}
+{regex_sinosi} 				{printf("%s - *Token si no si ([]) detectada \n", yytext); return (BI_SINOSI);}
 
-{regex_ini_array} {printf("%s - *Token inicio array ([) detectada \n", yytext);}
+{regex_ini_array} 			{printf("%s - *Token inicio array ([) detectada \n", yytext); return (BI_INI_ARRAY);}
 
-{regex_fin_array} {printf("%s - *Token fin array (]) detectada \n", yytext);}
+{regex_fin_array} 			{printf("%s - *Token fin array (]) detectada \n", yytext); return (BI_FIN_ARRAY);}
 
-{regex_identificador} {printf("%s - Identificador\n", yytext);}
-
-
-{regex_suma} {printf("Operador Aritmetico de Suma: %s\n", yytext);}
-
-{regex_resta} {printf("Operador Aritmetico de Resta: %s\n", yytext);}
-
-{regex_multiplicacion} {printf("Operador Aritmetico de Multiplicacion: %s\n", yytext);}
+{regex_identificador} 		{printf("%s - Identificador\n", yytext); return (BI_IDENTIFICADOR);}
 
 
-{regex_igualdad} {printf("Operador Relacional Igualdad: %s\n", yytext);}
+{regex_suma} 				{printf("Operador Aritmetico de Suma: %s\n", yytext); return (BI_SUMA);}
 
-{regex_distinto} {printf("Operador Relacional Distinto: %s\n", yytext);}
+{regex_resta} 				{printf("Operador Aritmetico de Resta: %s\n", yytext); return (BI_RESTA);}
 
-{regex_mayor} {printf("Operador Relacional Mayor: %s\n", yytext);}
+{regex_multiplicacion} 		{printf("Operador Aritmetico de Multiplicacion: %s\n", yytext); return (BI_MULTIPLICACION);}
 
-{regex_menor} {printf("Operador Relacional Menor: %s\n", yytext);}
 
-{regex_mayor_igual} {printf("Operador Relacional Mayor o Igual: %s\n", yytext);}
+{regex_igualdad} 			{printf("Operador Relacional Igualdad: %s\n", yytext); return (BI_IGUALDAD);}
 
-{regex_menor_igual} {printf("Operador Relacional Menor o Igual: %s\n", yytext);}
+{regex_distinto} 			{printf("Operador Relacional Distinto: %s\n", yytext); return (BI_DISTINTO);}
+
+{regex_mayor} 				{printf("Operador Relacional Mayor: %s\n", yytext); return (BI_MAYOR);}
+
+{regex_menor} 				{printf("Operador Relacional Menor: %s\n", yytext); return (BI_MENOR);}
+
+{regex_mayor_igual} 		{printf("Operador Relacional Mayor o Igual: %s\n", yytext); return (MAYOR_IGUAL);}
+
+{regex_menor_igual} 		{printf("Operador Relacional Menor o Igual: %s\n", yytext); return (BI_MENOR_IGUAL);}
 
 
 \n|. {}

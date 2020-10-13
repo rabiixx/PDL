@@ -3,13 +3,71 @@
 	#include <stdio.h>
 %}
 
-%token BI_IGUAL
-%left  BI_MAYOR
-%left  BI_MENOR
-%left  BI_MAYOR_IGUAL
-%left  BI_MENOR_IGUAL
-%left  BI_DISTINTO
+%token BI_COMENTARIO
+%token BI_LIT_ENTERO
+%token BI_LIT_REAL
+%token BI_LIT_BOOLEANO
+%token BI_LIT_CARACTER
+%token BI_LIT_CADENA
+
+%token BI_PR_ENTERO
+%token BI_PR_REAL
+%token BI_PR_BOOLEANO
+%token BI_PR_CARACTER
+%token BI_PR_CADENA
+
+%token BI_ACCION
+%token BI_FACCION
+
+%token BI_ALGORITMO
+%token BI_FALGORITMO
+
+%token BI_CONST
+%token BI_FCONST
+
+%token BI_FUNCION
+%token BI_FFUNCION
+
+%token BI_MIENTRAS
+%token BI_FMIENTRAS
+
+%token BI_PARA
+%token BI_FPARA
+
+%token BI_SI
+%token BI_FSI
+
+%token BI_TIPO
+%token BI_FTIPO
+
+%token BI_TUPLA
+%token BI_FTUPLA
+
+%token BI_VAR
+%token BI_FVAR
+
+
+%token BI_CONTINUAR
+%token BI_DE
+%token BI_DEV
+%token BI_DIV
+%token BI_ENT
+%token BI_E_S
+%token BI_FALSO
+%token BI_HACER
+%token BI_HASTA
+%token BI_MOD
+%token BI_NO
+%token BI_O
+%token BI_REF
+%token BI_SAL
+%token BI_TABLA
+%token BI_VERDADERO
+%token BI_Y
+
+
 %token BI_ASIGNACION
+%token BI_IGUAL
 %token BI_COMA
 %token BI_PUNTO
 %token BI_PUNTO_COMA
@@ -22,56 +80,20 @@
 %token BI_LLAVE_AP
 %token BI_LLAVE_CI
 
+%token BI_ENTONCES
+
+%left  BI_MAYOR
+%left  BI_MENOR
+%left  BI_MAYOR_IGUAL
+%left  BI_MENOR_IGUAL
+%left  BI_DISTINTO
+
+
 %left  BI_SUMA BI_RESTA
 %left  BI_MULT BI_DIVISION BI_MOD BI_DIV
 %left  BI_Y BI_O
 %right BI_MENOS_UNARIO
 
-%token BI_ALGORITMO
-%token BI_FALGORITMO
-%token BI_ACCION
-%token BI_FACCION
-%token BI_FUNCION
-%token BI_FFUNCION
-%token BI_TIPO
-%token BI_FTIPO
-%token BI_CONST
-%token BI_FCONST
-%token BI_VAR
-%token BI_FVAR
-%token BI_TUPLA
-%token BI_FTUPLA
-%token BI_MIENTRAS
-%token BI_FMIENTRAS
-%token BI_HACER
-%token BI_PARA
-%token BI_FPARA
-%token BI_HASTA
-%token BI_TABLA
-%token BI_CONTINUAR
-%token BI_DE
-%token BI_REF
-%token BI_ENT
-%token BI_SAL
-%token BI_ES
-%token BI_DEV
-%right BI_NO
-%token BI_SI
-%token BI_FSI
-%token BI_ENTONCES
-%token BI_ENTERO
-%token BI_REAL
-%token BI_BOOLEANO
-%token BI_CARACTER
-%token BI_CADENA
-
-%token BI_COMENTARIO
-%token <paraBooleanos> BI_LITERAL_BOOLEANO
-%token BI_LITERAL_CARACTER
-%token BI_LITERAL_CADENA
-%token <paraCadenas> BI_ID
-%token BI_LITERAL_ENTERO
-%token BI_LITERAL_REAL
 
 
 %%
