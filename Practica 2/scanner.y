@@ -73,10 +73,14 @@
 %token BI_INI_ARRAY
 %token BI_FIN_ARRAY
 %token BI_IDENTIFICADOR
+%token BI_PUNTO
+
+%token BI_PAR_APER
+%token BI_PAR_CIER
 
 
 %left  BI_SUMA BI_RESTA
-%left  BI_MULT BI_DIVISION BI_MOD BI_DIV
+%left  BI_MULTIPLICACION BI_DIVISION BI_MOD BI_DIV
 %left  BI_MENOR BI_MAYOR BI_MENOR_IGUAL BI_MAYOR_IGUAL BI_IGUALDAD BI_DISTINTO
 
 
@@ -94,7 +98,7 @@ bloque_alg		:	bloque BI_COMENTARIO
 				;
 
 decl_globales	:	declaracion_tipo decl_globales
-				| 	declaracion_const decl_globales
+				| 	declaracion_cte decl_globales
 				|	/* cadena vacia */
 				;
 
@@ -107,7 +111,7 @@ bloque 			: declaraciones instrucciones
 				;
 
 declaraciones	:	declaracion_tipo declaraciones
-				| 	declaracion_const declaraciones
+				| 	declaracion_cte declaraciones
 				|	declaracion_var declaraciones
 				|	/* cadena vacia */
 				;
@@ -128,32 +132,37 @@ lista_d_tipo	:	BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo
 				;
 
 d_tipo 			: 	BI_TUPLA lista_campos BI_FTUPLA
-				|	BI_TABLA BI_INI_ARRAY expresion_t BI_INI_ARRAY expresion_t BI_FIN_ARRAY BI_DE d_tipo
+				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
+				|	BI_IDENTIFICADOR
+				|	expresion_t BI_SUBRANGO expresion_t
+				|	BI_REF d_tipo
+				| 	tipo_base
 				;
 
 expresion_t		: 	expresion
-				|	BI_LITERAL_CARACTER
+				|	BI_LIT_CARACTER
 				;
 
-lista_d_tipo	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
+
+lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 				|	/* cadena vacia */
 				;
 
-tipo_base 		: 	BI_ENTERO
-				|	BI_REAL
-				|	BI_BOOLEANO
-				|	BI_CARACTER
-				|	BI_CADENA
+tipo_base 		: 	BI_PR_ENTERO
+				|	BI_PR_REAL
+				|	BI_PR_BOOLEANO
+				|	BI_PR_CARACTER
+				|	BI_PR_CADENA
 				;
 
-literal			:	BI_LITERAL_ENTERO
-				|	BI_LITERAL_REAL
-				|	BI_LITERAL_BOOLEANO
-				|	BI_LITERAL_CARACTER
-				|	BI_LITERAL_CADENA
+literal			:	BI_LIT_ENTERO
+				|	BI_LIT_REAL
+				|	BI_LIT_BOOLEANO
+				|	BI_LIT_CARACTER
+				|	BI_LIT_CADENA
 				;
 
-lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO BI_LITERAL BI_COMP_SEQ lista_d_cte 
+lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte 
 				|	/* cadena vacia */
 				;
 
@@ -180,13 +189,14 @@ decl_sal 		:	BI_SAL lista_d_var
 
 /* Expresiones */
 
+
 expresion 		:	exp_a 
 				|	exp_b
 				|	funcion_ll
 				;
 
-literal_numerico	:	BI_LITERAL_ENTERO
-					|	BI_LITERAL_REAL
+literal_numerico	:	BI_LIT_ENTERO
+					|	BI_LIT_REAL
 					;
 
 exp_a			:	exp_a BI_SUMA exp_a
@@ -218,12 +228,14 @@ exp_b 			:	exp_b BI_Y exp_b
 				|	expresion oprel expresion
 				|	BI_PAR_APER exp_b BI_PAR_CIER
 				;
-
+				
 operando		:	BI_IDENTIFICADOR
 				|	operando BI_PUNTO operando
 				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
 				|	operando BI_REF
 				;
+
+
 
 /* Instrucciones */
 instrucciones 	:	instruccion BI_COMP_SEQ instrucciones

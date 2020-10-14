@@ -105,6 +105,8 @@ regex_sinosi \[\]
 regex_ini_array \[
 regex_fin_array \]
 regex_punto \.
+regex_par_aper \(
+regex_par_cier \)
 	
 
 	/* Comentarios */
@@ -242,7 +244,11 @@ regex_menor_igual <=
 {regex_ftupla} 				{printf("%s - Palabra reservada ftupla detectada \n", yytext); return (BI_FTUPLAS);}
 
 {regex_var} 				{printf("%s - Palabra reservada var detectada \n", yytext); return (BI_VAR);}
+
 {regex_fvar} 				{printf("%s - Palabra reservada fvar detectada \n", yytext); return (BI_FVAR);}
+
+{regex_punto} 				{printf("%s - Token punto \n", yytext); return (BI_PUNTO);}
+
 
 
 
@@ -329,6 +335,11 @@ regex_menor_igual <=
 {regex_mayor_igual} 		{printf("Operador Relacional Mayor o Igual: %s\n", yytext); return (MAYOR_IGUAL);}
 
 {regex_menor_igual} 		{printf("Operador Relacional Menor o Igual: %s\n", yytext); return (BI_MENOR_IGUAL);}
+
+{regex_par_aper} 			{printf("Token parentesis de apertura: %s\n", yytext); return (BI_PAR_APER);}
+
+{regex_par_cier} 			{printf("Token parentesis de cierre: %s\n", yytext); return (BI_PAR_CIER);}
+
 
 
 \n|. {}
