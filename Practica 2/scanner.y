@@ -84,13 +84,13 @@
 %%
 
 	
-desc_algoritmo	: 	regex_algoritmo regex_identificador regex_comp_seq cabecera_alg bloque_alg regex_falgoritmo
+desc_algoritmo	: 	BI_ALGORITMO BI_IDENTIFICADOR BI_COMP_SEQ cabecera_alg bloque_alg BI_FALGORITMO
 				;
 
-cabecera_alg	:	decl_globales decl_a_f decl_ent_sal regex_comentario
+cabecera_alg	:	decl_globales decl_a_f decl_ent_sal BI_COMENTARIO
 				;
 
-bloque_alg		:	bloque regex_comentario
+bloque_alg		:	bloque BI_COMENTARIO
 				;
 
 decl_globales	:	declaracion_tipo decl_globales
@@ -113,58 +113,58 @@ declaraciones	:	declaracion_tipo declaraciones
 				;
 
 /* Declaraciones */
-declaracion_tipo	:	regex_tipo lista_d_tipo regex_ftipo regex_comp_seq
+declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
 					;
 
-declaracion_cte		:	regex_const lista_d_cte regex_fconst regex_comp_seq
+declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST BI_COMP_SEQ
 					;
 
-declaracion_var		:	regex_var lista_d_var regex_fvar regex_comp_seq
+declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
 					;
 
 /* Declaraciones de tipos */
-lista_d_tipo	:	regex_identificador regex_creacion_tipo d_tipo regex_comp_seq lista_d_tipo
+lista_d_tipo	:	BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo
 				| 	/* cadena vacia */
 				;
 
-d_tipo 			: 	regex_tupla lista_campos regex_ftupla
-				|	regex_tabla regex_ini_array expresion_t regex_ini_array expresion_t regex_fin_array regex_de d_tipo
+d_tipo 			: 	BI_TUPLA lista_campos BI_FTUPLA
+				|	BI_TABLA BI_INI_ARRAY expresion_t BI_INI_ARRAY expresion_t BI_FIN_ARRAY BI_DE d_tipo
 				;
 
 expresion_t		: 	expresion
-				|	regex_literal_caracter
+				|	BI_LITERAL_CARACTER
 				;
 
-lista_d_tipo	:	regex_identificador regex_def_typevar d_tipo regex_comp_seq lista_campos
+lista_d_tipo	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 				|	/* cadena vacia */
 				;
 
-tipo_base 		: 	regex_entero
-				|	regex_real
-				|	regex_booleano
-				|	regex_caracter
-				|	regex_cadena
+tipo_base 		: 	BI_ENTERO
+				|	BI_REAL
+				|	BI_BOOLEANO
+				|	BI_CARACTER
+				|	BI_CADENA
 				;
 
-literal			:	regex_literal_entero
-				|	regex_literal_real
-				|	regex_literal_booleano
-				|	regex_literal_caracter
-				|	regex_literal_cadena
+literal			:	BI_LITERAL_ENTERO
+				|	BI_LITERAL_REAL
+				|	BI_LITERAL_BOOLEANO
+				|	BI_LITERAL_CARACTER
+				|	BI_LITERAL_CADENA
 				;
 
-lista_d_cte		:	regex_identificador regex_creacion_tipo regex_literal regex_comp_seq lista_d_cte 
+lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO BI_LITERAL BI_COMP_SEQ lista_d_cte 
 				|	/* cadena vacia */
 				;
 
 
-lista_d_var		:	lista_id regex_def_typevar regex_identificador regex_comp_seq lista_d_var
-				| 	lista_id regex_def_typevar d_tipo regex_comp_seq lista_d_var
+lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
+				| 	lista_id BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_d_var
 				|	/* cadena vacia */
 				;
 
-lista_id 		:	regex_identificador regex_separador lista_id
-				|	regex_identificador
+lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
+				|	BI_IDENTIFICADOR
 				;
 
 decl_ent_sal	:	decl_ent
@@ -172,10 +172,10 @@ decl_ent_sal	:	decl_ent
 				|	decl_sal
 				;
 
-decl_ent 		:	regex_ent lista_d_var
+decl_ent 		:	BI_ENT lista_d_var
 				;
 
-decl_sal 		:	regex_sal lista_d_var
+decl_sal 		:	BI_SAL lista_d_var
 				;
 
 /* Expresiones */
@@ -185,65 +185,65 @@ expresion 		:	exp_a
 				|	funcion_ll
 				;
 
-literal_numerico	:	regex_literal_entero
-					|	regex_literal_real
+literal_numerico	:	BI_LITERAL_ENTERO
+					|	BI_LITERAL_REAL
 					;
 
-exp_a			:	exp_a regex_suma exp_a
-				|	exp_a regex_resta exp_a
-				|	exp_a regex_multiplicacion
-				|	exp_a regex_division exp_a
-				|	exp_a regex_mod exp_a
-				|	exp_a regex_div exa_a
-				|	regex_par_aper exp_a regex_par_cier
+exp_a			:	exp_a BI_SUMA exp_a
+				|	exp_a BI_RESTA exp_a
+				|	exp_a BI_MULTIPLICACION
+				|	exp_a BI_DIVISION exp_a
+				|	exp_a BI_MOD exp_a
+				|	exp_a BI_DIV exp_a
+				|	BI_PAR_APER exp_a BI_PAR_CIER
 				|	operando 
 				|	literal_numerico 
-				|	regex_resta exp_a
+				|	BI_RESTA exp_a
 				;
 
-oprel			: 	regex_igualdad
-				|	regex_distinto
-				|	regex_mayor
-				|	regex_menor
-				|	regex_mayor_igual
-				|	regex_menor_igual
+oprel			: 	BI_IGUALDAD
+				|	BI_DISTINTO
+				|	BI_MAYOR
+				|	BI_MENOR
+				|	BI_MAYOR_IGUAL
+				|	BI_MENOR_IGUAL
 				;
 
-exp_b 			:	exp_b regex_y exp_b
-				|	exp_b regex_o exp_b
-				|	regex_no exp_b
+exp_b 			:	exp_b BI_Y exp_b
+				|	exp_b BI_O exp_b
+				|	BI_NO exp_b
 				|	operando
-				|	regex_verdadero
-				|	regex_falso
+				|	BI_VERDADERO
+				|	BI_FALSO
 				|	expresion oprel expresion
-				|	regex_par_aper exp_b regex_par_cier
+				|	BI_PAR_APER exp_b BI_PAR_CIER
 				;
 
-operando		:	regex_identificador
-				|	operando regex_punto operando
-				|	operando regex_ini_array expresion regex_fin_array
-				|	operando regex_ref
+operando		:	BI_IDENTIFICADOR
+				|	operando BI_PUNTO operando
+				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
+				|	operando BI_REF
 				;
 
 /* Instrucciones */
-instrucciones 	:	instruccion regex_comp_seq instrucciones
+instrucciones 	:	instruccion BI_COMP_SEQ instrucciones
 				|	instruccion
 				;
 
-instruccion 	:	regex_continuar
+instruccion 	:	BI_CONTINUAR
 				|	asignacion
 				|	alternativa
 				| 	iteracion
 				|	accion_ll
 				;
 
-asignacion 		:	operando regex_asignacion expresion
+asignacion 		:	operando BI_ASIGNACION expresion
 				;
 
-alternativa		:	regex_si expresion regex_entonces instrucciones lista_opciones regex_fsi
+alternativa		:	BI_SI expresion BI_ENTONCES instrucciones lista_opciones BI_FSI
 				;
 
-lista_opciones 	:	regex_ini_array regex_fin_array expresion regex_entonces instrucciones lista_opciones
+lista_opciones 	:	BI_INI_ARRAY BI_FIN_ARRAY expresion BI_ENTONCES instrucciones lista_opciones
 				|	/* cadena vacia */
 				;
 
@@ -251,42 +251,42 @@ iteracion 		:	it_cota_fija
 				|	it_cota_exp
 				;
 
-it_cota_exp		:	regex_mientras expresion regex_hacer instrucciones regex_fmientras
+it_cota_exp		:	BI_MIENTRAS expresion BI_HACER instrucciones BI_FMIENTRAS
 				;
 
-it_cota_fija	:	regex_para regex_identificador regex_asignacion expresion 
-					regex_hasta expresion regrex_hacer instrucciones regex_fpara
+it_cota_fija	:	BI_PARA BI_IDENTIFICADOR BI_ASIGNACION expresion 
+					BI_HASTA expresion BI_HACER instrucciones BI_FPARA
 				;
 
 /* Acciones y Funciones */
-accion_d 		:	regex_accion a_cabecera bloque regex_faccion
+accion_d 		:	BI_ACCION a_cabecera bloque BI_FACCION
 				;
 
-funcion_d		:	regex_funcion f_cabecera bloque regex_dev expresion regex_ffuncion
+funcion_d		:	BI_FUNCION f_cabecera bloque BI_DEV expresion BI_FFUNCION
 				;
 
-a_cabecera		:	regex_identificador regex_par_aper d_par_form
+a_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER d_par_form
 				;
 
-f_cabecera		:	regex_identificador regex_par_aper lista_d_var regex_par_cier regex_comp_seq
+f_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER lista_d_var BI_PAR_CIER BI_COMP_SEQ
 				;
 
-d_par_form		:	d_p_form regex_comp_seq d_par_form
+d_par_form		:	d_p_form BI_COMP_SEQ d_par_form
 				|	/* cadena vacia */
 				;
 
-d_p_form 		:	regex_ent lista_id regex_def_typevar d_tipo 
-				|	regex_sal lista_id regex_def_typevar d_tipo
-				| 	regex_e_s lista_id regex_def_typevar d_tipo
+d_p_form 		:	BI_ENT lista_id BI_DEF_TYPEVAR d_tipo 
+				|	BI_SAL lista_id BI_DEF_TYPEVAR d_tipo
+				| 	BI_E_S lista_id BI_DEF_TYPEVAR d_tipo
 				;
 
-accion_ll		:	regex_identificador regex_par_aper l_ll regex_par_cier
+accion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
 				;
 
-funcion_ll		:	regex_identificador regex_par_aper l_ll regex_par_cier
+funcion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
 				;
 
-l_ll			:	expresion regex_separador l_ll
+l_ll			:	expresion BI_SEPARADOR l_ll
 				|	expresion
 				;
 
