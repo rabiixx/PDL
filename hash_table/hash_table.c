@@ -1,63 +1,114 @@
 #include "hash_table.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+void insert(llNode **);
+
+unsigned int hash(char *);
 
 int main(int argc, char const *argv[])
 {
-	
-	Symbol *hash_table[HT_SIZE];
+
+
+	char *str = "hola23";
+	printf("Hash: %d\n", hash(str) );
+
+	llNode *hash_table[HT_SIZE];
+
+	for (int i = 0; i < sizeof(hash_table) / sizeof(hash_table[0]); ++i)
+		hash_table[i] = NULL;
+
+	insert(&hash_table[0]);
+	insert(&hash_table[0]);
+	insert(&hash_table[1]);
+	insert(&hash_table[2]);
+	insert(&hash_table[2]);
 
 
 
-	for (int i = 0; i < sizeof(hash_table)/sizeof(hash_table[0]); ++i)
+	printf("***hash table state*** \n");
+	for (int i = 0; i < ( sizeof( hash_table ) / sizeof( hash_table[0] ) ); ++i)
 	{
 		
-		//Symbol *s = (Symbol*)malloc(sizeof(Symbol));
+		printf("HASH TABLE %d\n", i);
+		Symbol *tmp = hash_table[i]->head;
+		while ( tmp != NULL ) {
+			printf("id: %s\n", tmp->id);
+			printf("name: %s\n", tmp->name);
+			printf("type: %d\n", tmp->type);
+			printf("scope: %s\n\n", tmp->scope);
 
-		Symbol s;
-
-		s.id = (char*)malloc(sizeof(char) * 10);
-		s.name = (char*)malloc(sizeof(char) * 20);
-		s.id = (char*)malloc(sizeof(char) * 10);
-		
-
-		s.id = "1";
-		s.name = "rabiixx";
-		s.type = VAR;
-		s.scope = "rabixx_legend";
-		s.next = NULL;
-	
-		hash_table[i] = &s;
-
+			tmp = tmp->next;
+		}
 	}
-
-
-	for (int i = 0; i < sizeof(hash_table)/sizeof(hash_table[0]); ++i)
-	{
-		printf("Iteracion: %d\n", i);
-		printf("ID: %s\n", hash_table[i]->id);
-		printf("NAME: %s\n", hash_table[i]->name);
-		printf("TYPE: %d\n", hash_table[i]->type);
-		printf("SCOPE: %s\n\n", hash_table[i]->scope);
-	}
-
-	printf("Hash table size %d\n", sizeof(hash_table)/sizeof(hash_table[0]));
-	printf("SIZEOF table elem: %d\n", sizeof(hash_table[0]));
-	printf("Sizeof symbol: %d\n", sizeof(Symbol));
-
-
-	char *id;
-	char id2;
-	struct Symbol *next;
-	printf("jhsbdjhs2: %d\n", sizeof(*hash_table[0]) );
-	printf("jhsbdjhs2: %d\n", sizeof(hash_table[0]->id));
-	printf("jhsbdjhs2: %d\n", sizeof(hash_table[0]->name));
-	printf("jhsbdjhs2: %d\n", sizeof(hash_table[0]->type));
-	printf("jhsbdjhs2: %d\n", sizeof(hash_table[0]->scope));
-	printf("jhsbdjhs2: %d\n", sizeof(hash_table[0]->value));
-	printf("jhsbdjhs2: %d\n", sizeof(hash_table[0]->next));
-
 
 	return 0;
 }
+
+
+unsigned int hash(char *str) {
+
+	int sum = 0;
+	for (int i = 0; i < strlen(str); ++i) {
+		sum += (int) *(str + i); 
+	}
+	
+	return (unsigned int) sum % HT_SIZE;
+
+
+}
+
+void insert(llNode **table) {
+
+	if ( *table == NULL )
+	{
+
+		printf("[+]first elem\n");
+
+		llNode *node = (llNode*) calloc( 1, sizeof( llNode ) );
+		node->count = 1;		
+		*table = node;
+
+		Symbol *s = (Symbol*)calloc(1, sizeof(Symbol));
+	
+		s->id = "1";
+		s->name = "rabiixx";
+		s->type = VAR;
+		s->scope = "root";
+		s->next = NULL;
+
+		(*table)->head = s;
+		(*table)->tail = s;
+
+	} else {
+
+		printf("[+]second elem\n");
+
+		Symbol *s = (Symbol*)malloc(sizeof(Symbol));
+	
+		s->id = "2";
+		s->name = "rabiixx";
+		s->type = VAR;
+		s->scope = "superroot";
+		s->next = NULL;
+
+		++(*table)->count;
+		(*table)->head->next = s;
+		(*table)->tail = s;
+
+	}
+
+}
+
+
+Symbol *lookup(llNode *hast_table, char *name) {
+
+}
+
+
+int set_attribute(){
+
+}
+
+int getA

@@ -45,17 +45,32 @@ typedef struct Label {
 } Label;
 
 typedef struct Symbol {
+	int type;
 	char *id;
 	char *name;
-	int type;
 	char *scope;
+	struct Symbol *next;
 	union {
 		struct Variable var;
 		struct Function func;
 		struct Action act;
 		struct Constant cte;
 		struct Label lab;
-		int hola;
 	} value;
-	struct Symbol *next;
 } Symbol;
+
+
+/* In case of collison, insertions can be done on O(1) */
+typedef struct llNode
+{
+	Symbol *head;		/* Point first element of Linked List */
+	Symbol *tail;		/* Points last element if Linked List */
+	int count;
+} llNode;
+
+
+
+
+
+
+
