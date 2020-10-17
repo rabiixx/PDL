@@ -26,9 +26,12 @@ int main(int argc, char const *argv[])
 
 	insert(hash_table, "rabiixx");
 	insert(hash_table, "root");
+	insert(hash_table, "rabiixx2");
+	//insert(hash_table, "rabiixx7");
 
 	lookup(hash_table, "rabiixx");
 	lookup(hash_table, "rabiixx2");
+	lookup(hash_table, "rabiixx7");
 
 	/*for (int i = 0; i < 5; ++i)
 	{
@@ -124,29 +127,45 @@ Symbol *new_symbol( char *name ) {
 }
 
 
-/* Checks if a given symbol is on the symbol table */
+/** 
+  *Checks if a given symbol is on the symbol table.
+  *	To avoid false postitves produced by collisions, it also looks 
+  *	into index linked list.
+  */
 Symbol *lookup(llNode *hash_table[], char *name) {
 
 	const unsigned int index = hash( name );
 
 	if ( hash_table[index] )
 	{
-		printf("Symbol exist\n");
-		return hash_table[index]->head;
 
-		Symbol *tmp = hash_table[ index ]->head;
-		while ( tmp != NULL ) {
-			printf("id: %s\n", tmp->id);
-			printf("name: %s\n", tmp->name);
-			printf("type: %d\n", tmp->type);
-			printf("scope: %s\n\n", tmp->scope);
-			tmp = tmp->next;
+		if ( strcmp( hash_table[ index ]->head->name, name ) == 0 ) {
+			
+			printf("Symbol exist1\n");
+			return hash_table[ index ]->head;
+		
+		} else {
+
+			Symbol *tmp = hash_table[ index ]->head->next;
+			while ( tmp != NULL ) {
+				
+				if ( strcmp( tmp->name, name ) == 0 ) {
+					printf("Symbol exist2\n");
+					return tmp;
+				}
+
+				tmp = tmp->next;
+			}
+
+			printf("Symbol doesnt exist1\n");
+			return NULL;
 		}
 
-	} else {
-		printf("Symbol doesnt exist\n");
-		return NULL;
 	}
+
+	printf("Symbol doesnt exist2\n");
+	return NULL;
+
 }
 
 
