@@ -127,8 +127,23 @@ declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
 					;
 
 /* Declaraciones de tipos */
+
+
+
 lista_d_tipo	:	BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo
 				| 	/* cadena vacia */
+
+/**
+
+	tupla 
+		x : tabla[1 o 0..3] de entero;
+		x : y;
+		x : 1..N;
+		x : ref y;
+		x : entero;
+	ftupla
+*/
+
 				;
 
 d_tipo 			: 	BI_TUPLA lista_campos BI_FTUPLA
@@ -166,7 +181,10 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 				|	/* cadena vacia */
 				;
 
-
+/** 
+	x, y, z : suma; 
+	x, y, z : d_tipo;
+*/
 lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
 				| 	lista_id BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_d_var
 				|	/* cadena vacia */
@@ -181,6 +199,10 @@ decl_ent_sal	:	decl_ent
 				|	decl_sal
 				;
 
+/* 
+	ent
+		x, y : entero
+*/ 
 decl_ent 		:	BI_ENT lista_d_var
 				;
 

@@ -19,10 +19,14 @@
 
 /* Data Structures */
 
+/* Variables */
 typedef struct Variable {
-	char *type;
-	char *scope;
+	char *type;			/* Variable type */
 } Variable;
+
+typedef struct Constant {
+	char *type;
+} Constant;
 
 typedef struct Function {
 	char *name;
@@ -34,10 +38,6 @@ typedef struct Action {
 	char *devType;
 } Action;
 
-typedef struct Constant {
-	char *name;
-	char *devType;
-} Constant;
 
 typedef struct Label {
 	char *name;
@@ -45,9 +45,9 @@ typedef struct Label {
 } Label;
 
 typedef struct Symbol {
-	int type;
 	char *id;
 	char *name;
+	int type;
 	char *scope;
 	struct Symbol *next;
 	union {
