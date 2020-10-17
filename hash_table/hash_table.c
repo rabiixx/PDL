@@ -16,6 +16,11 @@ unsigned int hash(char *);
 
 Symbol *lookup(llNode *hast_table[], char *name);
 
+int set_attribute(llNode *hash_table[], char *name, char *attr);
+
+
+
+
 int main(int argc, char const *argv[])
 {
 
@@ -33,12 +38,13 @@ int main(int argc, char const *argv[])
 	lookup(hash_table, "rabiixx2");
 	lookup(hash_table, "rabiixx7");
 
+	set_attribute(hash_table, "rabiixx", "julio");
+
 	/*for (int i = 0; i < 5; ++i)
 	{
 		if ( hash_table[i] )
 		{
 			printf("head: %p\n", hash_table[i]->head);
-			printf("tail: %p\n", hash_table[i]->tail);
 			printf("head: %d\n", hash_table[i]->count);
 		} else {
 			printf("hash_table[%d]: %p\n", i, hash_table[i]);
@@ -58,7 +64,7 @@ int main(int argc, char const *argv[])
 			while ( tmp != NULL ) {
 				printf("id: %s\n", tmp->id);
 				printf("name: %s\n", tmp->name);
-				printf("type: %d\n", tmp->type);
+				printf("type: %s\n", tmp->type);
 				printf("scope: %s\n\n", tmp->scope);
 				tmp = tmp->next;
 			}
@@ -69,45 +75,10 @@ int main(int argc, char const *argv[])
 }
 
 
-unsigned int hash(char *str) {
-
-	int sum = 0;
-	for (int i = 0; i < strlen(str); ++i) {
-		sum += (int) *(str + i); 
-	}
-	
-	return (unsigned int) sum % HT_SIZE;
-
-
-}
-
-void insert(llNode *table[], char *name) {
-
-	const unsigned int index = hash(name);
-	printf("hash: %d\n", index);
-
-	if ( table[ index ] == NULL )
-	{
-
-		printf("[+]first elem\n");
-
-		table[ index ] = new_linkedList();
-		table[ index ]->head = table[ index ]->tail = new_symbol(name);
-	
-	} else {
-
-		printf("[+]second elem\n");
-
-		table[ index ]->tail = table[ index ]->tail->next = new_symbol(name);
-		++( table[ index ]->count );
-	}
-
-}
-
 llNode *new_linkedList() {
 
 	llNode *node = (llNode*) calloc( 1, sizeof( llNode ) );
-	node->head = node->tail = NULL;
+	node->head = NULL;
 	node->count = 1;
 
 	return node;
@@ -127,10 +98,48 @@ Symbol *new_symbol( char *name ) {
 }
 
 
+unsigned int hash(char *str) {
+
+	int sum = 0;
+
+	for (int i = 0; i < strlen(str); ++i)
+		sum += (int) *(str + i); 
+	
+	return (unsigned int) sum % HT_SIZE;
+
+}
+
+void insert(llNode *hash_table[], char *name) {
+
+	const unsigned int index = hash( name );
+	printf("[+] hash(%s) = %d\n", name, index);
+
+	if ( hash_table[ index ] == NULL )
+	{
+
+		hash_table[ index ] = new_linkedList();
+		hash_table[ index ]->head = new_symbol( name );
+	
+	} else {
+
+		Symbol *tmp = hash_table[ index ]->head;
+
+		while ( tmp->next != NULL ) { tmp = tmp->next; }
+
+		tmp->next = new_symbol( name );
+		++( hash_table[ index ]->count );
+
+	}
+
+}
+
+
+
 /** 
-  *Checks if a given symbol is on the symbol table.
+  * Checks if a given symbol is on the symbol table.
   *	To avoid false postitves produced by collisions, it also looks 
   *	into index linked list.
+  * Linear Search - O(N)
   */
 Symbol *lookup(llNode *hash_table[], char *name) {
 
@@ -169,6 +178,68 @@ Symbol *lookup(llNode *hash_table[], char *name) {
 }
 
 
-int set_attribute(){
+/**
+
+
+*/ 
+
+int set_attribute(llNode *hash_table[], char *name, char *attr) {
+
+
+	Symbol *s = lookup(hash_table, name);
+
+	if ( s != NULL )
+	{
+		s->type = (char*) calloc( strlen( attr ), sizeof( char ) );
+		strcpy( s->type, attr );
+
+		return 0;
+	}
+
+
+	return -1;
 
 }
+
+
+
+
+int delete(llNode *hash_table[], char *name ) {
+
+
+	const unsigned int index = hash( name );
+
+	Symbol *tmp, *prev = hash_table[ index ]->head;
+
+	if ( tmp != NULL && !strcmp( tmp->name, name ) )
+	{
+
+		tmp 
+
+	}
+
+		llNode ll = hash_table[ index ];
+	
+		if ( ll->count == 1 )
+		{
+			
+			free(s);
+			ll->head = ll->tail = NULL;
+			free( ll );
+
+		} else {
+
+		
+
+		}
+
+		return 0;
+	}
+
+
+	return -1;
+
+}
+
+
+

@@ -47,7 +47,7 @@ typedef struct Label {
 typedef struct Symbol {
 	char *id;
 	char *name;
-	int type;
+	char *type;
 	char *scope;
 	struct Symbol *next;
 	union {
@@ -64,7 +64,6 @@ typedef struct Symbol {
 typedef struct llNode
 {
 	Symbol *head;		/* Point first element of Linked List */
-	Symbol *tail;		/* Points last element if Linked List */
 	int count;
 } llNode;
 
