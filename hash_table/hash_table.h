@@ -58,18 +58,3 @@ typedef struct Symbol {
 		struct Label lab;
 	} value;
 } Symbol;
-
-
-/* In case of collison, insertions can be done on O(1) */
-typedef struct llNode
-{
-	Symbol *head;		/* Point first element of Linked List */
-	int count;
-} llNode;
-
-
-
-
-
-
-
