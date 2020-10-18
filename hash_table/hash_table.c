@@ -6,13 +6,28 @@
 
 unsigned int hash(const char *);
 
+/**
+ * Creates a new Symbol
+ */
 Symbol *new_symbol(char *);
 
-void insert(Symbol *table[], char *name);
+
+/**
+ * Inserts a given Symbol in the hash table.
+ * If symbol exists it wont be inserted.
+ * If a collision occurs the new symbol is appended.
+ */
+void insertSymbol(Symbol *table[], char *name);
+
+
+/**
+ * 
+ * 
+ * 
+ */
+int deleteSymbol(Symbol *hash_table[], const char *name);
 
 int delete(Symbol *hash_table[], char *name);
-
-int delete2(Symbol *hash_table[], char *name);
 
 Symbol *lookup(Symbol *hast_table[], char *name);
 
@@ -32,13 +47,20 @@ int main(int argc, char const *argv[])
 	for (int i = 0; i < sizeof(hash_table) / sizeof(hash_table[0]); ++i)
 		hash_table[i] = NULL;
 
-	//insert(hash_table, "rabiixx");
-	insert(hash_table, "root");
-	//insert(hash_table, "rabiixx2");
+	insertSymbol(hash_table, "rabiixx");	// 4
+	insertSymbol(hash_table, "rabiixx2");	// 4
+	insertSymbol(hash_table, "rabiixx13");	// 4
+	insertSymbol(hash_table, "root");		// 2
+	insertSymbol(hash_table, "rabiixx11");	// 2
+
 
 	lookup(hash_table, "rabiixx");
 	lookup(hash_table, "rabiixx2");
 	lookup(hash_table, "rabiixx7");
+
+	deleteSymbol(hash_table, "rabiixx");
+	//deleteSymbol(hash_table, "rabiixx2");
+	//deleteSymbol(hash_table, "rabiixx13");
 
 	set_attr(hash_table, "rabiixx", "julio");
 
@@ -59,10 +81,8 @@ int main(int argc, char const *argv[])
 
 	printf("\n\n");
 
-delete2(hash_table, "root");
-	deleteItem(hash_table, "root");
+	deleteSymbol(hash_table, "root");
 	
-
 	printf("\n\n");
 
 	for (int i = 0; i < 5; ++i)
@@ -115,20 +135,23 @@ Symbol *new_symbol( char *name ) {
 	strcpy(s->name, name);
 	s->next = NULL;
 
-	printf("\nnose: %s\n", *s);
-
 	return s;
 }
 
-void insert(Symbol *hash_table[], char *name) {
+void insertSymbol(Symbol *hash_table[], char *name) {
 
 	const unsigned int index = hash( name );
-	//printf("[+] hash(%s) = %d\n", name, index);
 
+	/* Symbol alredy exist */
+	if ( lookup(hash_table, name) )
+	{
+		printf("[+] Symbol alredy exists!");
+		return;
+	}
+	
 	if ( hash_table[ index ] == NULL )
 	{
 		hash_table[ index ] = new_symbol( name );
-		printf("\nhack: %s\n\n", *(hash_table[index]));
 
 	} else {
 
@@ -141,13 +164,32 @@ void insert(Symbol *hash_table[], char *name) {
 
 }
 
+// Deletes a given symbol from hash table
+int deleteSymbol(Symbol *table[], const char *name) {
+	
+	Symbol **link = &table[hash(name)];
+
+    while (*link) {
+        Symbol *tmp = *link;
+        if ( !strcmp(tmp->name, name) ) {
+            *link = tmp->next;
+			free(tmp);
+            break;
+        } else {
+            link = &(*link)->next;
+        }
+    }
+}
+
 
 
 /** 
   * Checks if a given symbol is on the symbol table.
   *	To avoid false postitves produced by collisions, it also looks 
-  *	into index linked list.
+  *	into corresponding linked list.
   * Linear Search - O(N)
+  * Returns a pointer to the symbol, if the symbol exist.
+  * Return NULL if the given symvbol doesnt exist. 
   */
 Symbol *lookup(Symbol *hash_table[], char *name) {
 
@@ -157,32 +199,25 @@ Symbol *lookup(Symbol *hash_table[], char *name) {
 	{
 
 		if ( !strcmp( hash_table[ index ]->name, name ) ) {
-			
-			//printf("Symbol exist1\n");
+
 			return hash_table[ index ];
 		
 		} else {
 
 			Symbol *tmp = hash_table[ index ]->next;
-			while ( tmp != NULL ) {
-				
+			
+			while ( tmp != NULL ) {	
 				if ( !strcmp( tmp->name, name ) ) {
-					//printf("Symbol exist2\n");
 					return tmp;
 				}
-
 				tmp = tmp->next;
 			}
-
-			//printf("Symbol doesnt exist1\n");
+			
 			return NULL;
 		}
-
 	}
 
-	//printf("Symbol doesnt exist2\n");
 	return NULL;
-
 }
 
 
@@ -210,61 +245,6 @@ char *get_attr(Symbol *hash_table[], char *name) {
 	return ( s ) ? s->type : NULL; 
 
 }
-
-
-// function for deleting item from hash table
-void deleteItem(Symbol *table[], const char *key) {
-    
-	printf("\n deleteItem() \n");
-	printf("table: %p\n", table);
-	
-	Symbol **link = &table[hash(key)];
-
-	printf("link: %p\n", link);
-	printf("*link: %p\n", *link);
-	printf("**link: %p\n", **link);
-	printf("&link: %p\n", &link);
-
-    while (*link) {
-        Symbol *tmp = *link;
-        if (strcmp(tmp->name, key) == 0) {
-            *link = tmp->next;  // unlink the list node
-            printf("tmp delete: %p", tmp);
-			free(tmp);
-            break;
-        } else {
-            link = &(*link)->next;
-        }
-    }
-}
-
-int delete2(Symbol *hash_table[], char *name ) {
-
-	printf("func delete\n");
-
-	const unsigned int index = hash( name );
-
-	Symbol *tmp = hash_table[ index ];
-	Symbol *prev = hash_table[ index ];
-	
-	printf("hash_table[%d]: %p\n", index, hash_table[index]);
-	printf("tmp: %p\n", tmp);
-
-	printf("tmp2: %p\n", *tmp);
-
-	if ( !tmp )
-		return -1;
-
-	if ( tmp && ( strcmp( (tmp)->name, name ) == 0 ) )
-	{
-		tmp = (tmp)->next;
-		free( tmp );
-		return 0;
-	}
-}
-
-
-
 
 int delete(Symbol *hash_table[], char *name ) {
 
