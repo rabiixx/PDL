@@ -88,11 +88,8 @@
 %left  BI_MULTIPLICACION BI_DIVISION BI_MOD BI_DIV
 %left  BI_MENOR BI_MAYOR BI_MENOR_IGUAL BI_MAYOR_IGUAL BI_IGUALDAD BI_DISTINTO
 
-
-
 %%
 
-	
 desc_algoritmo	: 	BI_ALGORITMO BI_IDENTIFICADOR BI_COMP_SEQ cabecera_alg bloque_alg BI_FALGORITMO
 				;
 
@@ -175,7 +172,13 @@ tipo_base 		: 	BI_PR_ENTERO
 				|	BI_PR_CADENA
 				;
 
-literal			:	BI_LIT_ENTERO
+literal			:	BI_LIT_ENTERO {
+
+	printf("LITERAL_ENTERO");
+
+	set_attr(st, )
+
+}
 				|	BI_LIT_REAL
 				|	BI_LIT_BOOLEANO
 				|	BI_LIT_CARACTER
@@ -194,6 +197,30 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
 				| 	lista_id BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_d_var
 				|	/* cadena vacia */
 				;
+/**
+  * Bison antes de realizar un reduccion comprueba cual es el proximo valor.
+  * En caso de que dicho valor pueda utilizarse para una reduccion mayor, 
+  * no aplica la reduccion y lo añade a la pile del Parser.
+  * Ejemplo:
+  * Supongamo la siguiente expresion: "x, y" <==> BI_ID BI_COMA BI_ID
+  * Bison leera un identificador y podria aplicar la siguiente reduccion: lista_id = BI_ID
+  * En caso de que la aplicara la expresion quedaria tal que asi: lista_id , y <==> lista_id BI_COMA BI_ID
+  * Como podemos ver, no existe ninguna regla de la gramatica por la cual la expresion pueda ser reducida y por
+  * lo tanto sa liado bastante. Por ello, antes de realizar reducciones Bison realizar ciertas comprobaciones 
+  * con el fin de evitar este tipo de situaciones.
+  *
+  * En este caso la reduccion se aplicaria de la siguiente manera. Soponiendo la sigueinte expresion: x, y, z
+  * BI_ID BI_SEP lista_id ==> BI_ID BI_SEP BI_ID BI_SEP ==> BI_ID BI_SEP BI_ID BI_SEP BI_ID
+  * Bison añadira lo siguiente a su pila(izq=primero): \n z , y , x 
+  * A partir de ese punto lo sigueinte que lea sera otro identificador y un salto de linea. Por tanto, realizara
+  * una reduccion por la segunda regla sobre z, quedando la pila tal que asi: pila(izq=primero): lista_id , y , x 
+  * Ahora aplicara una reduccion por la primera regla: lista_id = y, lista_id (BI_ID BI_SEP lista_id) quedando la pila
+  * tal que asi: lista_id , x.
+  * Finalmente volvera a aplicar la misma reduccion: lista_id = x, lista_id (BI_ID BI_SEP lista_id) quedando la pila
+  * finalemente asi: lista_id
+  */
+
+
 
 lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id 
 				{
