@@ -35,7 +35,7 @@ int set_attr(Symbol *hash_table[], char *name, char *attr);
 
 char *get_attr(Symbol *hash_table[], char *name);
 
-void print_ht(Symbol *hash_table[]);
+void printHt(Symbol *hash_table[]);
 
 void deleteItem(Symbol *table[], const char *key);
 
@@ -53,55 +53,22 @@ int main(int argc, char const *argv[])
 	insertSymbol(hash_table, "root");		// 2
 	insertSymbol(hash_table, "rabiixx11");	// 2
 
-
 	lookup(hash_table, "rabiixx");
 	lookup(hash_table, "rabiixx2");
 	lookup(hash_table, "rabiixx7");
 
-	deleteSymbol(hash_table, "rabiixx");
-	//deleteSymbol(hash_table, "rabiixx2");
-	//deleteSymbol(hash_table, "rabiixx13");
-
-	set_attr(hash_table, "rabiixx", "julio");
-
-	for (int i = 0; i < 5; ++i)
-	{
-
-		printf("%p: hash_table[%d]: %p\n", &hash_table[i], i, hash_table[i]);
-
-		if ( hash_table[i] )
-		{
-			Symbol *tmp = hash_table[i];
-			while ( tmp != NULL ) {
-				printf("\t%p: %s\n", tmp, tmp->name);
-				tmp = tmp->next;
-			}
-		}
-	}
+	printHt(hash_table);
 
 	printf("\n\n");
 
-	deleteSymbol(hash_table, "root");
+	//deleteSymbol(hash_table, "rabiixx");
+	//deleteSymbol(hash_table, "rabiixx13");
+	deleteSymbol(hash_table, "rabiixx13");
 	
 	printf("\n\n");
+//	set_attr(hash_table, "rabiixx", "julio");
 
-	for (int i = 0; i < 5; ++i)
-	{
-
-		printf("%p: hash_table[%d]: %p\n", &hash_table[i], i, hash_table[i]);
-
-		if ( hash_table[i] )
-		{
-			Symbol *tmp = hash_table[i];
-			while ( tmp != NULL ) {
-				printf("\t%p: %s\n", tmp, tmp->name);
-				tmp = tmp->next;
-			}
-		}
-	}
-
-
-	//print_ht(hash_table);
+	printHt(hash_table);
 
 
 	return 0;
@@ -238,6 +205,25 @@ int set_attr(Symbol *hash_table[], char *name, char *attr) {
 
 }
 
+void printHt(Symbol *hash_table[])
+{
+
+	for (int i = 0; i < 5; ++i)
+	{
+
+		printf("%p: hash_table[%d]: %p\n", &hash_table[i], i, hash_table[i]);
+		if ( hash_table[i] )
+		{
+			Symbol *tmp = hash_table[i];
+			while ( tmp != NULL ) {
+				printf("\t%p: %s\n", tmp, tmp->name);
+				tmp = tmp->next;
+			}
+		}
+	}
+
+}
+
 char *get_attr(Symbol *hash_table[], char *name) {
 
 	Symbol *s = lookup(hash_table, name);
@@ -284,31 +270,5 @@ int delete(Symbol *hash_table[], char *name ) {
 	printf("delete 2\n");
 
 	return 0;
-
-}
-
-
-void print_ht(Symbol *hash_table[])
-{
-
-	printf("\n***HASH TABLE STATE*** \n");
-	for (int i = 0; i < 5; ++i)
-	{
-
-		//printf("hash_table[%d]: %p\n", i, hash_table[i]);
-
-		if ( hash_table[i] )
-		{
-			printf("hash_table[%d] ==>\n", i);
-			Symbol *tmp = hash_table[i];
-			while ( tmp != NULL ) {
-				printf("id: %s\n", tmp->id);
-				printf("name: %s\n", tmp->name);
-				printf("type: %s\n", tmp->type);
-				printf("scope: %s\n\n", tmp->scope);
-				tmp = tmp->next;
-			}
-		}
-	}
 
 }

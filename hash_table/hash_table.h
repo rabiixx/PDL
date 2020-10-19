@@ -58,3 +58,22 @@ typedef struct Symbol {
 		struct Label lab;
 	} value;
 } Symbol;
+
+
+unsigned int hash(const char *);
+
+Symbol *new_symbol(char *);
+
+void insertSymbol(Symbol *table[], char *name);
+
+int deleteSymbol(Symbol *hash_table[], const char *name);
+
+Symbol *lookup(Symbol *hast_table[], char *name);
+
+int set_attr(Symbol *hash_table[], char *name, char *attr);
+
+char *get_attr(Symbol *hash_table[], char *name);
+
+void printHt(Symbol *hash_table[]);
+
+void delete(Symbol *table[], const char *key);

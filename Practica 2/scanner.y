@@ -1,6 +1,11 @@
 %{
 	/* fichero scanner.y */
 	#include <stdio.h>
+	#include "libs/hash_table.h"
+
+	Symbol *hash_table[HT_SIZE];
+
+
 %}
 
 %token BI_COMENTARIO
@@ -190,8 +195,24 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
 				|	/* cadena vacia */
 				;
 
-lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
+lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id 
+				{
+
+					if ( !lookup(hash_table, $1) ) {
+						insertSymbol(hash_table, $1);
+					} else {
+						printf("Identifier alredy exists")
+					}
+				}
 				|	BI_IDENTIFICADOR
+				{
+
+					if ( !lookup(hash_table, $1) ) {
+						insertSymbol(hash_table, $1);
+					} else {
+						printf("Identifier alredy exists")
+					}
+				}
 				;
 
 decl_ent_sal	:	decl_ent
@@ -326,17 +347,18 @@ l_ll			:	expresion BI_SEPARADOR l_ll
 
 
 
-
-
-
-
-
-
-
-
 %%
 
 
+int main(int argc, char const *argv[])
+{
+	
+	for (int i = 0; i < sizeof(hash_table) / sizeof(hash_table[0]); ++i)
+		hash_table[i] = NULL;
+
+
+	return 0;
+}
 
 
 
