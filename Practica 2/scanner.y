@@ -1,9 +1,12 @@
 %{
 	/* fichero scanner.y */
 	#include <stdio.h>
+	#include <stdbool.h>
 	#include "libs/hash_table.h"
 
 	Symbol *hash_table[HT_SIZE];
+
+	Stack stack;
 
 
 %}
@@ -204,10 +207,21 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 						
 						/* 
 						 * Now we need to assign type to all identifiers reduced by lista_id grammar rule.
-						 * Those identifiers have been added to symbol table.
+						 * Those identifiers have been added to symbol table and they have been added to 
+						 * stack. For each identifier, we set the type and we remove it from the stack.
 						 */
 
-						
+						while ( !esNulaPila( stack ) ) {
+
+							char *id = cima( stack );
+
+							if ( set_attr(st, id, type) == -1 ) {
+								printf("Identifier %s is not in the symbol table", id);
+							}
+
+							desapilar( stack );
+
+						}
 
 					} else {
 						printf("Symbol %s type is not defined\n", $3);
@@ -266,7 +280,16 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				{
 
 					if ( !lookup(st, $1) ) {
+
 						insertSymbol(st, $1);
+						
+						/* 
+						 * We add identifiers to stack, to be able to set their type
+						 * when we know it 
+						 */
+						apilar(stack, $1);
+
+
 					} else {
 						printf("Identifier alredy exists")
 					}
@@ -275,7 +298,10 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				{
 
 					if ( !lookup(st, $1) ) {
+						
 						insertSymbol(st, $1);
+						apilar(stack, $1);
+
 					} else {
 						printf("Identifier alredy exists")
 					}
