@@ -190,10 +190,48 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 				;
 
 /** 
-	x, y, z : suma; 
-	x, y, z : d_tipo;
-*/
-lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
+  *	x, y, z : suma; 
+  *	x, y, z : d_tipo;
+  */
+lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var {
+
+				/* Debug */
+				if ( lookup(st, $3) ) {
+
+					char *type;
+
+					if ( ( type = get_attr(st, %3) ) ) {
+						
+						/* 
+						 * Now we need to assign type to all identifiers reduced by lista_id grammar rule.
+						 * Those identifiers have been added to symbol table.
+						 */
+
+						
+
+					} else {
+						printf("Symbol %s type is not defined\n", $3);
+					}
+
+
+				} else {
+					printf("The symbol %s doesnt seem to be decalred\n", $3);
+				}
+
+
+				/* 
+				 * get_attr() function includes lookup, so its not necessary 
+				 * to make a lookup before get_attr(). In this case is done for
+				 * debugginf reesons 
+				 */
+				if ( get_attr(st, %3) ) {
+
+				} else {
+					printf("Symbol %s type is not defined\n", $3);
+				}
+
+
+}
 				| 	lista_id BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_d_var
 				|	/* cadena vacia */
 				;
@@ -217,7 +255,9 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
   * Ahora aplicara una reduccion por la primera regla: lista_id = y, lista_id (BI_ID BI_SEP lista_id) quedando la pila
   * tal que asi: lista_id , x.
   * Finalmente volvera a aplicar la misma reduccion: lista_id = x, lista_id (BI_ID BI_SEP lista_id) quedando la pila
-  * finalemente asi: lista_id
+  * finalemente asi: lista_id.
+  * Al aplicar la reduccion, se añade el identificador a la tabla de simbolos. Posteriormente habra que especificar 
+  * el tipo de identificador (entero,, char ...)
   */
 
 
@@ -225,8 +265,8 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
 lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id 
 				{
 
-					if ( !lookup(hash_table, $1) ) {
-						insertSymbol(hash_table, $1);
+					if ( !lookup(st, $1) ) {
+						insertSymbol(st, $1);
 					} else {
 						printf("Identifier alredy exists")
 					}
@@ -234,8 +274,8 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				|	BI_IDENTIFICADOR
 				{
 
-					if ( !lookup(hash_table, $1) ) {
-						insertSymbol(hash_table, $1);
+					if ( !lookup(st, $1) ) {
+						insertSymbol(st, $1);
 					} else {
 						printf("Identifier alredy exists")
 					}
