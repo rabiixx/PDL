@@ -41,7 +41,7 @@ regex_literal_real [+-]?{cifra}+(\.{cifra}+)?([e|E]?{cifra}+)?
 
 regex_literal_booleano regex_falso|regex_verdadero
 
-regex_literal_caracter \"{letra}\"
+regex_literal_caracter \".\"
 
 regex_literal_cadena \'[^\n|^\']+\'
 

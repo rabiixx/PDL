@@ -122,6 +122,16 @@ declaraciones	:	declaracion_tipo declaraciones
 				;
 
 /* Declaraciones */
+
+/* Ejemplos de declracion_tipo 
+
+tipo
+
+	x = 
+
+
+ftipo;
+*/
 declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
 					;
 
@@ -134,29 +144,53 @@ declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
 /* Declaraciones de tipos */
 
 
+/* 
 
+	x = 
+
+
+
+
+
+*/
 lista_d_tipo	:	BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo
 				| 	/* cadena vacia */
+				;
 
-/**
+/** Ejemplo d_tipo
 
-	tupla 
+G4: tupla
 		x : tabla[1 o 0..3] de entero;
 		x : y;
 		x : 1..N;
 		x : ref y;
 		x : entero;
+		x = 
 	ftupla
+	
+State analiysis
+
+	GR1: x = entero;
+	GR2: x = y;
+	GR3.1: x = ref entero ( gramatica incorrecta )
+	GR3.2: x = ref y;
+	GR3.3: x = ref ref ref ...
+
+
 */
 
-				;
+d_tipo 			:	tipo_base 						/* base case */
+				{
 
-d_tipo 			: 	BI_TUPLA lista_campos BI_FTUPLA
-				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
-				|	BI_IDENTIFICADOR
-				|	expresion_t BI_SUBRANGO expresion_t
-				|	BI_REF d_tipo
-				| 	tipo_base
+				}
+				|	BI_IDENTIFICADOR 				/* base case */
+				{
+
+				}
+				|	BI_REF d_tipo 								/* recursive by d_tipo */
+				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
+				| 	BI_TUPLA lista_campos BI_FTUPLA				/* recursive by lista_campos */
+				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo 	/* recursive by expresion_t and d_tipo */
 				;
 
 expresion_t		: 	expresion
