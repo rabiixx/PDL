@@ -175,20 +175,55 @@ tipo_base 		: 	BI_PR_ENTERO
 				|	BI_PR_CADENA
 				;
 
-literal			:	BI_LIT_ENTERO {
 
-	printf("LITERAL_ENTERO");
+/**
+  * This grammar rule is used by lista_d_cte that defines the stucture
+  * of a constant definition. In this case we need tu return the literal type.
+  * Returned literal type will be used in the parent grammar rule to set 
+  * identifier type in symbol table
+  */
 
-	set_attr(st, )
+literal			:	BI_LIT_ENTERO 
+				{
 
-}
+					printf("LITERAL_ENTERO");
+
+					$$ = INTEGER;
+				}
 				|	BI_LIT_REAL
-				|	BI_LIT_BOOLEANO
-				|	BI_LIT_CARACTER
-				|	BI_LIT_CADENA
+				{
+					$$ = FLOAT;
+				}
+				|	BI_LIT_BOOLEANO{
+					$$ = BOOLEAN;
+				}
+				|	BI_LIT_CARACTER{
+
+					$$ = CHARACTER;
+				}
+				|	BI_LIT_CADENA{
+					$$ = STRING;
+				}
 				;
 
-lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte 
+
+/** 
+  *	CONST 
+  * 	x = 3.1;
+  * 	y = asdas;
+  * FCONST 
+  */
+lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
+				{
+
+					/** 
+					  * We insert the identifier into the symbol table and we define its scope and type.
+					  * in this case scope will be, const. The type is returned by literal grammar rule 
+					  */
+					insertSymbol(st, $1);
+					set_attr(st, $1, "scope", "cte");
+					set_attr(st, $1, "type", $3)
+				}
 				|	/* cadena vacia */
 				;
 
