@@ -11,9 +11,10 @@ https://github.com/kranthikiran01/subc-compiler
 http://www.cc.uah.es/ie/docencia/ProcesadoresDeLenguaje/ProcesadoresDeLenguajeTema7_1xpagina.pdf
 
 typedef struct quadruple {
+	int op;
+	int op1;
+	int op2;
+	int res;
+} quad;
 
 
-
-
-
-} 

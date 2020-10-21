@@ -217,7 +217,7 @@ int set_attr(Symbol *hash_table[], char *name, char *attr, char *value) {
 			s->type = (char*) calloc( strlen( value ), sizeof( char ) );
 			strcpy( s->type, value );
 		} else if ( strcmp("scope", attr) == 0) {
-			s->type = (char*) calloc( strlen( value ), sizeof( char ) );
+			s->scope = (char*) calloc( strlen( value ), sizeof( char ) );
 			strcpy( s->type, value );
 		} else {
 			printf("Attribute %s doesnt exist.\n", attr);
@@ -254,7 +254,7 @@ char *get_attr(Symbol *hash_table[], char *name) {
 
 	Symbol *s = lookup(hash_table, name);
 
-	return ( s ) ? s->type : NULL; 
+	return ( s ) ? s->type : NULL;
 
 }
 

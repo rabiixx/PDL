@@ -53,12 +53,12 @@ Gramática
    18 lista_d_tipo: BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo
    19             | %empty
 
-   20 d_tipo: BI_TUPLA lista_campos BI_FTUPLA
-   21       | BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
-   22       | BI_IDENTIFICADOR
+   20 d_tipo: tipo_base
+   21       | BI_IDENTIFICADOR
+   22       | BI_REF d_tipo
    23       | expresion_t BI_SUBRANGO expresion_t
-   24       | BI_REF d_tipo
-   25       | tipo_base
+   24       | BI_TUPLA lista_campos BI_FTUPLA
+   25       | BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
 
    26 expresion_t: expresion
    27            | BI_LIT_CARACTER
@@ -212,12 +212,12 @@ BI_SI (281) 93
 BI_FSI (282) 93
 BI_TIPO (283) 15
 BI_FTIPO (284) 15
-BI_TUPLA (285) 20
-BI_FTUPLA (286) 20
+BI_TUPLA (285) 24
+BI_FTUPLA (286) 24
 BI_VAR (287) 17
 BI_FVAR (288) 17
 BI_CONTINUAR (289) 87
-BI_DE (290) 21
+BI_DE (290) 25
 BI_DEV (291) 101
 BI_DIV (292) 62
 BI_ENT (293) 50 106
@@ -225,9 +225,9 @@ BI_E_S (294) 108
 BI_FALSO (295) 78
 BI_HACER (296) 98 99
 BI_HASTA (297) 99
-BI_REF (298) 24 84
+BI_REF (298) 22 84
 BI_SAL (299) 51 107
-BI_TABLA (300) 21
+BI_TABLA (300) 25
 BI_VERDADERO (301) 77
 BI_Y (302) 73
 BI_O (303) 74
@@ -235,14 +235,14 @@ BI_NO (304) 75
 BI_ASIGNACION (305) 92 99
 BI_COMP_SEQ (306) 1 15 16 17 18 28 40 42 43 85 103 104
 BI_SEPARADOR (307) 45 111
-BI_SUBRANGO (308) 21 23
+BI_SUBRANGO (308) 23 25
 BI_DEF_TYPEVAR (309) 28 42 43 106 107 108
 BI_ENTONCES (310) 93 94
 BI_CREACION_TIPO (311) 18 40
 BI_SINOSI (312)
-BI_INI_ARRAY (313) 21 83 94
-BI_FIN_ARRAY (314) 21 83 94
-BI_IDENTIFICADOR (315) 1 18 22 28 40 42 45 46 81 99 102 103 109 110
+BI_INI_ARRAY (313) 25 83 94
+BI_FIN_ARRAY (314) 25 83 94
+BI_IDENTIFICADOR (315) 1 18 21 28 40 42 45 46 81 99 102 103 109 110
 BI_PUNTO (316) 82
 BI_PAR_APER (317) 63 80 102 103 109 110
 BI_PAR_CIER (318) 63 80 103 109 110
@@ -286,14 +286,14 @@ declaracion_var (85)
 lista_d_tipo (86)
     en la izquierda: 18 19, en la derecha: 15 18
 d_tipo (87)
-    en la izquierda: 20 21 22 23 24 25, en la derecha: 18 21 24 28
+    en la izquierda: 20 21 22 23 24 25, en la derecha: 18 22 25 28
     43 106 107 108
 expresion_t (88)
-    en la izquierda: 26 27, en la derecha: 21 23
+    en la izquierda: 26 27, en la derecha: 23 25
 lista_campos (89)
-    en la izquierda: 28 29, en la derecha: 20 28
+    en la izquierda: 28 29, en la derecha: 24 28
 tipo_base (90)
-    en la izquierda: 30 31 32 33 34, en la derecha: 25
+    en la izquierda: 30 31 32 33 34, en la derecha: 20
 literal (91)
     en la izquierda: 35 36 37 38 39, en la derecha: 40
 lista_d_cte (92)
@@ -1165,7 +1165,7 @@ Estado 81
 
 Estado 82
 
-   20 d_tipo: BI_TUPLA . lista_campos BI_FTUPLA
+   24 d_tipo: BI_TUPLA . lista_campos BI_FTUPLA
 
     BI_IDENTIFICADOR  desplazar e ir al estado 123
 
@@ -1183,7 +1183,7 @@ Estado 83
 
 Estado 84
 
-   24 d_tipo: BI_REF . d_tipo
+   22 d_tipo: BI_REF . d_tipo
 
     BI_LIT_ENTERO     desplazar e ir al estado 74
     BI_LIT_REAL       desplazar e ir al estado 75
@@ -1216,7 +1216,7 @@ Estado 84
 
 Estado 85
 
-   21 d_tipo: BI_TABLA . BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
+   25 d_tipo: BI_TABLA . BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
 
     BI_INI_ARRAY  desplazar e ir al estado 126
 
@@ -1251,13 +1251,13 @@ Estado 87
 
 Estado 88
 
-   22 d_tipo: BI_IDENTIFICADOR .
+   21 d_tipo: BI_IDENTIFICADOR .
    81 operando: BI_IDENTIFICADOR .
   110 funcion_ll: BI_IDENTIFICADOR . BI_PAR_APER l_ll BI_PAR_CIER
 
     BI_PAR_APER  desplazar e ir al estado 129
 
-    BI_COMP_SEQ  reduce usando la regla 22 (d_tipo)
+    BI_COMP_SEQ  reduce usando la regla 21 (d_tipo)
     $default     reduce usando la regla 81 (operando)
 
 
@@ -1314,9 +1314,9 @@ Estado 92
 
 Estado 93
 
-   25 d_tipo: tipo_base .
+   20 d_tipo: tipo_base .
 
-    $default  reduce usando la regla 25 (d_tipo)
+    $default  reduce usando la regla 20 (d_tipo)
 
 
 Estado 94
@@ -1742,21 +1742,21 @@ Estado 123
 
 Estado 124
 
-   20 d_tipo: BI_TUPLA lista_campos . BI_FTUPLA
+   24 d_tipo: BI_TUPLA lista_campos . BI_FTUPLA
 
     BI_FTUPLA  desplazar e ir al estado 176
 
 
 Estado 125
 
-   24 d_tipo: BI_REF d_tipo .
+   22 d_tipo: BI_REF d_tipo .
 
-    $default  reduce usando la regla 24 (d_tipo)
+    $default  reduce usando la regla 22 (d_tipo)
 
 
 Estado 126
 
-   21 d_tipo: BI_TABLA BI_INI_ARRAY . expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
+   25 d_tipo: BI_TABLA BI_INI_ARRAY . expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
 
     BI_LIT_ENTERO     desplazar e ir al estado 74
     BI_LIT_REAL       desplazar e ir al estado 75
@@ -2163,7 +2163,7 @@ Estado 154
 
 Estado 155
 
-   22 d_tipo: BI_IDENTIFICADOR .
+   21 d_tipo: BI_IDENTIFICADOR .
    42 lista_d_var: lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR . BI_COMP_SEQ lista_d_var
    81 operando: BI_IDENTIFICADOR .
   110 funcion_ll: BI_IDENTIFICADOR . BI_PAR_APER l_ll BI_PAR_CIER
@@ -2171,7 +2171,7 @@ Estado 155
     BI_COMP_SEQ  desplazar e ir al estado 192
     BI_PAR_APER  desplazar e ir al estado 129
 
-    BI_COMP_SEQ  [reduce usando la regla 22 (d_tipo)]
+    BI_COMP_SEQ  [reduce usando la regla 21 (d_tipo)]
     $default     reduce usando la regla 81 (operando)
 
 
@@ -2446,14 +2446,14 @@ Estado 175
 
 Estado 176
 
-   20 d_tipo: BI_TUPLA lista_campos BI_FTUPLA .
+   24 d_tipo: BI_TUPLA lista_campos BI_FTUPLA .
 
-    $default  reduce usando la regla 20 (d_tipo)
+    $default  reduce usando la regla 24 (d_tipo)
 
 
 Estado 177
 
-   21 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t . BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
+   25 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t . BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo
 
     BI_SUBRANGO  desplazar e ir al estado 207
 
@@ -2815,7 +2815,7 @@ Estado 206
 
 Estado 207
 
-   21 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO . expresion_t BI_FIN_ARRAY BI_DE d_tipo
+   25 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO . expresion_t BI_FIN_ARRAY BI_DE d_tipo
 
     BI_LIT_ENTERO     desplazar e ir al estado 74
     BI_LIT_REAL       desplazar e ir al estado 75
@@ -3039,7 +3039,7 @@ Estado 222
 
 Estado 223
 
-   21 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t . BI_FIN_ARRAY BI_DE d_tipo
+   25 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t . BI_FIN_ARRAY BI_DE d_tipo
 
     BI_FIN_ARRAY  desplazar e ir al estado 231
 
@@ -3118,7 +3118,7 @@ Estado 230
 
 Estado 231
 
-   21 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY . BI_DE d_tipo
+   25 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY . BI_DE d_tipo
 
     BI_DE  desplazar e ir al estado 234
 
@@ -3162,7 +3162,7 @@ Estado 233
 
 Estado 234
 
-   21 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE . d_tipo
+   25 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE . d_tipo
 
     BI_LIT_ENTERO     desplazar e ir al estado 74
     BI_LIT_REAL       desplazar e ir al estado 75
@@ -3223,9 +3223,9 @@ Estado 236
 
 Estado 237
 
-   21 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo .
+   25 d_tipo: BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo .
 
-    $default  reduce usando la regla 21 (d_tipo)
+    $default  reduce usando la regla 25 (d_tipo)
 
 
 Estado 238

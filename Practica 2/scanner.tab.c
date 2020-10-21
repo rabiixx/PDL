@@ -66,8 +66,16 @@
 
 	/* fichero scanner.y */
 	#include <stdio.h>
+	#include <stdbool.h>
+	#include "libs/hash_table.h"
 
-#line 71 "scanner.tab.c" /* yacc.c:339  */
+	Symbol *hash_table[HT_SIZE];
+
+	Stack stack;
+
+
+
+#line 79 "scanner.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -190,7 +198,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 194 "scanner.tab.c" /* yacc.c:358  */
+#line 202 "scanner.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -494,18 +502,18 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    91,    91,    94,    97,   100,   101,   102,   105,   106,
-     107,   110,   113,   114,   115,   116,   120,   123,   126,   130,
-     131,   134,   135,   136,   137,   138,   139,   142,   143,   147,
-     148,   151,   152,   153,   154,   155,   158,   159,   160,   161,
-     162,   165,   166,   170,   171,   172,   175,   176,   179,   180,
-     181,   184,   187,   193,   194,   195,   198,   199,   202,   203,
-     204,   205,   206,   207,   208,   209,   210,   211,   214,   215,
-     216,   217,   218,   219,   222,   223,   224,   225,   226,   227,
-     228,   229,   231,   232,   233,   234,   240,   241,   244,   245,
-     246,   247,   248,   251,   254,   257,   258,   261,   262,   265,
-     268,   273,   276,   279,   282,   285,   286,   289,   290,   291,
-     294,   297,   300,   301
+       0,    96,    96,    99,   102,   105,   106,   107,   110,   111,
+     112,   115,   118,   119,   120,   121,   135,   138,   141,   156,
+     157,   182,   186,   190,   191,   192,   193,   196,   197,   201,
+     202,   205,   206,   207,   208,   209,   220,   227,   231,   234,
+     238,   250,   261,   268,   318,   319,   348,   366,   380,   381,
+     382,   389,   392,   398,   399,   400,   403,   404,   407,   408,
+     409,   410,   411,   412,   413,   414,   415,   416,   419,   420,
+     421,   422,   423,   424,   427,   428,   429,   430,   431,   432,
+     433,   434,   437,   438,   439,   440,   446,   447,   450,   451,
+     452,   453,   454,   457,   460,   463,   464,   467,   468,   471,
+     474,   479,   482,   485,   488,   491,   492,   495,   496,   497,
+     500,   503,   506,   507
 };
 #endif
 
@@ -613,21 +621,21 @@ static const yytype_uint8 yydefact[] =
       45,    45,     0,    48,    50,     8,     9,    36,    37,    38,
       39,    40,     0,    17,    56,    57,    28,    31,    32,    33,
       34,    35,    30,    79,     0,     0,    78,     0,    82,     0,
-       0,     0,     0,    26,    27,    66,    53,    54,    65,    55,
+       0,     0,     0,    21,    27,    66,    53,    54,    65,    55,
       16,     0,     0,     0,    82,     0,     0,     0,     0,    85,
        0,     0,     0,     0,   106,     0,    45,     0,    51,    52,
-       3,    49,    42,     0,     0,    25,     0,     0,    76,     0,
+       3,    49,    42,     0,     0,    23,     0,     0,    76,     0,
       53,    54,    82,     0,    67,    65,    20,     0,    71,    70,
       73,    72,    68,    69,     0,     0,     0,     0,    60,     0,
        0,     0,     0,    46,    18,    82,     0,     0,     0,     0,
      113,     0,    93,     0,    83,    86,     0,     0,     0,   103,
-       0,   101,     0,     0,    41,     0,    21,     0,     0,    64,
+       0,   101,     0,     0,    41,     0,    25,     0,     0,    64,
       81,     0,    19,    24,    80,    63,    58,    59,    61,    62,
       74,    75,    45,    45,     0,     0,    96,     0,   110,    84,
        0,     0,     0,   106,     0,     0,     0,     0,   111,    43,
       44,    99,     0,     0,     0,   112,     0,     0,     0,   105,
      104,   102,    30,     0,     0,     0,    94,   107,   109,   108,
-      29,     0,     0,     0,     0,     0,     0,    22,   100,    96,
+      29,     0,     0,     0,     0,     0,     0,    26,   100,    96,
       95
 };
 
@@ -659,7 +667,7 @@ static const yytype_int16 yytable[] =
       44,   125,   165,   177,   178,   105,     1,   107,   221,   118,
      119,   151,   152,   153,   183,     3,   109,   128,     5,   131,
      156,   145,   109,   110,    39,     6,    40,   180,    41,   130,
-     134,   111,    23,   -23,   112,     7,    42,   111,    24,    16,
+     134,   111,    23,   -22,   112,     7,    42,   111,    24,    16,
      112,    60,    74,    75,   129,     4,   194,    61,   196,    12,
      148,   149,   150,   127,    14,   127,   138,   139,   140,   141,
      142,   143,    43,    10,   192,   172,   151,   152,    10,    10,
@@ -781,7 +789,7 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     6,     4,     2,     2,     2,     0,     2,     2,
        0,     2,     2,     2,     2,     0,     4,     4,     4,     5,
-       0,     3,     8,     1,     3,     2,     1,     1,     1,     5,
+       0,     1,     1,     2,     3,     3,     8,     1,     1,     5,
        0,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     5,     0,     5,     5,     0,     3,     1,     1,     2,
        1,     2,     2,     1,     1,     1,     1,     1,     3,     3,
@@ -1466,8 +1474,176 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1471 "scanner.tab.c" /* yacc.c:1646  */
+        case 21:
+#line 183 "scanner.y" /* yacc.c:1646  */
+    {
+
+				}
+#line 1483 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 187 "scanner.y" /* yacc.c:1646  */
+    {
+
+				}
+#line 1491 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 221 "scanner.y" /* yacc.c:1646  */
+    {
+
+					printf("LITERAL_ENTERO");
+
+					(yyval) = INTEGER;
+				}
+#line 1502 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 37:
+#line 228 "scanner.y" /* yacc.c:1646  */
+    {
+					(yyval) = FLOAT;
+				}
+#line 1510 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 38:
+#line 231 "scanner.y" /* yacc.c:1646  */
+    {
+					(yyval) = BOOLEAN;
+				}
+#line 1518 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 39:
+#line 234 "scanner.y" /* yacc.c:1646  */
+    {
+
+					(yyval) = CHARACTER;
+				}
+#line 1527 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 40:
+#line 238 "scanner.y" /* yacc.c:1646  */
+    {
+					(yyval) = STRING;
+				}
+#line 1535 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 41:
+#line 251 "scanner.y" /* yacc.c:1646  */
+    {
+
+					/** 
+					  * We insert the identifier into the symbol table and we define its scope and type.
+					  * in this case scope will be, const. The type is returned by literal grammar rule 
+					  */
+					insertSymbol(st, (yyvsp[-4]));
+					set_attr(st, (yyvsp[-4]), "scope", "cte");
+					set_attr(st, (yyvsp[-4]), "type", (yyvsp[-2]))
+				}
+#line 1550 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 43:
+#line 268 "scanner.y" /* yacc.c:1646  */
+    {
+
+				/* Debug */
+				if ( lookup(st, (yyvsp[-2])) ) {
+
+					char *type;
+
+					if ( ( type = get_attr(st, %3) ) ) {
+						
+						/* 
+						 * Now we need to assign type to all identifiers reduced by lista_id grammar rule.
+						 * Those identifiers have been added to symbol table and they have been added to 
+						 * stack. For each identifier, we set the type and we remove it from the stack.
+						 */
+
+						while ( !esNulaPila( stack ) ) {
+
+							char *id = cima( stack );
+
+							if ( set_attr(st, id, type) == -1 ) {
+								printf("Identifier %s is not in the symbol table", id);
+							}
+
+							desapilar( stack );
+
+						}
+
+					} else {
+						printf("Symbol %s type is not defined\n", (yyvsp[-2]));
+					}
+
+
+				} else {
+					printf("The symbol %s doesnt seem to be decalred\n", (yyvsp[-2]));
+				}
+
+
+				/* 
+				 * get_attr() function includes lookup, so its not necessary 
+				 * to make a lookup before get_attr(). In this case is done for
+				 * debugginf reesons 
+				 */
+				if ( get_attr(st, %3) ) {
+
+				} else {
+					printf("Symbol %s type is not defined\n", (yyvsp[-2]));
+				}
+
+
+}
+#line 1605 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 46:
+#line 349 "scanner.y" /* yacc.c:1646  */
+    {
+
+					if ( !lookup(st, (yyvsp[-2])) ) {
+
+						insertSymbol(st, (yyvsp[-2]));
+						
+						/* 
+						 * We add identifiers to stack, to be able to set their type
+						 * when we know it 
+						 */
+						apilar(stack, (yyvsp[-2]));
+
+
+					} else {
+						printf("Identifier alredy exists")
+					}
+				}
+#line 1627 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 47:
+#line 367 "scanner.y" /* yacc.c:1646  */
+    {
+
+					if ( !lookup(st, (yyvsp[0])) ) {
+						
+						insertSymbol(st, (yyvsp[0]));
+						apilar(stack, (yyvsp[0]));
+
+					} else {
+						printf("Identifier alredy exists")
+					}
+				}
+#line 1643 "scanner.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1647 "scanner.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1695,10 +1871,19 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 314 "scanner.y" /* yacc.c:1906  */
+#line 512 "scanner.y" /* yacc.c:1906  */
 
 
 
+int main(int argc, char const *argv[])
+{
+	
+	for (int i = 0; i < sizeof(hash_table) / sizeof(hash_table[0]); ++i)
+		hash_table[i] = NULL;
+
+
+	return 0;
+}
 
 
 

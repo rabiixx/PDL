@@ -134,6 +134,11 @@ ftipo;
 */
 declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
 					;
+/* 
+const
+	
+fconst;
+*/
 
 declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST BI_COMP_SEQ
 					;
@@ -148,12 +153,12 @@ declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
 
 	x = 
 
-
-
-
-
 */
 lista_d_tipo	:	BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo
+				{
+
+
+				}
 				| 	/* cadena vacia */
 				;
 
@@ -165,7 +170,7 @@ G4: tupla
 		x : 1..N;
 		x : ref y;
 		x : entero;
-		x = 
+		x = tupla
 	ftupla
 	
 State analiysis
@@ -175,38 +180,75 @@ State analiysis
 	GR3.1: x = ref entero ( gramatica incorrecta )
 	GR3.2: x = ref y;
 	GR3.3: x = ref ref ref ...
-
-
+	tabla[1+2..5-3] de 
 */
+
 
 d_tipo 			:	tipo_base 						/* base case */
 				{
-
+					/****duda: es integer? */
 				}
 				|	BI_IDENTIFICADOR 				/* base case */
 				{
+
+					char *type = get_attr(st, $1, "type");
+
+					if ( !type ) {
+						printf("Identifier %s doesnt exist", $1);
+					} else {
+						// strcpy();
+						$$ = type;
+					}
+
 
 				}
 				|	BI_REF d_tipo 								/* recursive by d_tipo */
 				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
 				| 	BI_TUPLA lista_campos BI_FTUPLA				/* recursive by lista_campos */
+				{
+					/* Que devolver ??? tupla*/
+				}
 				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo 	/* recursive by expresion_t and d_tipo */
 				;
 
 expresion_t		: 	expresion
 				|	BI_LIT_CARACTER
 				;
-
+/* x = tupla
+			y : entero;
+	   ftupla
+*/
 
 lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
+				{
+
+					insertSymbol(st, $1);
+					set_attr(st, $1, "type", $3);
+
+				}
 				|	/* cadena vacia */
 				;
 
 tipo_base 		: 	BI_PR_ENTERO
+				{
+					$$ = INTEGER;
+				}
 				|	BI_PR_REAL
+				{
+					$$ = FLOAT;
+				}
 				|	BI_PR_BOOLEANO
+				{
+					$$ = BOOLEAN;
+				}
 				|	BI_PR_CARACTER
+				{
+					$$ = CHARACTER;
+				}
 				|	BI_PR_CADENA
+				{
+					$$ = STRING;
+				}
 				;
 
 
@@ -242,13 +284,18 @@ literal			:	BI_LIT_ENTERO
 
 
 /** 
-  *	CONST 
+  *	CONST
   * 	x = 3.1;
   * 	y = asdas;
-  * FCONST 
+  * FCONST
+
+decla_cte: BI_CTE lista_d_cte B
+
+  x = 2;
   */
 lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 				{
+
 
 					/** 
 					  * We insert the identifier into the symbol table and we define its scope and type.
@@ -460,7 +507,7 @@ asignacion 		:	operando BI_ASIGNACION expresion
 alternativa		:	BI_SI expresion BI_ENTONCES instrucciones lista_opciones BI_FSI
 				;
 
-lista_opciones 	:	BI_INI_ARRAY BI_FIN_ARRAY expresion BI_ENTONCES instrucciones lista_opciones
+lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES instrucciones lista_opciones
 				|	/* cadena vacia */
 				;
 
