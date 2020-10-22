@@ -451,36 +451,51 @@ literal_numerico	:	BI_LIT_ENTERO
 					|	BI_LIT_REAL
 					;
 
-exp_a			:	exp_a BI_SUMA exp_a
-				|	exp_a BI_RESTA exp_a
-				|	exp_a BI_MULTIPLICACION
-				|	exp_a BI_DIVISION exp_a
-				|	exp_a BI_MOD exp_a
-				|	exp_a BI_DIV exp_a
-				|	BI_PAR_APER exp_a BI_PAR_CIER
-				|	operando 
-				|	literal_numerico 
-				|	BI_RESTA exp_a
-				;
-
-oprel			: 	BI_IGUALDAD
-				|	BI_DISTINTO
-				|	BI_MAYOR
-				|	BI_MENOR
-				|	BI_MAYOR_IGUAL
-				|	BI_MENOR_IGUAL
-				;
-
-exp_b 			:	exp_b BI_Y exp_b
-				|	exp_b BI_O exp_b
-				|	BI_NO exp_b
+exp_a_b			:	exp_a_b BI_SUMA exp_a_b
+				|	exp_a_b BI_RESTA exp_a_b
+				|	exp_a_b BI_MULTIPLICACION exp_a_b
+				|	exp_a_b BI_DIVISION exp_a_b
+				|	exp_a_b BI_MOD exp_a_b
+				|	exp_a_b BI_DIV exp_a_b
+				|	BI_PAR_APER exp_a_b BI_PAR_CIER
+				|	literal_numerico
+				|	BI_RESTA exp_a_b
+				|	exp_a_b BI_Y exp_a_b
+				|	exp_a_b BI_O exp_a_b
+				|	BI_PAR_APER exp_a_b BI_PAR_CIER
+				|	BI_NO exp_a_b
+				|	expresion oprel expresion
 				|	operando
 				|	BI_VERDADERO
 				|	BI_FALSO
-				|	expresion oprel expresion
-				|	BI_PAR_APER exp_b BI_PAR_CIER
 				;
-				
+				;
+
+/**
+  * EQ:EQUAL
+  * NE: NOT EQUAL
+  * GE: GREATER THAN
+  * GE: GREATER EQUAL
+  * LT: LESS THAN
+  * LE: LESS EQUAL
+  */
+oprel			: 	BI_IGUALDAD 	{ $$ = EQ }
+				|	BI_DISTINTO 	{ $$ = NE }
+				|	BI_MAYOR 		{ $$ = GT }
+				|	BI_MAYOR_IGUAL 	{ $$ = GE }
+				|	BI_MENOR 		{ $$ = LT }
+				|	BI_MENOR_IGUAL 	{ $$ = LE }
+				;
+
+
+
+/*
+	x
+	person.name
+	arr[5]
+	arr[num]
+*/
+
 operando		:	BI_IDENTIFICADOR
 				|	operando BI_PUNTO operando
 				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
