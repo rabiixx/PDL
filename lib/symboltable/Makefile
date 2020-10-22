@@ -1,3 +1,3 @@
 default:
 	clear
-	gcc -g -o hash_table hash_table.c
+	gcc -g -o symbol_table symbol_table.c

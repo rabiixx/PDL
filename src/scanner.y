@@ -8,7 +8,6 @@
 
 	Stack stack;
 
-
 %}
 
 %token BI_COMENTARIO
