@@ -49,3 +49,14 @@ LinkedList *makelist( Quad *quad );
 
 LinkedList *merge( LinkedList *l1, LinkedList *l2 );
 
+void free_quad_table(Quad **head);
+
+void free_quad_table2(Quad *head);
+
+
+void free_quads_qt(Quad *q);
+
+void deleteList(Quad **q);
+
+
+void deleteList2(QuadTable *q);

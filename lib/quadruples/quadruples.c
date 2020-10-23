@@ -39,7 +39,6 @@ Quad *new_quad(const int op, const int op1, const unsigned int op2, const unsign
 
 }
 
-
 /**
   * Inserts a given quadruple into quadruples table.
   *
@@ -47,11 +46,12 @@ Quad *new_quad(const int op, const int op1, const unsigned int op2, const unsign
   */
 void gen(QuadTable *qt, Quad *quad) {
 
-	if ( qt )
+	if ( !(qt->head) )
 	{
-		qt->head = qt->tail = quad;
-		
-	} else {
+		qt->head = qt->tail = quad;	
+	}
+	else
+	{
 		qt->tail->next = quad;
 		qt->tail = quad;
 	}
@@ -147,8 +147,62 @@ LinkedList *merge( LinkedList *l1, LinkedList *l2 ) {
 	}
 }
 
+void backpatch(LinkedList *list, int q) {
+
+	Node *tmp = list->head;
+
+	while ( tmp ) {
+		tmp->q->res = q;
+		tmp = tmp->next;
+	}
+
+}
 
 
+void free_quad_table(Quad **head) {
+
+	if ( *head )
+	{
+		free_quad_table( & ((*head)->next) );
+		free( *head );
+	}
+
+	//*head = NULL;
+}
+
+/* Function to delete the entire linked list */
+void deleteList(Quad** q) 
+{ 
+
+	Quad* current = *q; 
+	Quad* next; 
+
+	while (current != NULL) 
+	{ 
+		next = current->next; 
+		free(current); 
+		current = next; 
+	} 
+	
+	*q = NULL; 
+}
+
+/* Function to delete the entire linked list */
+void deleteList2(QuadTable *qt) 
+{ 
+
+	Quad* current = qt->head; 
+	Quad* next; 
+
+	while (current != NULL) 
+	{ 
+		next = current->next; 
+		free(current); 
+		current = next; 
+	} 
+	
+	qt->head = NULL;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -156,42 +210,59 @@ int main(int argc, char const *argv[])
 	QuadTable *qt = new_quad_tb();
 	
 	Quad *quad1 = new_quad(99, 1, 2 , 3);
+	Quad *quad2 = new_quad(100, 1, 2 , 3);
+	Quad *quad3 = new_quad(101, 1, 2 , 3);
+	gen(qt, quad1);
+	gen(qt, quad2);
+	gen(qt, quad3);
 
-	printf("quad1: \n");
-	printf("\top: %d\n", quad1->op);
-	printf("\top1: %d\n", quad1->op1);
-	printf("\top2: %d\n", quad1->op2);
-	printf("\tres: %d\n", quad1->res);
-
-
-	Quad *quad2 = (Quad*) calloc(1, sizeof( Quad ) );
+/*	Quad *quad2 = (Quad*) calloc(1, sizeof( Quad ) );
 	*quad2 = *quad1;
-
-	printf("MA quad1: %p\n", quad1);
-	printf("MA quad2: %p\n", quad2);
-
-	printf("quad2: \n");
-	printf("\top: %d\n", quad2->op);
-	printf("\top1: %d\n", quad2->op1);
-	printf("\top2: %d\n", quad2->op2);
-	printf("\tres: %d\n", quad2->res);
-
-	quad2->op = 100;
-
-	printf("quad1: \n");
-	printf("\top: %d\n", quad1->op);
-	printf("\top1: %d\n", quad1->op1);
-	printf("\top2: %d\n", quad1->op2);
-	printf("\tres: %d\n", quad1->res);
-
-	printf("quad2: \n");
-	printf("\top: %d\n", quad2->op);
-	printf("\top1: %d\n", quad2->op1);
-	printf("\top2: %d\n", quad2->op2);
-	printf("\tres: %d\n", quad2->res);
+	quad2->op = 100;*/
 
 
-	LinkedList *list = new_linked_list();
+	Quad *tmp = qt->head;
+	int i = 0;
+
+	while ( tmp ) {
+
+		printf("MA qt[%d]: %p\n", i, tmp);
+		printf("\top: %d\n", tmp->op);
+		printf("\top1: %d\n", tmp->op1);
+		printf("\top2: %d\n", tmp->op2);
+		printf("\tres: %d\n\n", tmp->res);
+		printf("*****************\n");
+
+		tmp = tmp->next;
+		++i;
+	}
+
+
+	//free_quad_table( &(qt->head) );
+	free_quad_table2( qt->head);
+	//free_quads_qt(qt->head);
+	//deleteList( &(qt->head) );
+	//deleteList2( qt );
+
+
+	tmp = qt->head;
+	i = 0;
+
+	while ( tmp ) {
+
+		printf("MA qt[%d]: %p\n", i, tmp);
+		printf("\top: %d\n", tmp->op);
+		printf("\top1: %d\n", tmp->op1);
+		printf("\top2: %d\n", tmp->op2);
+		printf("\tres: %d\n", tmp->res);
+
+		tmp = tmp->next;
+		++i;
+	}
+
+
+
+/*	LinkedList *list = new_linked_list();
 	
 	Node *node1 = new_node(quad1);
 	Node *node2 = new_node(quad2);
@@ -214,11 +285,12 @@ int main(int argc, char const *argv[])
 
 		tmp = tmp->next;
 		++i;
-	}
+	}*/
+
+
 
 
 	return 0;
 }
-
 
 
