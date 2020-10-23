@@ -12,14 +12,33 @@ typedef struct quadruple {
 	struct quead *queadnext; 
 } Quad;
 
-typedef struct _QuadTable
-{
+typedef struct _QuadTable {
 	struct quead *head;
 	struct quead *tail;
-	int size;
+	unsigned int size;
 } QuadTable;
+
+
+typedef struct _node {
+	Quad *q;
+	struct Node *next; 
+} Node;
+
+
+typedef struct _linkedList {
+	Node *head;
+	Node *tail;
+	unsigned int size;
+} LinkedList;
+
 
 
 QuadTable *new_quad_tb();
 
 Quad *new_quad(const int op, const int op1, const unsigned int op2, const unsigned int res);
+
+Node *new_node( Quad *quad );
+
+LinkedList *new_linked_list();
+
+LinkedList *makelist( Quad *quad );
