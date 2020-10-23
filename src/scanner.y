@@ -468,7 +468,10 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				|	BI_VERDADERO
 				|	BI_FALSO
 				;
-				;
+
+/* The variable nextquad (M.quad) holds the index of the next quadruple to follow. */
+M 				: /* empty */ { $$ = next_quad() }
+
 
 /**
   * EQ:EQUAL
