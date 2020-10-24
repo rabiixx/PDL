@@ -464,42 +464,73 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				|	BI_PAR_APER exp_a_b BI_PAR_CIER
 				|	BI_NO exp_a_b
 				|	expresion oprel expresion
+				{
+
+					/**
+					 * Production: E --> id1 relop id2
+					 * { 	E.truelist := makelist( nextaddr )
+					 * 		E.falselist := makelist( nextaddr + 1)
+					 *		emit( 'if' id1.place relop.op id2.place 'goto_')
+					 *		emit( 'goto' )
+					 * }
+					 */
+					
+
+
+				}
 				|	operando
 				|	BI_VERDADERO
 				{
+					/** 
+					  * Production: E --> true
+					  * { E.truelist := makelist(nextaddr) } 
+					  * 
+					  */
+					$$ = new_exp_a_b(BOOLEAN);
+					$$->s = new_symbol("_tmp");
+					$$->s->type = BOOLEAN;
+      				/*$$->s->value.bool = $1;*/
+      				insert_symbol_st(st, $$->s);
 
+					Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_TRUE, NOTGOTO);
+					gen(qt, quad);
+					$$->truelist = makelist( quad );
 
-				$$ = new_exp_a_b(BOOLEAN);
-				$$->s = new_symbol("_tmp");
-				set_attr(st, type, "_tmp");
-
-				
 
 				}
 				|	BI_FALSO
 				{
+					/** 
+					  * Production: E --> false
+					  * { E.falselist := makelist(nextaddr) } 
+					  * 
+					  */
+					$$ = new_exp_a_b(BOOLEAN);
+					$$->s = new_symbol("_tmp");
+					$$->s->type = BOOLEAN;
+      				/*$$->s->value.bool = $1;*/
+      				insert_symbol_st(st, $$->s);
+
+					Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_FALSE, NOTGOTO);
+					gen(qt, quad);
+					$$->falselist = makelist( quad );
 
 				}
 				;
+
+
 
 /* The variable nextquad (M.quad) holds the index of the next quadruple to follow. */
 M 				: /* empty */ { $$ = next_quad() }
 
 
-/**
-  * EQ:EQUAL
-  * NE: NOT EQUAL
-  * GE: GREATER THAN
-  * GE: GREATER EQUAL
-  * LT: LESS THAN
-  * LE: LESS EQUAL
-  */
-oprel			: 	BI_IGUALDAD 	{ $$ = EQ }
-				|	BI_DISTINTO 	{ $$ = NE }
-				|	BI_MAYOR 		{ $$ = GT }
-				|	BI_MAYOR_IGUAL 	{ $$ = GE }
-				|	BI_MENOR 		{ $$ = LT }
-				|	BI_MENOR_IGUAL 	{ $$ = LE }
+
+oprel			: 	BI_IGUALDAD 	{ $$ = QUAD_OP_EQ }
+				|	BI_DISTINTO 	{ $$ = QUAD_OP_NE }
+				|	BI_MAYOR 		{ $$ = QUAD_OP_GT }
+				|	BI_MAYOR_IGUAL 	{ $$ = QUAD_OP_GE }
+				|	BI_MENOR 		{ $$ = QUAD_OP_LT }
+				|	BI_MENOR_IGUAL 	{ $$ = QUAD_OP_LE }
 				;
 
 

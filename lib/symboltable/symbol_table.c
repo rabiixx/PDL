@@ -1,15 +1,20 @@
 #include "symbol_table.h"
 
-Symbol *new_hash_table( const unsigned int SIZE ) {
+static unsigned int hash(const char *str) {
 
-	Symbol *table[ 2 ][ SIZE ];
+	int sum = 0;
+
+	for (int i = 0; i < strlen(str); ++i)
+		sum += (int) *(str + i); 
 	
-	for (int i = 0; i < SIZE; ++i) {
-		table[0][i] = NULL;
-		table[1][i] = 0;
-	}
+	return (unsigned int) sum % HT_SIZE;
+}
 
-	return table;
+void init_symbol_table( Symbol *table[] ) {
+
+	for (int i = 0; i < HT_SIZE; ++i)
+		table[ i ] = NULL;
+
 }
 
 
@@ -25,29 +30,26 @@ Symbol *new_symbol( char *name ) {
 	return s;
 }
 
-void insertSymbol(Symbol table[2][], char *name) {
+void add_symbol(Symbol *table[], char *name) {
 
-
-	static int numSymbols = 
 
 	const unsigned int index = hash( name );
 	
-	if ( table[ 0 ][ index ] == NULL )
+	if ( table[ index ] == NULL )
 	{
-		table[ 0 ][ index ] = new_symbol( name );
+		table[ index ] = new_symbol( name );
+		table[ index ]->id = NUMSYM++;
 
 	} else {
 
-		Symbol *tmp = hash_table[ 0 ][ index ];
+		Symbol *tmp = table[ index ];
 
 		while ( tmp->next != NULL ) { tmp = tmp->next; }
 
 		tmp->next = new_symbol( name );
+		tmp->next->id = NUMSYM++;
 	}
 	
-	++table[ 1 ][ index ];
-	table[ 0 ][ index ]->id = table[ 1 ][ index ];
-
 }
 
 
@@ -58,9 +60,9 @@ void insertSymbol(Symbol table[2][], char *name) {
  * @return -1: if symbol doesnt exist 
  * @return 0: if symbol has been removed successfully 
  */
-int deleteSymbol(Symbol *table[2][], const char *name) {
+int remove_symbol(Symbol *table[], const char *name) {
 	
-	Symbol **link = &table[ 0 ][ hash( name ) ];
+	Symbol **link = &table[ hash( name ) ];
 
     while (*link) 
     {
@@ -69,7 +71,7 @@ int deleteSymbol(Symbol *table[2][], const char *name) {
         {
             *link = tmp->next;
 			free(tmp);
-            ++table[ 1 ][ hash( name ) ];
+            --NUMSYM;
             return 0;
         }
         else
@@ -171,37 +173,18 @@ char *get_attr(Symbol *table[], char *name, char *attr) {
 
 }
 
-static unsigned int hash(const char *str) {
-
-	int sum = 0;
-
-	for (int i = 0; i < strlen(str); ++i)
-		sum += (int) *(str + i); 
-	
-	return (unsigned int) sum % HT_SIZE;
-}
-
-static int get_num_symbol( Symbol *table[] ) {
-
-	int sum = 0;
-	for (int i = 0; i < sizeof( table ) / sizeof( table[0]); ++i)
-		sum += table[i];
-
-	return sum;
-
-}
 
 
-void printHt(Symbol *hash_table[])
+void print_symbol_table(Symbol *table[])
 {
 
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < HT_SIZE; ++i)
 	{
 
-		printf("%p: hash_table[%d]: %p\n", &hash_table[i], i, hash_table[i]);
-		if ( hash_table[i] )
+		printf("%p: symbol_table[%d]: %p\n", &table[i], i, table[i]);
+		if ( table[i] )
 		{
-			Symbol *tmp = hash_table[i];
+			Symbol *tmp = table[i];
 			while ( tmp != NULL ) {
 				printf("\t%p: %s\n", tmp, tmp->name);
 				tmp = tmp->next;
@@ -211,34 +194,54 @@ void printHt(Symbol *hash_table[])
 
 }
 
-/*int main(int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
 
+	Symbol *table[ 5 ];
+
+	init_symbol_table( table );
+
+	add_symbol(table, "rabiixx");	// 4
+	add_symbol(table, "rabiixx2");	// 4
+	add_symbol(table, "rabiixx13");	// 4
+	add_symbol(table, "root");		// 2
+	add_symbol(table, "rabiixx16");	// 2
+	add_symbol(table, "rabiixx11");	// 2
+	add_symbol(table, "rabiixx14");	// 0
+
+
+	print_symbol_table(table);
 	
+	if ( lookup(table, "rabiixx") )
+	{
+		printf("symbol exist \n");
+	} else {
+		printf("symbol not exist \n");
+	}
 
-	insertSymbol(hash_table, "rabiixx");	// 4
-	insertSymbol(hash_table, "rabiixx2");	// 4
-	insertSymbol(hash_table, "rabiixx13");	// 4
-	insertSymbol(hash_table, "root");		// 2
-	insertSymbol(hash_table, "rabiixx11");	// 2
 
-	lookup(hash_table, "rabiixx");
-	lookup(hash_table, "rabiixx2");
-	lookup(hash_table, "rabiixx7");
+	if ( lookup(table, "rabiixx2") )
+	{
+		printf("symbol exist \n");
+	} else {
+		printf("symbol not exist \n");
+	}
 
-	printHt(hash_table);
+	if ( lookup(table, "rabiixx19") )
+	{
+		printf("symbol exist \n");
+	} else {
+		printf("symbol not exist \n");
+	}
+
 
 	printf("\n\n");
 
-	//deleteSymbol(hash_table, "rabiixx");
-	//deleteSymbol(hash_table, "rabiixx13");
-	deleteSymbol(hash_table, "rabiixx13");
+	remove_symbol(table, "rabiixx");
 	
 	printf("\n\n");
-//	set_attr(hash_table, "rabiixx", "julio");
-
-	printHt(hash_table);
+	print_symbol_table(table);
 
 
 	return 0;
-}*/
+}

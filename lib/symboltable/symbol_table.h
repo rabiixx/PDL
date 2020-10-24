@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*====================================
 =            Symbol Table            =
@@ -65,19 +66,18 @@ typedef struct Symbol {
 	} value;
 } Symbol;
 
-type
-
+unsigned int NUMSYM = 0;
 
 
 /*----------  Function Declaration  ----------*/
 
-Symbol *new_hash_table( const unsigned int SIZE );
+void init_symbol_table( Symbol *table[] );
 
 Symbol *new_symbol(char *name);
 
-void insertSymbol(Symbol table[2][], char *name);
+void add_symbol(Symbol *table[], char *name);
 
-int deleteSymbol(Symbol *table[2][], const char *name);
+int remove_symbol(Symbol *table[], const char *name);
 
 Symbol *lookup(Symbol *table[], char *name);
 
@@ -88,12 +88,8 @@ char *get_attr(Symbol *table[], char *name, char *attr);
 
 /*----------  Utils  ----------*/
 
-static unsigned int hash(const char *);
+static unsigned int hash(const char *str);
 
-void printHt(Symbol *table[]);
-
-static int get_num_symbol( Symbol *table[] );
-
-
+void print_symbol_table(Symbol *table[]);
 
 /*=====  Symbol Table  ======*/
