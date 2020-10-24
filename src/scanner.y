@@ -466,7 +466,20 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				|	expresion oprel expresion
 				|	operando
 				|	BI_VERDADERO
+				{
+
+
+				$$ = new_exp_a_b(BOOLEAN);
+				$$->s = new_symbol("_tmp");
+				set_attr(st, type, "_tmp");
+
+				
+
+				}
 				|	BI_FALSO
+				{
+
+				}
 				;
 
 /* The variable nextquad (M.quad) holds the index of the next quadruple to follow. */
@@ -579,8 +592,7 @@ l_ll			:	expresion BI_SEPARADOR l_ll
 int main(int argc, char const *argv[])
 {
 	
-	for (int i = 0; i < sizeof(hash_table) / sizeof(hash_table[0]); ++i)
-		hash_table[i] = NULL;
+	init_symbol_table( st );
 
 
 	return 0;

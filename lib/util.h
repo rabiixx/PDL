@@ -8,3 +8,10 @@ typedef enum {
 	DIVENT,			/* INTEGER DIVISION */
 	DIVREAL,		/* REAL DIVISION */
 } operators;
+
+
+typedef enum {
+	BOOLEAN,
+	ARITHMETIC,
+	UNDEFINED
+} Expression_type;

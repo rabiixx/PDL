@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*====================================
+=            Symbol Table            =
+====================================*/
 
 /* MACROS */
 #define HT_SIZE 5
@@ -18,6 +21,9 @@
 #define CTE 3
 
 /* Data Structures */
+
+/*----------  Data Structures  ----------*/
+
 
 /* Variables */
 typedef struct Variable {
@@ -45,7 +51,7 @@ typedef struct Label {
 } Label;
 
 typedef struct Symbol {
-	char *id;
+	int id;
 	char *name;
 	char *type;
 	char *scope;
@@ -59,21 +65,35 @@ typedef struct Symbol {
 	} value;
 } Symbol;
 
+type
 
-unsigned int hash(const char *);
 
-Symbol *new_symbol(char *);
 
-void insertSymbol(Symbol *table[], char *name);
+/*----------  Function Declaration  ----------*/
 
-int deleteSymbol(Symbol *hash_table[], const char *name);
+Symbol *new_hash_table( const unsigned int SIZE );
 
-Symbol *lookup(Symbol *hast_table[], char *name);
+Symbol *new_symbol(char *name);
 
-int set_attr(Symbol *hash_table[], char *name, char *attr);
+void insertSymbol(Symbol table[2][], char *name);
 
-char *get_attr(Symbol *hash_table[], char *name);
+int deleteSymbol(Symbol *table[2][], const char *name);
 
-void printHt(Symbol *hash_table[]);
+Symbol *lookup(Symbol *table[], char *name);
 
-void delete(Symbol *table[], const char *key);
+int set_attr(Symbol *table[], char *name, char *attr, char *value);
+
+char *get_attr(Symbol *table[], char *name, char *attr);
+
+
+/*----------  Utils  ----------*/
+
+static unsigned int hash(const char *);
+
+void printHt(Symbol *table[]);
+
+static int get_num_symbol( Symbol *table[] );
+
+
+
+/*=====  Symbol Table  ======*/
