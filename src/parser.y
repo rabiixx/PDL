@@ -451,38 +451,317 @@ literal_numerico	:	BI_LIT_ENTERO
 					;
 
 exp_a_b			:	exp_a_b BI_SUMA exp_a_b
+				{
+
+					$$ = new_exp_a_b(ARITHMETIC_EXP);
+					$$->s = new_symbol("_tmp");
+					add_symbol(st, $$->s);
+
+					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					{
+						$$->s->type = DATA_TYPE_INTEGER;
+						Quad *quad = new_quad(QUAD_OP_INTSUM, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+
+					}
+					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					{
+						$$->s->type = DATA_TYPE_REAL;
+						Quad *quad = new_quad(QUAD_OP_REALSUM, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+					}
+					else if ( $1->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUM, $$->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( $3->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUM, $$->s->id, $1->s->id, $$->s->id);
+						
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $1->s->type == DATA_TYPE_BOOLEAN ))
+					{
+
+					}
+
+				}
 				|	exp_a_b BI_RESTA exp_a_b
+				{
+					$$ = new_exp_a_b(ARITHMETIC_EXP);
+					$$->s = new_symbol("_tmp");
+					add_symbol(st, $$->s);
+
+					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					{
+						$$->s->type = DATA_TYPE_INTEGER;
+						Quad *quad = new_quad(QUAD_OP_INTSUBS, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+
+					}
+					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					{
+						$$->s->type = DATA_TYPE_REAL;
+						Quad *quad = new_quad(QUAD_OP_REALSUBS, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+					}
+					else if ( $1->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUBS, $$->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( $3->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUBS, $$->s->id, $1->s->id, $$->s->id);
+						
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $1->s->type == DATA_TYPE_BOOLEAN ))
+					{
+
+					}
+				}
 				|	exp_a_b BI_MULTIPLICACION exp_a_b
+				{
+					$$ = new_exp_a_b(ARITHMETIC_EXP);
+					$$->s = new_symbol("_tmp");
+					add_symbol(st, $$->s);
+
+					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					{
+						$$->s->type = DATA_TYPE_INTEGER;
+						Quad *quad = new_quad(QUAD_OP_INTMULT, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+
+					}
+					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					{
+						$$->s->type = DATA_TYPE_REAL;
+						Quad *quad = new_quad(QUAD_OP_REALMULT, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+					}
+					else if ( $1->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMULT, $$->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( $3->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMULT, $$->s->id, $1->s->id, $$->s->id);
+						
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $1->s->type == DATA_TYPE_BOOLEAN ))
+					{
+
+					}
+				}
 				|	exp_a_b BI_DIVISION exp_a_b
+				{
+					$$ = new_exp_a_b(ARITHMETIC_EXP);
+					$$->s = new_symbol("_tmp");
+					add_symbol(st, $$->s);
+
+					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					{
+						$$->s->type = DATA_TYPE_INTEGER;
+
+						Quad *quad = new_quad(QUAD_OP_INT2REAL, $1->s->id, $3->s->id, $$->s->id);
+						Quad *quad = new_quad(QUAD_OP_INTMULT, $1->s->id, $3->s->id, $$->s->id);
+						Quad *quad = new_quad(QUAD_OP_INTMULT, $1->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+						gen(qt, quad3);
+
+					}
+					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					{
+						$$->s->type = DATA_TYPE_REAL;
+						Quad *quad = new_quad(QUAD_OP_REALMULT, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+					}
+					else if ( $1->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMULT, $$->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( $3->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMULT, $$->s->id, $1->s->id, $$->s->id);
+						
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $1->s->type == DATA_TYPE_BOOLEAN ))
+					{
+
+					}
+				}
 				|	exp_a_b BI_MOD exp_a_b
 				|	exp_a_b BI_DIV exp_a_b
+				{
+					/* div is division in which the fractional part (remainder) is discarded */
+					
+				}
 				|	BI_PAR_APER exp_a_b BI_PAR_CIER
 				|	literal_numerico
 				|	BI_RESTA exp_a_b
-				|	exp_a_b BI_Y exp_a_b
-				|	exp_a_b BI_O exp_a_b
-				|	BI_PAR_APER exp_a_b BI_PAR_CIER
+				|	operando
+				|	exp_a_b BI_O M exp_a_b
+				{
+
+					/**
+					 * Production 1: E --> E1 OR M E2
+					 * 	{
+					 * 		backpatch(E1.falselist, M.quad);
+					 *		E.truelist := merge(E1.truelist, E2.truelist)
+					 *		E.falselist := E2.falselist
+					 *	}
+					 */
+
+					$$ = new_exp_a_b(BOOLEAN);
+					$$->s = new_symbol("_tmp");
+					$$->s->type = BOOLEAN;
+					add_symbol( st, $$->s );
+					
+					backpatch($1->falselist, $3);
+					$$->truelist = merge($1->truelist, $4->truelist);
+					$$->falselist = $4->falselist;
+
+				}
+				|	exp_a_b BI_Y M exp_a_b
+				{
+					/**
+					 * Production 2: E --> E1 AND M E2
+					 * 	{
+					 * 		backpatch(E1.truelist, M.quad);
+					 *		E.truelist := E2.truelist
+					 *		E.falselist := merge(E1.falselist, E2.falselist)
+					 *	}
+					 */
+
+					$$ = new_exp_a_b(BOOLEAN);
+					$$->s = new_symbol("_tmp");
+					$$->s->type = BOOLEAN;
+					add_symbol( st, $$->s );
+					
+					backpatch($1->truelist, $3);
+					$$->truelist = $4->truelist;
+					$$->falselist = merge($1->falselist, $4->falselist);
+
+				}
 				|	BI_NO exp_a_b
+				{
+
+					/**
+					 * Production 3: E --> not E1
+					 * {
+					 * 		E.truelist = E1.falselist
+					 *		E.falselist = E1.truelist
+					 * }
+					 */
+					
+					$$ = new_exp_a_b(BOOLEAN);
+					$$->s = new_symbol("_tmp");
+					$$->s->type = BOOLEAN;
+					add_symbol( st, $$->s );
+
+					$$->truelist = $2->falselist;
+					$$->falselist = $2->truelist;
+
+				}
+				|	BI_PAR_APER exp_a_b BI_PAR_CIER
+				{
+
+					/**
+					 * Production 4: E --> (E1)
+					 * 	{
+					 *		E.truelist := E1.truelist
+					 *		E.falselist := E1.falselist
+					 * 	}
+					 */
+					
+					$$ = new_exp_a_b(BOOLEAN);
+					$$->s = new_symbol("_tmp");
+					$$->s->type = BOOLEAN;
+					add_symbol( st, $$->s );
+
+					$$->truelist = $2->truelist;
+					$$->falselist = $2->falselist;
+
+				}
 				|	expresion oprel expresion
 				{
 
 					/**
-					 * Production: E --> id1 relop id2
-					 * { 	E.truelist := makelist( nextaddr )
+					 * Production 5: E --> id1 relop id2
+					 * { 	
+					 *		E.truelist := makelist( nextaddr )
 					 * 		E.falselist := makelist( nextaddr + 1)
 					 *		emit( 'if' id1.place relop.op id2.place 'goto_')
-					 *		emit( 'goto' )
+					 *		emit( 'goto_' )
 					 * }
 					 */
-					
 
+					$$ = new_exp_a_b(BOOLEAN);
+
+					 /* We create new tmp variable and add to symbol table*/
+					$$->s = new_symbol("_tmp");
+					$$->s->type = BOOLEAN;
+					add_symbol( st, $$->s );
+
+					/* We generate new quadruples */ 
+					Quad *quad1 = new_quad($2, $1->s->is, $2->s->id, QUAD_OP_NOGOTO);
+					Quad *quad2 = new_quad(QUAD_OP_GOTO, $$->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
+
+					gen( qt, quad1 );
+					gen( qt, quad2 );
+
+					$$->truelist = makelist( quad1 );
+					$$->falselist = makelist( quad2 );
 
 				}
-				|	operando
 				|	BI_VERDADERO
 				{
 					/** 
-					  * Production: E --> true
+					  * Production 6: E --> true
 					  * { E.truelist := makelist(nextaddr) } 
 					  * 
 					  */
@@ -490,7 +769,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					$$->s = new_symbol("_tmp");
 					$$->s->type = BOOLEAN;
       				/*$$->s->value.bool = $1;*/
-      				insert_symbol_st(st, $$->s);
+      				add_symbol(st, $$->s);
 
 					Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_TRUE, NOTGOTO);
 					gen(qt, quad);
@@ -501,7 +780,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				|	BI_FALSO
 				{
 					/** 
-					  * Production: E --> false
+					  * Production 7: E --> false
 					  * { E.falselist := makelist(nextaddr) } 
 					  * 
 					  */
@@ -509,7 +788,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					$$->s = new_symbol("_tmp");
 					$$->s->type = BOOLEAN;
       				/*$$->s->value.bool = $1;*/
-      				insert_symbol_st(st, $$->s);
+      				add_symbol(st, $$->s);
 
 					Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_FALSE, NOTGOTO);
 					gen(qt, quad);
@@ -519,8 +798,13 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				;
 
 
-
-/* The variable nextquad (M.quad) holds the index of the next quadruple to follow. */
+/**
+ * 	The variable nextquad (M.quad) holds the index of the next quadruple to follow.
+ * 	Production 8: E --> epsilon
+ * 	{
+ *		M.quad := nextaddr
+ *	}
+ */
 M 				: /* empty */ { $$ = next_quad() }
 
 

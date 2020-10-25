@@ -13,6 +13,8 @@ typedef enum {
 	QUAD_OP_GOTO,
 	QUAD_OP_NOGOTO,
 
+	QUAD_OP_INT2REAL,		/* Converts integer to real */
+
 	/* Relational Operators */
 	QUAD_OP_EQ,				/* EQ:EQUAL */
 	QUAD_OP_NE,				/* NE: NOT EQUAL */
@@ -27,21 +29,22 @@ typedef enum {
 	
 	/* No Operator */
 	QUAD_OP_NOOP,
+	QUAD_OP_VOID,
 } Quad_operators;
 
 
 typedef enum {
-	BOOLEANEXP,
-	ARITHMETICEXP,
-	UNDEFINEDEXP
+	BOOLEAN_EXP,
+	ARITHMETIC_EXP,
+	UNDEFINED_EXP
 } Expression_type;
 
 typedef enum {
-	STRING,
-	INTEGER,
-	REAL,
-	CHAR,
-	BOOLEAN
+	DATA_TYPE_STRING,
+	DATA_TYPE_INTEGER,
+	DATA_TYPE_REAL,
+	DATA_TYPE_CHAR,
+	DATA_TYPE_BOOLEAN
 } Data_type;
 
 typedef enum Quad_AddrType_type{

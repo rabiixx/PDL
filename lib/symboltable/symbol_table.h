@@ -54,7 +54,7 @@ typedef struct Label {
 typedef struct Symbol {
 	int id;
 	char *name;
-	char *type;
+	Data_type type;			/* Data types enum */
 	char *scope;
 	struct Symbol *next;
 	union {
