@@ -441,8 +441,7 @@ decl_sal 		:	BI_SAL lista_d_var
 /* Expresiones */
 
 
-expresion 		:	exp_a 
-				|	exp_b
+expresion 		:	exp_a b
 				|	funcion_ll
 				;
 
@@ -586,33 +585,45 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				}
 				|	exp_a_b BI_DIVISION exp_a_b
 				{
+
+				/**
+				 * In case the argumnets are integers we need to convert them to 
+				 * real before realizing the division. If both arguments are of
+				 * integer type, we need another tmp variable to store the result
+				 * of the conversions. 
+				 *
+				 */
+
 					$$ = new_exp_a_b(ARITHMETIC_EXP);
 					$$->s = new_symbol("_tmp");
 					add_symbol(st, $$->s);
 
+
 					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
 					{
-						$$->s->type = DATA_TYPE_INTEGER;
-
-						Quad *quad = new_quad(QUAD_OP_INT2REAL, $1->s->id, $3->s->id, $$->s->id);
-						Quad *quad = new_quad(QUAD_OP_INTMULT, $1->s->id, $3->s->id, $$->s->id);
-						Quad *quad = new_quad(QUAD_OP_INTMULT, $1->s->id, $3->s->id, $$->s->id);
+						Symbol *tmp_symbol = new_symbol("_tmp");
+						add_symbol( tmp_symbol );
+						
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, tmp_symbol->id);
+						Quad *quad3 = new_quad(QUAD_OP_REALDIV, $1->s->id, $3->s->id, $$->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 						gen(qt, quad3);
 
+						$$->s->type = DATA_TYPE_REAL;
 					}
 					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
 					{
-						$$->s->type = DATA_TYPE_REAL;
-						Quad *quad = new_quad(QUAD_OP_REALMULT, $1->s->id, $3->s->id, $$->s->id);
+						Quad *quad = new_quad(QUAD_OP_REALDIV, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
+						$$->s->type = DATA_TYPE_REAL;
 					}
 					else if ( $1->s->type == DATA_TYPE_INTEGER )
 					{
 						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALMULT, $$->s->id, $3->s->id, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, $$->s->id, $3->s->id, $$->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
@@ -622,7 +633,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					else if ( $3->s->type == DATA_TYPE_INTEGER )
 					{
 						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $$->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALMULT, $$->s->id, $1->s->id, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, $$->s->id, $1->s->id, $$->s->id);
 						
 						gen(qt, quad1);
 						gen(qt, quad2);
@@ -635,15 +646,171 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					}
 				}
 				|	exp_a_b BI_MOD exp_a_b
+				{
+
+					$$ = new_exp_a_b(ARITHMETIC_EXP);
+					$$->s = new_symbol("_tmp");
+					add_symbol(st, $$->s);
+
+					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					{
+						Quad *quad = new_quad(QUAD_OP_INTMOD, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+						$$->s->type = DATA_TYPE_INTEGER;
+					}
+					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					{
+						Quad *quad = new_quad(QUAD_OP_MODREAL, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( $1->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMOD, $$->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( $3->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMOD, $$->s->id, $1->s->id, $$->s->id);
+						
+						gen(qt, quad1);
+						gen(qt, quad2);
+
+						$$->s->type = DATA_TYPE_REAL;
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $1->s->type == DATA_TYPE_BOOLEAN ))
+					{
+
+					}
+				}
 				|	exp_a_b BI_DIV exp_a_b
 				{
+
 					/* div is division in which the fractional part (remainder) is discarded */
+
+					$$ = new_exp_a_b(ARITHMETIC_EXP);
+					$$->s = new_symbol("_tmp");
+					add_symbol(st, $$->s);
+
+
+					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					{
+						Symbol *tmp_symbol = new_symbol("_tmp");
+						add_symbol( tmp_symbol );
+
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, tmp_symbol->id);
+						Quad *quad3 = new_quad(QUAD_OP_REALDIV, $1->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+						gen(qt, quad3);
+					}
+					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					{
+						Quad *quad = new_quad(QUAD_OP_REALDIV, $1->s->id, $3->s->id, $$->s->id);
+						gen(qt, quad);
+					}
+					else if ( $1->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, $$->s->id, $3->s->id, $$->s->id);
+
+						gen(qt, quad1);
+						gen(qt, quad2);
+					}
+					else if ( $3->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $$->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, $$->s->id, $1->s->id, $$->s->id);
+						
+						gen(qt, quad1);
+						gen(qt, quad2);
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $1->s->type == DATA_TYPE_BOOLEAN ))
+					{
+
+					}
+
+					/* Convert result to INTEGER */
+					Quad *q = new_quad(QUAD_OP_REAL2INT, $$->s->id, QUAD_OP_VOID, $$->s->id);
+					gen(qt, q);
 					
+					$$->s->type = DATA_TYPE_INTEGER;
 				}
 				|	BI_PAR_APER exp_a_b BI_PAR_CIER
-				|	literal_numerico
+				{
+					/**
+					 * Production 5: E --> ( E1 )
+					 * Semantic Rule:
+					 * 	{
+					 *		E.place := E1.place 
+					 *		E.type = E1.type
+					 *	}
+					 */
+
+					if ( !( $2->type == BOOLEAN_EXP ) && !( $2->type == ARITHMETIC_EXP ) )	
+					{
+				 		fprintf(stderr, "Error: Not valid expresion type\n");
+				 	} else {
+						$$ = $2;
+				 	}
+
+				}
+				|	BI_LIT_ENTERO
+				{
+
+					$$ = new_exp_a_b( ARITHMETIC_EXP );
+					$$->s = new_symbol( "_tmp" );
+					$$->S->type = DATA_TYPE_INTEGER;
+					add_symbol(st, $$->s);
+
+				}
+				| 	BI_LIT_REAL
+				{
+					$$ = new_exp_a_b( ARITHMETIC_EXP );
+					$$->s = new_symbol( "_tmp" );
+					$$->S->type = DATA_TYPE_REAL;
+					add_symbol(st, $$->s);
+				}
 				|	BI_RESTA exp_a_b
+				{
+					/**
+					 * Productio: E --> -E1
+					 * Semantic Rule:
+					 * 	{
+					 * 		T := newTemp();
+					 *		modificarTipoTS(T, E1.type);
+					 *		E.place = T;
+					 * 		si ( E1.type = entero ) --> gen(E.place := -ent E1.place);
+					 *		[] ( E1.type = real ) --> gen(E.place := -real E1.place)
+					 *		fsi
+					 *	}
+					 */
+					$$ = new_exp_a_b( ARITHMETIC_EXP );
+					$$->s = new_symbol( "_tmp");
+					$$->s->type = $1->s->type;
+
+					if ( $1->s->type == DATA_TYPE_INTEGER )
+					{
+						Quad *quad = new_quad(QUAD_OP_INTUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id)
+					}
+					else if ( $1->s->type == DATA_TYPE_REAL )
+					{
+						Quad *quad = new_quad(QUAD_OP_REALUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id)
+					}
+
+				}
 				|	operando
+				{
+
+				}
 				|	exp_a_b BI_O M exp_a_b
 				{
 
@@ -827,6 +994,31 @@ oprel			: 	BI_IGUALDAD 	{ $$ = QUAD_OP_EQ }
 */
 
 operando		:	BI_IDENTIFICADOR
+				{
+					/**
+					 * Prodcution 6: E --> id
+					 * Semantic Rule:
+					 * 	{
+					 * 		E.place := id.val
+					 *		E.type := consultar_tipo_TS( id.val );
+					 *	}
+					 */
+					
+					Symbol *symbol = lookup( st, $1 );
+					if ( symbol )
+					{
+						$$ = new_exp_a_b( UNDEFINED_EXP );					
+						$$->s = symbol;
+
+					}
+					else
+					{
+						fprintf(stderr, "Error: Symbol %s doesnt exist in symbom table", $1);
+					}
+
+
+					
+				}
 				|	operando BI_PUNTO operando
 				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
 				|	operando BI_REF
@@ -847,6 +1039,54 @@ instruccion 	:	BI_CONTINUAR
 				;
 
 asignacion 		:	operando BI_ASIGNACION expresion
+				{
+
+
+					/**
+					 *
+					 * 
+					 *
+					 */
+
+					if ( $1->s->type == $3->s->type )
+					{
+						Quad *quad = new_quad( QUAD_OP_ASSIGN, $1->s->id, $3->s->id, QUAD_OP_VOID, $$->s->id );
+						gen( qt, quad );
+					}
+					else if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_REAL ) )
+					{
+						Quad *quad = new_quad( REAL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						gen( qt, quad );
+					}
+					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
+					{
+						Quad *quad = new_quad( INT2REAL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						gen( qt, quad );	
+					}
+					else if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_BOOLEAN ) )
+					{
+						Quad *quad = new_quad( BOOL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						gen( qt, quad );	
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
+					{
+						Quad *quad = new_quad( INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						gen( qt, quad );
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $3->s->type == DATA_TYPE_REAL ) )
+					{
+						Quad *quad = new_quad( INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						gen( qt, quad );	
+					}
+					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
+					{
+						Quad *quad = new_quad( INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						gen( qt, quad );
+					}
+					
+
+
+				}
 				;
 
 alternativa		:	BI_SI expresion BI_ENTONCES instrucciones lista_opciones BI_FSI

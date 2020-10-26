@@ -1,0 +1,21 @@
+El compilador no distingue entre expresione aritmeticas y booleanas.
+
+Como ejemplo vemos el sigueinte trozo de codigo: 
+
+
+var
+	x: entero;
+	y : booleano;
+fvar 
+
+y := verdadero;
+x := y;
+
+Este trozo de codigo seria totalmente valido y el comipiladro no lanzaria ningun aviso ni error.
+El resultado de la asignacion dependeria del valor que tome "verdadero".
+
+El funcionamiento trata de imitar el funcionamineto del lenguaje C y compilador GCC. En C el resultado
+de la asignacion es x = 1.
+
+
+El lenguaje C diferencia entre expresiones aritmeticas y booleanas.
