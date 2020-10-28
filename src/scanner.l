@@ -242,7 +242,11 @@ regex_menor_igual <=
 
 {regex_fin_array} 			{printf("%s - *Token fin array (]) detectada \n", yytext); return (BI_FIN_ARRAY);}
 
-{regex_identificador} 		{printf("%s - Identificador\n", yytext); return (BI_IDENTIFICADOR);}
+{regex_identificador} 		{	printf("%s - Identificador\n", yytext);
+								yylval.sval	= malloc( strlen( yytext ) );
+								strncpy( yylval.sval, yytext, strlen( yytext ) );
+								return (BI_IDENTIFICADOR);
+								}
 
 
 {regex_suma} 				{printf("Operador Aritmetico de Suma: %s\n", yytext); return (BI_SUMA);}

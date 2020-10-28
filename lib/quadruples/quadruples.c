@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "quadruples.h"
 
 QuadTable *new_quad_table() {
@@ -6,7 +9,7 @@ QuadTable *new_quad_table() {
 
 	if ( qt == NULL )
 	{
-		perror("Impossible to assign memory to quad table");
+		perror("Error: Impossible to assign memory to quad table");
 		exit(-1);
 	}
 

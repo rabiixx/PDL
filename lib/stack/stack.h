@@ -1,29 +1,21 @@
-/*
-  FICHERO: pilaEnterosDinamica.h
-  VERSION: 1.0.0
-  HISTORICO:
-  Creado por Aránzazu Jurío Munárriz el 09/09/19.
-  
-  Este fichero se crea sólo con intenciones de coordinación docente y como
-  ayuda a sus alumnos y alumnas. La autora desautoriza expresamente su difusión, copia
-  o exhibición pública (salvo entre los alumnos de las asignaturas 240301 y 250301 del
-  grado en Ingeniería Informática de la UPNA).
-*/
+#ifndef STACK_H
+#define STACK_H
 
 #include <stdbool.h>
   
-typedef struct Stack{
+typedef struct _stack{
     char* elem;
-    struct celdaP *sig;
+    struct _stack *sig;
 } Stack; 
 
-void nuevaPila(tipoPila *);
+void nuevaPila(Stack **);
 
-void apilar(tipoPila* , char *);
+void apilar(Stack** , char *);
 
-void desapilar(tipoPila *);
+void desapilar(Stack **);
 
-tipoElementoPila cima(tipoPila);
+char *cima(Stack *);
 
-bool esNulaPila(tipoPila);
+bool esNulaPila(Stack *);
 
+#endif

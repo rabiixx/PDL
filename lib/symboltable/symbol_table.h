@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef SYMBOL_TABLE_H
+#define SYMBOL_TABLE_H
+
 #include "../util.h"
 
 /*====================================
@@ -94,3 +94,6 @@ static unsigned int hash(const char *str);
 void print_symbol_table(Symbol *table[]);
 
 /*=====  Symbol Table  ======*/
+
+
+#endif

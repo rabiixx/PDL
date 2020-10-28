@@ -1,11 +1,12 @@
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef QUADRUPLES_H
+#define QUADRUPLES_H
+
 #include "../util.h"
 
 //https://steemit.com/utopian-io/@drifter1/writing-a-simple-compiler-on-my-own-combine-flex-and-bison
 
 typedef struct _quad {
-	operators op;			/* Operators enum */
+	Quad_op_code op;			/* Operators enum */
 	int op1;
 	int op2;
 	int res;
@@ -33,7 +34,7 @@ typedef struct _linkedList {
 
 
 
-QuadTable *new_quad_tb();
+QuadTable *new_quad_table();
 
 Quad *new_quad(const int op, const int op1, const unsigned int op2, const unsigned int res);
 
@@ -60,3 +61,5 @@ void deleteList(Quad **q);
 
 
 void deleteList2(QuadTable *q);
+
+#endif

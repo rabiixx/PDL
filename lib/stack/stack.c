@@ -11,12 +11,12 @@
 */
 
 
-#include "pilaEnterosDinamica.h"
+#include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 
-void nuevaPila(tipoPila *p){
+void nuevaPila(Stack **p){
 	*p=NULL;
 }
 
@@ -24,7 +24,7 @@ void errorPila(char s[]){
 	printf("\n\n\nERROR en el modulo pilas: %s \n", s);
 }
 
-void apilar(tipoPila *p, char* elemento){
+void apilar(Stack **p, char* elemento){
 	celdaPila *nuevo;
 	nuevo=(celdaPila*)malloc(sizeof(celdaPila));
 	nuevo->elem=elemento;
@@ -32,7 +32,7 @@ void apilar(tipoPila *p, char* elemento){
 	*p = nuevo;
 }
 
-void desapilar(tipoPila *p){
+void desapilar(Stack **p){
 	if (esNulaPila(*p))
 		errorPila("No se puede desapilar en una pila vacia.");
 	else{
@@ -43,14 +43,14 @@ void desapilar(tipoPila *p){
 	}
 }
 
-char *cima(tipoPila p){
+char *cima(Stack *p){
 	if (esNulaPila(p))
 		errorPila("No se puede obtener la cima en una pila vacia.");
 	else
 		return p->elem;
 }
 
-bool esNulaPila(tipoPila p){
+bool esNulaPila(Stack *p){
 	return p==NULL;
 }
 

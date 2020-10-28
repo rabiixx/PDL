@@ -1,3 +1,7 @@
+#ifndef UTIL_H
+#define UTIL_H
+
+
 /* Quadruples Operators */
 typedef enum {
 	
@@ -47,7 +51,7 @@ typedef enum {
 	/* No Operator */
 	QUAD_OP_NOOP,
 	QUAD_OP_VOID,
-} Quad_operators;
+} Quad_op_code;
 
 
 typedef enum {
@@ -73,3 +77,6 @@ typedef enum Quad_AddrType_type{
 
 	QUAD_ADDR_TYPE_UNKOWN = -1,
 } Quad_AddrType_type;
+
+
+#endif

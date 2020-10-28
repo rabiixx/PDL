@@ -15,12 +15,18 @@
 
 	void yyerror (char const *);
 
-	Symbol *hash_table[HT_SIZE];
-	QuadTable *qt = new_quad_table();
+	Symbol *st[HT_SIZE];
+	QuadTable *qt;
 
 	Stack stack;
 
 %}
+
+
+
+%union {
+	char *sval;
+}
 
 %token BI_COMENTARIO
 %token BI_LIT_ENTERO
@@ -91,7 +97,7 @@
 %token BI_SINOSI
 %token BI_INI_ARRAY
 %token BI_FIN_ARRAY
-%token BI_IDENTIFICADOR
+%token <sval> BI_IDENTIFICADOR
 %token BI_PUNTO
 
 %token BI_PAR_APER
@@ -202,7 +208,8 @@ d_tipo 			:	tipo_base 						/* base case */
 				|	BI_IDENTIFICADOR 				/* base case */
 				{
 
-					char *type = get_attr(st, $1, "type");
+					char *str = "type";
+					char *type = get_attr(st, "hola", str);
 
 					if ( !type ) {
 						printf("Identifier %s doesnt exist", $1);
@@ -213,7 +220,7 @@ d_tipo 			:	tipo_base 						/* base case */
 
 
 				}
-				|	BI_REF d_tipo 								/* recursive by d_tipo */
+				|	BI_REF d_tipo								/* recursive by d_tipo */
 				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
 				| 	BI_TUPLA lista_campos BI_FTUPLA				/* recursive by lista_campos */
 				{
@@ -1136,7 +1143,6 @@ l_ll			:	expresion BI_SEPARADOR l_ll
 int main(int argc, char const *argv[])
 {
 	
-	init_symbol_table( st );
 
 	if ( argc == 2 && ( strcmp( argv[1], "--help" ) == 0 || strcmp( argv[1], "--help" ) == 0 ) )
 	{
@@ -1168,6 +1174,10 @@ int main(int argc, char const *argv[])
 			}
 
 			yyin = file;			
+		
+			init_symbol_table( st );
+			qt = new_quad_table();
+
 		} else {
 			printf("Error: Not supported input file extension.\n\n");
 			printf("Usage: compiler <input-file>\n");

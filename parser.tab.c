@@ -85,8 +85,8 @@
 
 	void yyerror (char const *);
 
-	Symbol *hash_table[HT_SIZE];
-	QuadTable *qt = new_quad_table();
+	Symbol *st[HT_SIZE];
+	QuadTable *qt;
 
 	Stack stack;
 
@@ -615,16 +615,16 @@ static const yytype_int16 yyrline[] =
 {
        0,   107,   107,   110,   113,   116,   117,   118,   121,   122,
      123,   126,   129,   130,   131,   132,   146,   154,   157,   168,
-     173,   198,   202,   216,   217,   218,   222,   225,   226,   233,
-     240,   243,   247,   251,   255,   259,   273,   280,   284,   287,
-     291,   307,   319,   326,   376,   377,   406,   424,   438,   439,
-     440,   447,   450,   456,   457,   460,   506,   550,   594,   656,
-     700,   755,   764,   771,   799,   803,   825,   846,   866,   886,
-     917,   936,   964,   968,   969,   970,   971,   972,   973,   985,
-    1011,  1012,  1013,  1019,  1020,  1023,  1024,  1025,  1026,  1027,
-    1030,  1081,  1084,  1085,  1088,  1089,  1092,  1095,  1100,  1103,
-    1106,  1109,  1112,  1113,  1116,  1117,  1118,  1121,  1124,  1127,
-    1128
+     173,   198,   202,   217,   218,   219,   223,   226,   227,   234,
+     241,   244,   248,   252,   256,   260,   274,   281,   285,   288,
+     292,   308,   320,   327,   377,   378,   407,   425,   439,   440,
+     441,   448,   451,   457,   458,   461,   507,   551,   595,   657,
+     701,   756,   765,   772,   800,   804,   826,   847,   867,   887,
+     918,   937,   965,   969,   970,   971,   972,   973,   974,   986,
+    1012,  1013,  1014,  1020,  1021,  1024,  1025,  1026,  1027,  1028,
+    1031,  1082,  1085,  1086,  1089,  1090,  1093,  1096,  1101,  1104,
+    1107,  1110,  1113,  1114,  1117,  1118,  1119,  1122,  1125,  1128,
+    1129
 };
 #endif
 
@@ -1410,7 +1410,8 @@ yyreduce:
 #line 203 "src/parser.y"
                                 {
 
-					char *type = get_attr(st, yyvsp[0], "type");
+					char *str = "type";
+					char *type = get_attr(st, "hola", str);
 
 					if ( !type ) {
 						printf("Identifier %s doesnt exist", yyvsp[0]);
@@ -1421,114 +1422,114 @@ yyreduce:
 
 
 				}
-#line 1425 "parser.tab.c"
+#line 1426 "parser.tab.c"
     break;
 
   case 25: /* d_tipo: BI_TUPLA lista_campos BI_FTUPLA  */
-#line 219 "src/parser.y"
+#line 220 "src/parser.y"
                                 {
 					/* Que devolver ??? tupla*/
 				}
-#line 1433 "parser.tab.c"
+#line 1434 "parser.tab.c"
     break;
 
   case 29: /* lista_campos: BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos  */
-#line 234 "src/parser.y"
+#line 235 "src/parser.y"
                                 {
 
 					insertSymbol(st, yyvsp[-4]);
 					set_attr(st, yyvsp[-4], "type", yyvsp[-2]);
 
 				}
-#line 1444 "parser.tab.c"
+#line 1445 "parser.tab.c"
     break;
 
   case 31: /* tipo_base: BI_PR_ENTERO  */
-#line 244 "src/parser.y"
+#line 245 "src/parser.y"
                                 {
 					yyval = INTEGER;
 				}
-#line 1452 "parser.tab.c"
+#line 1453 "parser.tab.c"
     break;
 
   case 32: /* tipo_base: BI_PR_REAL  */
-#line 248 "src/parser.y"
+#line 249 "src/parser.y"
                                 {
 					yyval = FLOAT;
 				}
-#line 1460 "parser.tab.c"
+#line 1461 "parser.tab.c"
     break;
 
   case 33: /* tipo_base: BI_PR_BOOLEANO  */
-#line 252 "src/parser.y"
+#line 253 "src/parser.y"
                                 {
 					yyval = BOOLEAN;
 				}
-#line 1468 "parser.tab.c"
+#line 1469 "parser.tab.c"
     break;
 
   case 34: /* tipo_base: BI_PR_CARACTER  */
-#line 256 "src/parser.y"
+#line 257 "src/parser.y"
                                 {
 					yyval = CHARACTER;
 				}
-#line 1476 "parser.tab.c"
+#line 1477 "parser.tab.c"
     break;
 
   case 35: /* tipo_base: BI_PR_CADENA  */
-#line 260 "src/parser.y"
+#line 261 "src/parser.y"
                                 {
 					yyval = STRING;
 				}
-#line 1484 "parser.tab.c"
+#line 1485 "parser.tab.c"
     break;
 
   case 36: /* literal: BI_LIT_ENTERO  */
-#line 274 "src/parser.y"
+#line 275 "src/parser.y"
                                 {
 
 					printf("LITERAL_ENTERO");
 
 					yyval = INTEGER;
 				}
-#line 1495 "parser.tab.c"
+#line 1496 "parser.tab.c"
     break;
 
   case 37: /* literal: BI_LIT_REAL  */
-#line 281 "src/parser.y"
+#line 282 "src/parser.y"
                                 {
 					yyval = FLOAT;
 				}
-#line 1503 "parser.tab.c"
+#line 1504 "parser.tab.c"
     break;
 
   case 38: /* literal: BI_LIT_BOOLEANO  */
-#line 284 "src/parser.y"
+#line 285 "src/parser.y"
                                                        {
 					yyval = BOOLEAN;
 				}
-#line 1511 "parser.tab.c"
+#line 1512 "parser.tab.c"
     break;
 
   case 39: /* literal: BI_LIT_CARACTER  */
-#line 287 "src/parser.y"
+#line 288 "src/parser.y"
                                                        {
 
 					yyval = CHARACTER;
 				}
-#line 1520 "parser.tab.c"
+#line 1521 "parser.tab.c"
     break;
 
   case 40: /* literal: BI_LIT_CADENA  */
-#line 291 "src/parser.y"
+#line 292 "src/parser.y"
                                                      {
 					yyval = STRING;
 				}
-#line 1528 "parser.tab.c"
+#line 1529 "parser.tab.c"
     break;
 
   case 41: /* lista_d_cte: BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte  */
-#line 308 "src/parser.y"
+#line 309 "src/parser.y"
                                 {
 
 
@@ -1540,11 +1541,11 @@ yyreduce:
 					set_attr(st, yyvsp[-4], "scope", "cte");
 					set_attr(st, yyvsp[-4], "type", yyvsp[-2])
 				}
-#line 1544 "parser.tab.c"
+#line 1545 "parser.tab.c"
     break;
 
   case 43: /* lista_d_var: lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var  */
-#line 326 "src/parser.y"
+#line 327 "src/parser.y"
                                                                                                  {
 
 				/* Debug */
@@ -1595,11 +1596,11 @@ yyreduce:
 
 
 }
-#line 1599 "parser.tab.c"
+#line 1600 "parser.tab.c"
     break;
 
   case 46: /* lista_id: BI_IDENTIFICADOR BI_SEPARADOR lista_id  */
-#line 407 "src/parser.y"
+#line 408 "src/parser.y"
                                 {
 
 					if ( !lookup(st, yyvsp[-2]) ) {
@@ -1617,11 +1618,11 @@ yyreduce:
 						printf("Identifier alredy exists")
 					}
 				}
-#line 1621 "parser.tab.c"
+#line 1622 "parser.tab.c"
     break;
 
   case 47: /* lista_id: BI_IDENTIFICADOR  */
-#line 425 "src/parser.y"
+#line 426 "src/parser.y"
                                 {
 
 					if ( !lookup(st, yyvsp[0]) ) {
@@ -1633,11 +1634,11 @@ yyreduce:
 						printf("Identifier alredy exists")
 					}
 				}
-#line 1637 "parser.tab.c"
+#line 1638 "parser.tab.c"
     break;
 
   case 55: /* exp_a_b: exp_a_b BI_SUMA exp_a_b  */
-#line 461 "src/parser.y"
+#line 462 "src/parser.y"
                                 {
 
 					yyval = new_exp_a_b(ARITHMETIC_EXP);
@@ -1683,11 +1684,11 @@ yyreduce:
 					}
 
 				}
-#line 1687 "parser.tab.c"
+#line 1688 "parser.tab.c"
     break;
 
   case 56: /* exp_a_b: exp_a_b BI_RESTA exp_a_b  */
-#line 507 "src/parser.y"
+#line 508 "src/parser.y"
                                 {
 					yyval = new_exp_a_b(ARITHMETIC_EXP);
 					yyval->s = new_symbol("_tmp");
@@ -1731,11 +1732,11 @@ yyreduce:
 
 					}
 				}
-#line 1735 "parser.tab.c"
+#line 1736 "parser.tab.c"
     break;
 
   case 57: /* exp_a_b: exp_a_b BI_MULTIPLICACION exp_a_b  */
-#line 551 "src/parser.y"
+#line 552 "src/parser.y"
                                 {
 					yyval = new_exp_a_b(ARITHMETIC_EXP);
 					yyval->s = new_symbol("_tmp");
@@ -1779,11 +1780,11 @@ yyreduce:
 
 					}
 				}
-#line 1783 "parser.tab.c"
+#line 1784 "parser.tab.c"
     break;
 
   case 58: /* exp_a_b: exp_a_b BI_DIVISION exp_a_b  */
-#line 595 "src/parser.y"
+#line 596 "src/parser.y"
                                 {
 
 				/**
@@ -1845,11 +1846,11 @@ yyreduce:
 
 					}
 				}
-#line 1849 "parser.tab.c"
+#line 1850 "parser.tab.c"
     break;
 
   case 59: /* exp_a_b: exp_a_b BI_MOD exp_a_b  */
-#line 657 "src/parser.y"
+#line 658 "src/parser.y"
                                 {
 
 					yyval = new_exp_a_b(ARITHMETIC_EXP);
@@ -1893,11 +1894,11 @@ yyreduce:
 
 					}
 				}
-#line 1897 "parser.tab.c"
+#line 1898 "parser.tab.c"
     break;
 
   case 60: /* exp_a_b: exp_a_b BI_DIV exp_a_b  */
-#line 701 "src/parser.y"
+#line 702 "src/parser.y"
                                 {
 
 					/* div is division in which the fractional part (remainder) is discarded */
@@ -1952,11 +1953,11 @@ yyreduce:
 					
 					yyval->s->type = DATA_TYPE_INTEGER;
 				}
-#line 1956 "parser.tab.c"
+#line 1957 "parser.tab.c"
     break;
 
   case 61: /* exp_a_b: BI_LIT_ENTERO  */
-#line 756 "src/parser.y"
+#line 757 "src/parser.y"
                                 {
 
 					yyval = new_exp_a_b( ARITHMETIC_EXP );
@@ -1965,22 +1966,22 @@ yyreduce:
 					add_symbol(st, yyval->s);
 
 				}
-#line 1969 "parser.tab.c"
+#line 1970 "parser.tab.c"
     break;
 
   case 62: /* exp_a_b: BI_LIT_REAL  */
-#line 765 "src/parser.y"
+#line 766 "src/parser.y"
                                 {
 					yyval = new_exp_a_b( ARITHMETIC_EXP );
 					yyval->s = new_symbol( "_tmp" );
 					yyval->S->type = DATA_TYPE_REAL;
 					add_symbol(st, yyval->s);
 				}
-#line 1980 "parser.tab.c"
+#line 1981 "parser.tab.c"
     break;
 
   case 63: /* exp_a_b: BI_RESTA exp_a_b  */
-#line 772 "src/parser.y"
+#line 773 "src/parser.y"
                                 {
 					/**
 					 * Productio: E --> -E1
@@ -2008,19 +2009,19 @@ yyreduce:
 					}
 
 				}
-#line 2012 "parser.tab.c"
+#line 2013 "parser.tab.c"
     break;
 
   case 64: /* exp_a_b: operando  */
-#line 800 "src/parser.y"
+#line 801 "src/parser.y"
                                 {
 
 				}
-#line 2020 "parser.tab.c"
+#line 2021 "parser.tab.c"
     break;
 
   case 65: /* exp_a_b: exp_a_b BI_O M exp_a_b  */
-#line 804 "src/parser.y"
+#line 805 "src/parser.y"
                                 {
 
 					/**
@@ -2042,11 +2043,11 @@ yyreduce:
 					yyval->falselist = yyvsp[0]->falselist;
 
 				}
-#line 2046 "parser.tab.c"
+#line 2047 "parser.tab.c"
     break;
 
   case 66: /* exp_a_b: exp_a_b BI_Y M exp_a_b  */
-#line 826 "src/parser.y"
+#line 827 "src/parser.y"
                                 {
 					/**
 					 * Production 2: E --> E1 AND M E2
@@ -2067,11 +2068,11 @@ yyreduce:
 					yyval->falselist = merge(yyvsp[-3]->falselist, yyvsp[0]->falselist);
 
 				}
-#line 2071 "parser.tab.c"
+#line 2072 "parser.tab.c"
     break;
 
   case 67: /* exp_a_b: BI_NO exp_a_b  */
-#line 847 "src/parser.y"
+#line 848 "src/parser.y"
                                 {
 
 					/**
@@ -2091,11 +2092,11 @@ yyreduce:
 					yyval->falselist = yyvsp[0]->truelist;
 
 				}
-#line 2095 "parser.tab.c"
+#line 2096 "parser.tab.c"
     break;
 
   case 68: /* exp_a_b: BI_PAR_APER exp_a_b BI_PAR_CIER  */
-#line 867 "src/parser.y"
+#line 868 "src/parser.y"
                                 {
 
 					/**
@@ -2115,11 +2116,11 @@ yyreduce:
 					yyval->falselist = yyvsp[-1]->falselist;
 
 				}
-#line 2119 "parser.tab.c"
+#line 2120 "parser.tab.c"
     break;
 
   case 69: /* exp_a_b: expresion oprel expresion  */
-#line 887 "src/parser.y"
+#line 888 "src/parser.y"
                                 {
 
 					/**
@@ -2150,11 +2151,11 @@ yyreduce:
 					yyval->falselist = makelist( quad2 );
 
 				}
-#line 2154 "parser.tab.c"
+#line 2155 "parser.tab.c"
     break;
 
   case 70: /* exp_a_b: BI_VERDADERO  */
-#line 918 "src/parser.y"
+#line 919 "src/parser.y"
                                 {
 					/** 
 					  * Production 6: E --> true
@@ -2173,11 +2174,11 @@ yyreduce:
 
 
 				}
-#line 2177 "parser.tab.c"
+#line 2178 "parser.tab.c"
     break;
 
   case 71: /* exp_a_b: BI_FALSO  */
-#line 937 "src/parser.y"
+#line 938 "src/parser.y"
                                 {
 					/** 
 					  * Production 7: E --> false
@@ -2195,53 +2196,53 @@ yyreduce:
 					yyval->falselist = makelist( quad );
 
 				}
-#line 2199 "parser.tab.c"
+#line 2200 "parser.tab.c"
     break;
 
   case 72: /* M: %empty  */
-#line 964 "src/parser.y"
+#line 965 "src/parser.y"
                                               { yyval = next_quad() }
-#line 2205 "parser.tab.c"
+#line 2206 "parser.tab.c"
     break;
 
   case 73: /* oprel: BI_IGUALDAD  */
-#line 968 "src/parser.y"
+#line 969 "src/parser.y"
                                                 { yyval = QUAD_OP_EQ }
-#line 2211 "parser.tab.c"
+#line 2212 "parser.tab.c"
     break;
 
   case 74: /* oprel: BI_DISTINTO  */
-#line 969 "src/parser.y"
+#line 970 "src/parser.y"
                                                         { yyval = QUAD_OP_NE }
-#line 2217 "parser.tab.c"
+#line 2218 "parser.tab.c"
     break;
 
   case 75: /* oprel: BI_MAYOR  */
-#line 970 "src/parser.y"
+#line 971 "src/parser.y"
                                                                 { yyval = QUAD_OP_GT }
-#line 2223 "parser.tab.c"
+#line 2224 "parser.tab.c"
     break;
 
   case 76: /* oprel: BI_MAYOR_IGUAL  */
-#line 971 "src/parser.y"
+#line 972 "src/parser.y"
                                                         { yyval = QUAD_OP_GE }
-#line 2229 "parser.tab.c"
+#line 2230 "parser.tab.c"
     break;
 
   case 77: /* oprel: BI_MENOR  */
-#line 972 "src/parser.y"
+#line 973 "src/parser.y"
                                                                 { yyval = QUAD_OP_LT }
-#line 2235 "parser.tab.c"
+#line 2236 "parser.tab.c"
     break;
 
   case 78: /* oprel: BI_MENOR_IGUAL  */
-#line 973 "src/parser.y"
+#line 974 "src/parser.y"
                                                         { yyval = QUAD_OP_LE }
-#line 2241 "parser.tab.c"
+#line 2242 "parser.tab.c"
     break;
 
   case 79: /* operando: BI_IDENTIFICADOR  */
-#line 986 "src/parser.y"
+#line 987 "src/parser.y"
                                 {
 					/**
 					 * Prodcution 6: E --> id
@@ -2267,11 +2268,11 @@ yyreduce:
 
 					
 				}
-#line 2271 "parser.tab.c"
+#line 2272 "parser.tab.c"
     break;
 
   case 90: /* asignacion: operando BI_ASIGNACION expresion  */
-#line 1031 "src/parser.y"
+#line 1032 "src/parser.y"
                                 {
 
 
@@ -2320,11 +2321,11 @@ yyreduce:
 
 
 				}
-#line 2324 "parser.tab.c"
+#line 2325 "parser.tab.c"
     break;
 
 
-#line 2328 "parser.tab.c"
+#line 2329 "parser.tab.c"
 
       default: break;
     }
@@ -2518,14 +2519,13 @@ yyreturn:
   return yyresult;
 }
 
-#line 1133 "src/parser.y"
+#line 1134 "src/parser.y"
 
 
 
 int main(int argc, char const *argv[])
 {
 	
-	init_symbol_table( st );
 
 	if ( argc == 2 && ( strcmp( argv[1], "--help" ) == 0 || strcmp( argv[1], "--help" ) == 0 ) )
 	{
@@ -2557,6 +2557,10 @@ int main(int argc, char const *argv[])
 			}
 
 			yyin = file;			
+		
+			init_symbol_table( st );
+			qt = new_quad_table();
+
 		} else {
 			printf("Error: Not supported input file extension.\n\n");
 			printf("Usage: compiler <input-file>\n");
