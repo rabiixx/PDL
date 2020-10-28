@@ -1235,80 +1235,84 @@ YY_RULE_SETUP
 case 60:
 YY_RULE_SETUP
 #line 246 "src/scanner.l"
-{printf("%s - Identificador\n", yytext); return (BI_IDENTIFICADOR);}
+{	printf("%s - Identificador\n", yytext);
+								yylval.sval	= malloc( strlen( yytext ) );
+								strncpy( yylval.sval, yytext, strlen( yytext ) );
+								return (BI_IDENTIFICADOR);
+								}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 249 "src/scanner.l"
+#line 253 "src/scanner.l"
 {printf("Operador Aritmetico de Suma: %s\n", yytext); return (BI_SUMA);}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 251 "src/scanner.l"
+#line 255 "src/scanner.l"
 {printf("Operador Aritmetico de Resta: %s\n", yytext); return (BI_RESTA);}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 253 "src/scanner.l"
+#line 257 "src/scanner.l"
 {printf("Operador Aritmetico de Multiplicacion: %s\n", yytext); return (BI_MULTIPLICACION);}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 255 "src/scanner.l"
+#line 259 "src/scanner.l"
 {printf("Operador Aritmetico de Division: %s\n", yytext); return (BI_DIVISION);}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 257 "src/scanner.l"
+#line 261 "src/scanner.l"
 {printf("Operador Relacional Igualdad: %s\n", yytext); return (BI_IGUALDAD);}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 259 "src/scanner.l"
+#line 263 "src/scanner.l"
 {printf("Operador Relacional Distinto: %s\n", yytext); return (BI_DISTINTO);}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 261 "src/scanner.l"
+#line 265 "src/scanner.l"
 {printf("Operador Relacional Mayor: %s\n", yytext); return (BI_MAYOR);}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 263 "src/scanner.l"
+#line 267 "src/scanner.l"
 {printf("Operador Relacional Menor: %s\n", yytext); return (BI_MENOR);}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 265 "src/scanner.l"
+#line 269 "src/scanner.l"
 {printf("Operador Relacional Mayor o Igual: %s\n", yytext); return (BI_MAYOR_IGUAL);}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 267 "src/scanner.l"
+#line 271 "src/scanner.l"
 {printf("Operador Relacional Menor o Igual: %s\n", yytext); return (BI_MENOR_IGUAL);}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 269 "src/scanner.l"
+#line 273 "src/scanner.l"
 {printf("Token parentesis de apertura: %s\n", yytext); return (BI_PAR_APER);}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 271 "src/scanner.l"
+#line 275 "src/scanner.l"
 {printf("Token parentesis de cierre: %s\n", yytext); return (BI_PAR_CIER);}
 	YY_BREAK
 case 73:
 /* rule 73 can match eol */
 YY_RULE_SETUP
-#line 275 "src/scanner.l"
+#line 279 "src/scanner.l"
 {}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 277 "src/scanner.l"
+#line 281 "src/scanner.l"
 ECHO;
 	YY_BREAK
-#line 1312 "lex.yy.c"
+#line 1316 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2313,7 +2317,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 277 "src/scanner.l"
+#line 281 "src/scanner.l"
 
 
 /*long int checkPowOverflowInt( int a, int b) {

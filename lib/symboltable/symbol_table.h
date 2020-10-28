@@ -86,6 +86,9 @@ int set_attr(Symbol *table[], char *name, char *attr, char *value);
 
 char *get_attr(Symbol *table[], char *name, char *attr);
 
+Data_type get_type(Symbol *table[], char *name);
+
+int set_type(Symbol *table[], char *name, Data_type type); 
 
 /*----------  Utils  ----------*/
 

@@ -132,7 +132,24 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 28 "src/parser.y"
+
+	char *sval;
+	Data_type data_type;
+	Exp_a_b *exp;
+	int next_quad;
+	Quad_op_code oprel_val;
+	%union {
+		char id;
+		Data_type type;
+	} type_d_tipo;
+
+#line 150 "parser.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

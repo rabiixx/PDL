@@ -7,6 +7,7 @@
 	#include "lib/quadruples/quadruples.h"
 	#include "lib/exp_a_b/exp_a_b.h"
 	#include "lib/stack/stack.h"
+	#include "../lib/util.h"
 
 
 	extern int yylex();
@@ -26,6 +27,14 @@
 
 %union {
 	char *sval;
+	Data_type data_type;
+	Exp_a_b *exp;
+	int next_quad;
+	Quad_op_code oprel_val;
+	%union {
+		char id;
+		Data_type type;
+	} type_d_tipo;
 }
 
 %token BI_COMENTARIO
@@ -107,6 +116,43 @@
 %left  BI_SUMA BI_RESTA
 %left  BI_MULTIPLICACION BI_DIVISION BI_MOD BI_DIV
 %left  BI_MENOR BI_MAYOR BI_MENOR_IGUAL BI_MAYOR_IGUAL BI_IGUALDAD BI_DISTINTO
+
+
+%type <data_type> tipo_base 
+%type <data_type> literal
+%type <typo_d_tipo> d_tipo
+%type <exp> exp_a_b
+%type <exp> expresion
+%type <exp> operando
+%type <next_quad> M
+%type <oprel_val> oprel
+
+/*=======================================
+=            Dudas Generales            =
+=======================================*/
+
+/* 
+
+1. Duda: Como hacer que d_tipo devuelva un tipo de dato dependiendo de la reduccion aplicada.
+%type <data_type> d_tipo
+
+2. 	Como tratar las variables en la tabla de simbolos. Todas las variables temporales contienen el
+	mismo nombre y por lo tanto la tabla de hash no sirve de nada.
+	
+	2.1: Utilizar nonbres aleatorios para los nombre de las variables de variables temporales.
+		 Añadir un caracter especial ( "_" por ejemplo ) al comienzo del nombre generado 
+
+	2.2: Crear una nueva tabla de simbolos para almacenar las variables temporales
+
+3. 	expresion : exp_a_b | funcion_ll --> funcion_ll : bi_id ( l_ll ) -->
+ 	--> l_ll : expresion , l_ll | expresion
+
+ 	Esto es la llamada a una funcion ?? 
+ 	Si es asi, no se le pueden pasar ni strings ni caracteres
+
+/*=====  End of Dudas Generales  ======*/
+
+
 
 %%
 
@@ -203,20 +249,18 @@ State analiysis
 
 d_tipo 			:	tipo_base 						/* base case */
 				{
-					/****duda: es integer? */
+					
 				}
 				|	BI_IDENTIFICADOR 				/* base case */
 				{
 
-					char *str = "type";
-					char *type = get_attr(st, "hola", str);
+					/*cchar *type = get_type( st, $1 );
 
-					if ( !type ) {
-						printf("Identifier %s doesnt exist", $1);
+					if ( type == UNKNOWN_SYMBOL ) {
+						printf("Error: Unknown symbol %s", $1);
 					} else {
-						// strcpy();
 						$$ = type;
-					}
+					}*/
 
 
 				}
@@ -241,7 +285,7 @@ lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 				{
 
 					insertSymbol(st, $1);
-					set_attr(st, $1, "type", $3);
+					set_type(st, $1, $3);
 
 				}
 				|	/* cadena vacia */
@@ -249,23 +293,23 @@ lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 
 tipo_base 		: 	BI_PR_ENTERO
 				{
-					$$ = INTEGER;
+					$$ = DATA_TYPE_INTEGER;
 				}
 				|	BI_PR_REAL
 				{
-					$$ = FLOAT;
+					$$ = DATA_TYPE_REAL;
 				}
 				|	BI_PR_BOOLEANO
 				{
-					$$ = BOOLEAN;
+					$$ = DATA_TYPE_BOOLEAN;
 				}
 				|	BI_PR_CARACTER
 				{
-					$$ = CHARACTER;
+					$$ = DATA_TYPE_CHAR;
 				}
 				|	BI_PR_CADENA
 				{
-					$$ = STRING;
+					$$ = DATA_TYPE_STRING;
 				}
 				;
 
@@ -279,24 +323,23 @@ tipo_base 		: 	BI_PR_ENTERO
 
 literal			:	BI_LIT_ENTERO 
 				{
-
-					printf("LITERAL_ENTERO");
-
-					$$ = INTEGER;
+					$$ = DATA_TYPE_INTEGER;
 				}
 				|	BI_LIT_REAL
 				{
-					$$ = FLOAT;
+					$$ = DATA_TYPE_REAL;
 				}
-				|	BI_LIT_BOOLEANO{
-					$$ = BOOLEAN;
+				|	BI_LIT_BOOLEANO
+				{
+					$$ = DATA_TYPE_BOOLEAN;
 				}
-				|	BI_LIT_CARACTER{
-
-					$$ = CHARACTER;
+				|	BI_LIT_CARACTER
+				{
+					$$ = DATA_TYPE_CHAR;
 				}
-				|	BI_LIT_CADENA{
-					$$ = STRING;
+				|	BI_LIT_CADENA
+				{
+					$$ = DATA_TYPE_STRING;
 				}
 				;
 
@@ -791,13 +834,13 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					 */
 					$$ = new_exp_a_b( ARITHMETIC_EXP );
 					$$->s = new_symbol( "_tmp");
-					$$->s->type = $1->s->type;
+					$$->s->type = $2->s->type;
 
-					if ( $1->s->type == DATA_TYPE_INTEGER )
+					if ( $2->s->type == DATA_TYPE_INTEGER )
 					{
 						Quad *quad = new_quad(QUAD_OP_INTUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id)
 					}
-					else if ( $1->s->type == DATA_TYPE_REAL )
+					else if ( $2->s->type == DATA_TYPE_REAL )
 					{
 						Quad *quad = new_quad(QUAD_OP_REALUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id)
 					}
@@ -1046,7 +1089,7 @@ asignacion 		:	operando BI_ASIGNACION expresion
 
 					if ( $1->s->type == $3->s->type )
 					{
-						Quad *quad = new_quad( QUAD_OP_ASSIGN, $1->s->id, $3->s->id, QUAD_OP_VOID, $$->s->id );
+						Quad *quad = new_quad( QUAD_OP_ASSIGN, $1->s->id, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );
 					}
 					else if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_REAL ) )

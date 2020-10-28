@@ -65,10 +65,11 @@ typedef enum {
 	DATA_TYPE_INTEGER,
 	DATA_TYPE_REAL,
 	DATA_TYPE_CHAR,
-	DATA_TYPE_BOOLEAN
+	DATA_TYPE_BOOLEAN,
+	UNKNOWN_DATA_TYPE
 } Data_type;
 
-typedef enum Quad_AddrType_type{
+/*typedef enum Quad_AddrType_type{
 	QUAD_ADDR_TYPE_EMPTY = 0,
 
 	QUAD_ADDR_TYPE_NAME = 1,
@@ -76,7 +77,8 @@ typedef enum Quad_AddrType_type{
 	QUAD_ADDR_TYPE_CONSTANT,
 
 	QUAD_ADDR_TYPE_UNKOWN = -1,
-} Quad_AddrType_type;
+} Quad_AddrType_type;*/
 
+#define UNKNOWN_SYMBOL -1
 
 #endif

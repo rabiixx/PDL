@@ -77,6 +77,7 @@
 	#include "lib/quadruples/quadruples.h"
 	#include "lib/exp_a_b/exp_a_b.h"
 	#include "lib/stack/stack.h"
+	#include "../lib/util.h"
 
 
 	extern int yylex();
@@ -91,7 +92,7 @@
 	Stack stack;
 
 
-#line 95 "parser.tab.c"
+#line 96 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -613,18 +614,18 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   107,   107,   110,   113,   116,   117,   118,   121,   122,
-     123,   126,   129,   130,   131,   132,   146,   154,   157,   168,
-     173,   198,   202,   217,   218,   219,   223,   226,   227,   234,
-     241,   244,   248,   252,   256,   260,   274,   281,   285,   288,
-     292,   308,   320,   327,   377,   378,   407,   425,   439,   440,
-     441,   448,   451,   457,   458,   461,   507,   551,   595,   657,
-     701,   756,   765,   772,   800,   804,   826,   847,   867,   887,
-     918,   937,   965,   969,   970,   971,   972,   973,   974,   986,
-    1012,  1013,  1014,  1020,  1021,  1024,  1025,  1026,  1027,  1028,
-    1031,  1082,  1085,  1086,  1089,  1090,  1093,  1096,  1101,  1104,
-    1107,  1110,  1113,  1114,  1117,  1118,  1119,  1122,  1125,  1128,
-    1129
+       0,   159,   159,   162,   165,   168,   169,   170,   173,   174,
+     175,   178,   181,   182,   183,   184,   198,   206,   209,   220,
+     225,   250,   254,   267,   268,   269,   273,   276,   277,   284,
+     291,   294,   298,   302,   306,   310,   324,   328,   332,   336,
+     340,   357,   369,   376,   426,   427,   456,   474,   488,   489,
+     490,   497,   500,   506,   507,   510,   556,   600,   644,   706,
+     750,   805,   814,   821,   849,   853,   875,   896,   916,   936,
+     967,   986,  1014,  1018,  1019,  1020,  1021,  1022,  1023,  1035,
+    1061,  1062,  1063,  1069,  1070,  1073,  1074,  1075,  1076,  1077,
+    1080,  1131,  1134,  1135,  1138,  1139,  1142,  1145,  1150,  1153,
+    1156,  1159,  1162,  1163,  1166,  1167,  1168,  1171,  1174,  1177,
+    1178
 };
 #endif
 
@@ -1390,146 +1391,140 @@ yyreduce:
   switch (yyn)
     {
   case 19: /* lista_d_tipo: BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo  */
-#line 169 "src/parser.y"
+#line 221 "src/parser.y"
                                 {
 
 
 				}
-#line 1399 "parser.tab.c"
+#line 1400 "parser.tab.c"
     break;
 
   case 21: /* d_tipo: tipo_base  */
-#line 199 "src/parser.y"
+#line 251 "src/parser.y"
                                 {
-					/****duda: es integer? */
+					
 				}
-#line 1407 "parser.tab.c"
+#line 1408 "parser.tab.c"
     break;
 
   case 22: /* d_tipo: BI_IDENTIFICADOR  */
-#line 203 "src/parser.y"
+#line 255 "src/parser.y"
                                 {
 
-					char *str = "type";
-					char *type = get_attr(st, "hola", str);
+					/*cchar *type = get_type( st, $1 );
 
-					if ( !type ) {
-						printf("Identifier %s doesnt exist", yyvsp[0]);
+					if ( type == UNKNOWN_SYMBOL ) {
+						printf("Error: Unknown symbol %s", $1);
 					} else {
-						// strcpy();
-						yyval = type;
-					}
+						$$ = type;
+					}*/
 
 
 				}
-#line 1426 "parser.tab.c"
+#line 1425 "parser.tab.c"
     break;
 
   case 25: /* d_tipo: BI_TUPLA lista_campos BI_FTUPLA  */
-#line 220 "src/parser.y"
+#line 270 "src/parser.y"
                                 {
 					/* Que devolver ??? tupla*/
 				}
-#line 1434 "parser.tab.c"
+#line 1433 "parser.tab.c"
     break;
 
   case 29: /* lista_campos: BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos  */
-#line 235 "src/parser.y"
+#line 285 "src/parser.y"
                                 {
 
-					insertSymbol(st, yyvsp[-4]);
-					set_attr(st, yyvsp[-4], "type", yyvsp[-2]);
+					insertSymbol(st, (yyvsp[-4].sval));
+					set_type(st, (yyvsp[-4].sval), (yyvsp[-2].typo_d_tipo));
 
 				}
-#line 1445 "parser.tab.c"
+#line 1444 "parser.tab.c"
     break;
 
   case 31: /* tipo_base: BI_PR_ENTERO  */
-#line 245 "src/parser.y"
+#line 295 "src/parser.y"
                                 {
-					yyval = INTEGER;
+					(yyval.data_type) = DATA_TYPE_INTEGER;
 				}
-#line 1453 "parser.tab.c"
+#line 1452 "parser.tab.c"
     break;
 
   case 32: /* tipo_base: BI_PR_REAL  */
-#line 249 "src/parser.y"
+#line 299 "src/parser.y"
                                 {
-					yyval = FLOAT;
+					(yyval.data_type) = DATA_TYPE_REAL;
 				}
-#line 1461 "parser.tab.c"
+#line 1460 "parser.tab.c"
     break;
 
   case 33: /* tipo_base: BI_PR_BOOLEANO  */
-#line 253 "src/parser.y"
+#line 303 "src/parser.y"
                                 {
-					yyval = BOOLEAN;
+					(yyval.data_type) = DATA_TYPE_BOOLEAN;
 				}
-#line 1469 "parser.tab.c"
+#line 1468 "parser.tab.c"
     break;
 
   case 34: /* tipo_base: BI_PR_CARACTER  */
-#line 257 "src/parser.y"
+#line 307 "src/parser.y"
                                 {
-					yyval = CHARACTER;
+					(yyval.data_type) = DATA_TYPE_CHAR;
 				}
-#line 1477 "parser.tab.c"
+#line 1476 "parser.tab.c"
     break;
 
   case 35: /* tipo_base: BI_PR_CADENA  */
-#line 261 "src/parser.y"
+#line 311 "src/parser.y"
                                 {
-					yyval = STRING;
+					(yyval.data_type) = DATA_TYPE_STRING;
 				}
-#line 1485 "parser.tab.c"
+#line 1484 "parser.tab.c"
     break;
 
   case 36: /* literal: BI_LIT_ENTERO  */
-#line 275 "src/parser.y"
+#line 325 "src/parser.y"
                                 {
-
-					printf("LITERAL_ENTERO");
-
-					yyval = INTEGER;
+					(yyval.data_type) = DATA_TYPE_INTEGER;
 				}
-#line 1496 "parser.tab.c"
+#line 1492 "parser.tab.c"
     break;
 
   case 37: /* literal: BI_LIT_REAL  */
-#line 282 "src/parser.y"
+#line 329 "src/parser.y"
                                 {
-					yyval = FLOAT;
+					(yyval.data_type) = DATA_TYPE_REAL;
 				}
-#line 1504 "parser.tab.c"
+#line 1500 "parser.tab.c"
     break;
 
   case 38: /* literal: BI_LIT_BOOLEANO  */
-#line 285 "src/parser.y"
-                                                       {
-					yyval = BOOLEAN;
+#line 333 "src/parser.y"
+                                {
+					(yyval.data_type) = DATA_TYPE_BOOLEAN;
 				}
-#line 1512 "parser.tab.c"
+#line 1508 "parser.tab.c"
     break;
 
   case 39: /* literal: BI_LIT_CARACTER  */
-#line 288 "src/parser.y"
-                                                       {
-
-					yyval = CHARACTER;
+#line 337 "src/parser.y"
+                                {
+					(yyval.data_type) = DATA_TYPE_CHAR;
 				}
-#line 1521 "parser.tab.c"
+#line 1516 "parser.tab.c"
     break;
 
   case 40: /* literal: BI_LIT_CADENA  */
-#line 292 "src/parser.y"
-                                                     {
-					yyval = STRING;
+#line 341 "src/parser.y"
+                                {
+					(yyval.data_type) = DATA_TYPE_STRING;
 				}
-#line 1529 "parser.tab.c"
+#line 1524 "parser.tab.c"
     break;
 
   case 41: /* lista_d_cte: BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte  */
-#line 309 "src/parser.y"
+#line 358 "src/parser.y"
                                 {
 
 
@@ -1537,19 +1532,19 @@ yyreduce:
 					  * We insert the identifier into the symbol table and we define its scope and type.
 					  * in this case scope will be, const. The type is returned by literal grammar rule 
 					  */
-					insertSymbol(st, yyvsp[-4]);
-					set_attr(st, yyvsp[-4], "scope", "cte");
-					set_attr(st, yyvsp[-4], "type", yyvsp[-2])
+					insertSymbol(st, (yyvsp[-4].sval));
+					set_attr(st, (yyvsp[-4].sval), "scope", "cte");
+					set_attr(st, (yyvsp[-4].sval), "type", (yyvsp[-2].data_type))
 				}
-#line 1545 "parser.tab.c"
+#line 1540 "parser.tab.c"
     break;
 
   case 43: /* lista_d_var: lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var  */
-#line 327 "src/parser.y"
+#line 376 "src/parser.y"
                                                                                                  {
 
 				/* Debug */
-				if ( lookup(st, yyvsp[-2]) ) {
+				if ( lookup(st, (yyvsp[-2].sval)) ) {
 
 					char *type;
 
@@ -1574,12 +1569,12 @@ yyreduce:
 						}
 
 					} else {
-						printf("Symbol %s type is not defined\n", yyvsp[-2]);
+						printf("Symbol %s type is not defined\n", (yyvsp[-2].sval));
 					}
 
 
 				} else {
-					printf("The symbol %s doesnt seem to be decalred\n", yyvsp[-2]);
+					printf("The symbol %s doesnt seem to be decalred\n", (yyvsp[-2].sval));
 				}
 
 
@@ -1591,200 +1586,200 @@ yyreduce:
 				if ( get_attr(st, %3) ) {
 
 				} else {
-					printf("Symbol %s type is not defined\n", yyvsp[-2]);
+					printf("Symbol %s type is not defined\n", (yyvsp[-2].sval));
 				}
 
 
 }
-#line 1600 "parser.tab.c"
+#line 1595 "parser.tab.c"
     break;
 
   case 46: /* lista_id: BI_IDENTIFICADOR BI_SEPARADOR lista_id  */
-#line 408 "src/parser.y"
+#line 457 "src/parser.y"
                                 {
 
-					if ( !lookup(st, yyvsp[-2]) ) {
+					if ( !lookup(st, (yyvsp[-2].sval)) ) {
 
-						insertSymbol(st, yyvsp[-2]);
+						insertSymbol(st, (yyvsp[-2].sval));
 						
 						/* 
 						 * We add identifiers to stack, to be able to set their type
 						 * when we know it 
 						 */
-						apilar(stack, yyvsp[-2]);
+						apilar(stack, (yyvsp[-2].sval));
 
 
 					} else {
 						printf("Identifier alredy exists")
 					}
 				}
-#line 1622 "parser.tab.c"
+#line 1617 "parser.tab.c"
     break;
 
   case 47: /* lista_id: BI_IDENTIFICADOR  */
-#line 426 "src/parser.y"
+#line 475 "src/parser.y"
                                 {
 
-					if ( !lookup(st, yyvsp[0]) ) {
+					if ( !lookup(st, (yyvsp[0].sval)) ) {
 						
-						insertSymbol(st, yyvsp[0]);
-						apilar(stack, yyvsp[0]);
+						insertSymbol(st, (yyvsp[0].sval));
+						apilar(stack, (yyvsp[0].sval));
 
 					} else {
 						printf("Identifier alredy exists")
 					}
 				}
-#line 1638 "parser.tab.c"
+#line 1633 "parser.tab.c"
     break;
 
   case 55: /* exp_a_b: exp_a_b BI_SUMA exp_a_b  */
-#line 462 "src/parser.y"
+#line 511 "src/parser.y"
                                 {
 
-					yyval = new_exp_a_b(ARITHMETIC_EXP);
-					yyval->s = new_symbol("_tmp");
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b(ARITHMETIC_EXP);
+					(yyval.exp)->s = new_symbol("_tmp");
+					add_symbol(st, (yyval.exp)->s);
 
-					if ( ( yyvsp[-2]->s->type == INTEGER ) && ( yyvsp[0]->s->type == INTEGER ) )
+					if ( ( (yyvsp[-2].exp)->s->type == INTEGER ) && ( (yyvsp[0].exp)->s->type == INTEGER ) )
 					{
-						yyval->s->type = DATA_TYPE_INTEGER;
-						Quad *quad = new_quad(QUAD_OP_INTSUM, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						(yyval.exp)->s->type = DATA_TYPE_INTEGER;
+						Quad *quad = new_quad(QUAD_OP_INTSUM, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
 
 					}
-					else if ( ( yyvsp[-2]->s->type == REAL ) && ( yyvsp[0]->s->type == REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == REAL ) && ( (yyvsp[0].exp)->s->type == REAL ) )
 					{
-						yyval->s->type = DATA_TYPE_REAL;
-						Quad *quad = new_quad(QUAD_OP_REALSUM, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
+						Quad *quad = new_quad(QUAD_OP_REALSUM, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
 					}
-					else if ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALSUM, yyval->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUM, (yyval.exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( yyvsp[0]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALSUM, yyval->s->id, yyvsp[-2]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUM, (yyval.exp)->s->id, (yyvsp[-2].exp)->s->id, (yyval.exp)->s->id);
 						
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ))
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ))
 					{
 
 					}
 
 				}
-#line 1688 "parser.tab.c"
+#line 1683 "parser.tab.c"
     break;
 
   case 56: /* exp_a_b: exp_a_b BI_RESTA exp_a_b  */
-#line 508 "src/parser.y"
+#line 557 "src/parser.y"
                                 {
-					yyval = new_exp_a_b(ARITHMETIC_EXP);
-					yyval->s = new_symbol("_tmp");
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b(ARITHMETIC_EXP);
+					(yyval.exp)->s = new_symbol("_tmp");
+					add_symbol(st, (yyval.exp)->s);
 
-					if ( ( yyvsp[-2]->s->type == INTEGER ) && ( yyvsp[0]->s->type == INTEGER ) )
+					if ( ( (yyvsp[-2].exp)->s->type == INTEGER ) && ( (yyvsp[0].exp)->s->type == INTEGER ) )
 					{
-						yyval->s->type = DATA_TYPE_INTEGER;
-						Quad *quad = new_quad(QUAD_OP_INTSUBS, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						(yyval.exp)->s->type = DATA_TYPE_INTEGER;
+						Quad *quad = new_quad(QUAD_OP_INTSUBS, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
 
 					}
-					else if ( ( yyvsp[-2]->s->type == REAL ) && ( yyvsp[0]->s->type == REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == REAL ) && ( (yyvsp[0].exp)->s->type == REAL ) )
 					{
-						yyval->s->type = DATA_TYPE_REAL;
-						Quad *quad = new_quad(QUAD_OP_REALSUBS, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
+						Quad *quad = new_quad(QUAD_OP_REALSUBS, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
 					}
-					else if ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALSUBS, yyval->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUBS, (yyval.exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( yyvsp[0]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALSUBS, yyval->s->id, yyvsp[-2]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALSUBS, (yyval.exp)->s->id, (yyvsp[-2].exp)->s->id, (yyval.exp)->s->id);
 						
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ))
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ))
 					{
 
 					}
 				}
-#line 1736 "parser.tab.c"
+#line 1731 "parser.tab.c"
     break;
 
   case 57: /* exp_a_b: exp_a_b BI_MULTIPLICACION exp_a_b  */
-#line 552 "src/parser.y"
+#line 601 "src/parser.y"
                                 {
-					yyval = new_exp_a_b(ARITHMETIC_EXP);
-					yyval->s = new_symbol("_tmp");
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b(ARITHMETIC_EXP);
+					(yyval.exp)->s = new_symbol("_tmp");
+					add_symbol(st, (yyval.exp)->s);
 
-					if ( ( yyvsp[-2]->s->type == INTEGER ) && ( yyvsp[0]->s->type == INTEGER ) )
+					if ( ( (yyvsp[-2].exp)->s->type == INTEGER ) && ( (yyvsp[0].exp)->s->type == INTEGER ) )
 					{
-						yyval->s->type = DATA_TYPE_INTEGER;
-						Quad *quad = new_quad(QUAD_OP_INTMULT, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						(yyval.exp)->s->type = DATA_TYPE_INTEGER;
+						Quad *quad = new_quad(QUAD_OP_INTMULT, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
 
 					}
-					else if ( ( yyvsp[-2]->s->type == REAL ) && ( yyvsp[0]->s->type == REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == REAL ) && ( (yyvsp[0].exp)->s->type == REAL ) )
 					{
-						yyval->s->type = DATA_TYPE_REAL;
-						Quad *quad = new_quad(QUAD_OP_REALMULT, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
+						Quad *quad = new_quad(QUAD_OP_REALMULT, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
 					}
-					else if ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALMULT, yyval->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMULT, (yyval.exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( yyvsp[0]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALMULT, yyval->s->id, yyvsp[-2]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMULT, (yyval.exp)->s->id, (yyvsp[-2].exp)->s->id, (yyval.exp)->s->id);
 						
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ))
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ))
 					{
 
 					}
 				}
-#line 1784 "parser.tab.c"
+#line 1779 "parser.tab.c"
     break;
 
   case 58: /* exp_a_b: exp_a_b BI_DIVISION exp_a_b  */
-#line 596 "src/parser.y"
+#line 645 "src/parser.y"
                                 {
 
 				/**
@@ -1795,193 +1790,193 @@ yyreduce:
 				 *
 				 */
 
-					yyval = new_exp_a_b(ARITHMETIC_EXP);
-					yyval->s = new_symbol("_tmp");
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b(ARITHMETIC_EXP);
+					(yyval.exp)->s = new_symbol("_tmp");
+					add_symbol(st, (yyval.exp)->s);
 
 
-					if ( ( yyvsp[-2]->s->type == INTEGER ) && ( yyvsp[0]->s->type == INTEGER ) )
+					if ( ( (yyvsp[-2].exp)->s->type == INTEGER ) && ( (yyvsp[0].exp)->s->type == INTEGER ) )
 					{
 						Symbol *tmp_symbol = new_symbol("_tmp");
 						add_symbol( tmp_symbol );
 						
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, tmp_symbol->id);
-						Quad *quad3 = new_quad(QUAD_OP_REALDIV, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, tmp_symbol->id);
+						Quad *quad3 = new_quad(QUAD_OP_REALDIV, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 						gen(qt, quad3);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( ( yyvsp[-2]->s->type == REAL ) && ( yyvsp[0]->s->type == REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == REAL ) && ( (yyvsp[0].exp)->s->type == REAL ) )
 					{
-						Quad *quad = new_quad(QUAD_OP_REALDIV, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad = new_quad(QUAD_OP_REALDIV, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALDIV, yyval->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, (yyval.exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( yyvsp[0]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALDIV, yyval->s->id, yyvsp[-2]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, (yyval.exp)->s->id, (yyvsp[-2].exp)->s->id, (yyval.exp)->s->id);
 						
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ))
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ))
 					{
 
 					}
 				}
-#line 1850 "parser.tab.c"
+#line 1845 "parser.tab.c"
     break;
 
   case 59: /* exp_a_b: exp_a_b BI_MOD exp_a_b  */
-#line 658 "src/parser.y"
+#line 707 "src/parser.y"
                                 {
 
-					yyval = new_exp_a_b(ARITHMETIC_EXP);
-					yyval->s = new_symbol("_tmp");
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b(ARITHMETIC_EXP);
+					(yyval.exp)->s = new_symbol("_tmp");
+					add_symbol(st, (yyval.exp)->s);
 
-					if ( ( yyvsp[-2]->s->type == INTEGER ) && ( yyvsp[0]->s->type == INTEGER ) )
+					if ( ( (yyvsp[-2].exp)->s->type == INTEGER ) && ( (yyvsp[0].exp)->s->type == INTEGER ) )
 					{
-						Quad *quad = new_quad(QUAD_OP_INTMOD, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad = new_quad(QUAD_OP_INTMOD, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
-						yyval->s->type = DATA_TYPE_INTEGER;
+						(yyval.exp)->s->type = DATA_TYPE_INTEGER;
 					}
-					else if ( ( yyvsp[-2]->s->type == REAL ) && ( yyvsp[0]->s->type == REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == REAL ) && ( (yyvsp[0].exp)->s->type == REAL ) )
 					{
-						Quad *quad = new_quad(QUAD_OP_MODREAL, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad = new_quad(QUAD_OP_MODREAL, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALMOD, yyval->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMOD, (yyval.exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( yyvsp[0]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALMOD, yyval->s->id, yyvsp[-2]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALMOD, (yyval.exp)->s->id, (yyvsp[-2].exp)->s->id, (yyval.exp)->s->id);
 						
 						gen(qt, quad1);
 						gen(qt, quad2);
 
-						yyval->s->type = DATA_TYPE_REAL;
+						(yyval.exp)->s->type = DATA_TYPE_REAL;
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ))
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ))
 					{
 
 					}
 				}
-#line 1898 "parser.tab.c"
+#line 1893 "parser.tab.c"
     break;
 
   case 60: /* exp_a_b: exp_a_b BI_DIV exp_a_b  */
-#line 702 "src/parser.y"
+#line 751 "src/parser.y"
                                 {
 
 					/* div is division in which the fractional part (remainder) is discarded */
 
-					yyval = new_exp_a_b(ARITHMETIC_EXP);
-					yyval->s = new_symbol("_tmp");
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b(ARITHMETIC_EXP);
+					(yyval.exp)->s = new_symbol("_tmp");
+					add_symbol(st, (yyval.exp)->s);
 
 
-					if ( ( yyvsp[-2]->s->type == INTEGER ) && ( yyvsp[0]->s->type == INTEGER ) )
+					if ( ( (yyvsp[-2].exp)->s->type == INTEGER ) && ( (yyvsp[0].exp)->s->type == INTEGER ) )
 					{
 						Symbol *tmp_symbol = new_symbol("_tmp");
 						add_symbol( tmp_symbol );
 
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, tmp_symbol->id);
-						Quad *quad3 = new_quad(QUAD_OP_REALDIV, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, tmp_symbol->id);
+						Quad *quad3 = new_quad(QUAD_OP_REALDIV, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 						gen(qt, quad3);
 					}
-					else if ( ( yyvsp[-2]->s->type == REAL ) && ( yyvsp[0]->s->type == REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == REAL ) && ( (yyvsp[0].exp)->s->type == REAL ) )
 					{
-						Quad *quad = new_quad(QUAD_OP_REALDIV, yyvsp[-2]->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad = new_quad(QUAD_OP_REALDIV, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 						gen(qt, quad);
 					}
-					else if ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[-2]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALDIV, yyval->s->id, yyvsp[0]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[-2].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, (yyval.exp)->s->id, (yyvsp[0].exp)->s->id, (yyval.exp)->s->id);
 
 						gen(qt, quad1);
 						gen(qt, quad2);
 					}
-					else if ( yyvsp[0]->s->type == DATA_TYPE_INTEGER )
+					else if ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id);
-						Quad *quad2 = new_quad(QUAD_OP_REALDIV, yyval->s->id, yyvsp[-2]->s->id, yyval->s->id);
+						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
+						Quad *quad2 = new_quad(QUAD_OP_REALDIV, (yyval.exp)->s->id, (yyvsp[-2].exp)->s->id, (yyval.exp)->s->id);
 						
 						gen(qt, quad1);
 						gen(qt, quad2);
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ))
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ))
 					{
 
 					}
 
 					/* Convert result to INTEGER */
-					Quad *q = new_quad(QUAD_OP_REAL2INT, yyval->s->id, QUAD_OP_VOID, yyval->s->id);
+					Quad *q = new_quad(QUAD_OP_REAL2INT, (yyval.exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id);
 					gen(qt, q);
 					
-					yyval->s->type = DATA_TYPE_INTEGER;
+					(yyval.exp)->s->type = DATA_TYPE_INTEGER;
 				}
-#line 1957 "parser.tab.c"
+#line 1952 "parser.tab.c"
     break;
 
   case 61: /* exp_a_b: BI_LIT_ENTERO  */
-#line 757 "src/parser.y"
+#line 806 "src/parser.y"
                                 {
 
-					yyval = new_exp_a_b( ARITHMETIC_EXP );
-					yyval->s = new_symbol( "_tmp" );
-					yyval->S->type = DATA_TYPE_INTEGER;
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b( ARITHMETIC_EXP );
+					(yyval.exp)->s = new_symbol( "_tmp" );
+					(yyval.exp)->S->type = DATA_TYPE_INTEGER;
+					add_symbol(st, (yyval.exp)->s);
 
 				}
-#line 1970 "parser.tab.c"
+#line 1965 "parser.tab.c"
     break;
 
   case 62: /* exp_a_b: BI_LIT_REAL  */
-#line 766 "src/parser.y"
+#line 815 "src/parser.y"
                                 {
-					yyval = new_exp_a_b( ARITHMETIC_EXP );
-					yyval->s = new_symbol( "_tmp" );
-					yyval->S->type = DATA_TYPE_REAL;
-					add_symbol(st, yyval->s);
+					(yyval.exp) = new_exp_a_b( ARITHMETIC_EXP );
+					(yyval.exp)->s = new_symbol( "_tmp" );
+					(yyval.exp)->S->type = DATA_TYPE_REAL;
+					add_symbol(st, (yyval.exp)->s);
 				}
-#line 1981 "parser.tab.c"
+#line 1976 "parser.tab.c"
     break;
 
   case 63: /* exp_a_b: BI_RESTA exp_a_b  */
-#line 773 "src/parser.y"
+#line 822 "src/parser.y"
                                 {
 					/**
 					 * Productio: E --> -E1
@@ -1995,33 +1990,33 @@ yyreduce:
 					 *		fsi
 					 *	}
 					 */
-					yyval = new_exp_a_b( ARITHMETIC_EXP );
-					yyval->s = new_symbol( "_tmp");
-					yyval->s->type = yyvsp[-1]->s->type;
+					(yyval.exp) = new_exp_a_b( ARITHMETIC_EXP );
+					(yyval.exp)->s = new_symbol( "_tmp");
+					(yyval.exp)->s->type = (yyvsp[0].exp)->s->type;
 
-					if ( yyvsp[-1]->s->type == DATA_TYPE_INTEGER )
+					if ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad = new_quad(QUAD_OP_INTUNIMUS, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id)
+						Quad *quad = new_quad(QUAD_OP_INTUNIMUS, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id)
 					}
-					else if ( yyvsp[-1]->s->type == DATA_TYPE_REAL )
+					else if ( (yyvsp[0].exp)->s->type == DATA_TYPE_REAL )
 					{
-						Quad *quad = new_quad(QUAD_OP_REALUNIMUS, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id)
+						Quad *quad = new_quad(QUAD_OP_REALUNIMUS, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyval.exp)->s->id)
 					}
 
 				}
-#line 2013 "parser.tab.c"
+#line 2008 "parser.tab.c"
     break;
 
   case 64: /* exp_a_b: operando  */
-#line 801 "src/parser.y"
+#line 850 "src/parser.y"
                                 {
 
 				}
-#line 2021 "parser.tab.c"
+#line 2016 "parser.tab.c"
     break;
 
   case 65: /* exp_a_b: exp_a_b BI_O M exp_a_b  */
-#line 805 "src/parser.y"
+#line 854 "src/parser.y"
                                 {
 
 					/**
@@ -2033,21 +2028,21 @@ yyreduce:
 					 *	}
 					 */
 
-					yyval = new_exp_a_b(BOOLEAN);
-					yyval->s = new_symbol("_tmp");
-					yyval->s->type = BOOLEAN;
-					add_symbol( st, yyval->s );
+					(yyval.exp) = new_exp_a_b(BOOLEAN);
+					(yyval.exp)->s = new_symbol("_tmp");
+					(yyval.exp)->s->type = BOOLEAN;
+					add_symbol( st, (yyval.exp)->s );
 					
-					backpatch(yyvsp[-3]->falselist, yyvsp[-1]);
-					yyval->truelist = merge(yyvsp[-3]->truelist, yyvsp[0]->truelist);
-					yyval->falselist = yyvsp[0]->falselist;
+					backpatch((yyvsp[-3].exp)->falselist, (yyvsp[-1].next_quad));
+					(yyval.exp)->truelist = merge((yyvsp[-3].exp)->truelist, (yyvsp[0].exp)->truelist);
+					(yyval.exp)->falselist = (yyvsp[0].exp)->falselist;
 
 				}
-#line 2047 "parser.tab.c"
+#line 2042 "parser.tab.c"
     break;
 
   case 66: /* exp_a_b: exp_a_b BI_Y M exp_a_b  */
-#line 827 "src/parser.y"
+#line 876 "src/parser.y"
                                 {
 					/**
 					 * Production 2: E --> E1 AND M E2
@@ -2058,21 +2053,21 @@ yyreduce:
 					 *	}
 					 */
 
-					yyval = new_exp_a_b(BOOLEAN);
-					yyval->s = new_symbol("_tmp");
-					yyval->s->type = BOOLEAN;
-					add_symbol( st, yyval->s );
+					(yyval.exp) = new_exp_a_b(BOOLEAN);
+					(yyval.exp)->s = new_symbol("_tmp");
+					(yyval.exp)->s->type = BOOLEAN;
+					add_symbol( st, (yyval.exp)->s );
 					
-					backpatch(yyvsp[-3]->truelist, yyvsp[-1]);
-					yyval->truelist = yyvsp[0]->truelist;
-					yyval->falselist = merge(yyvsp[-3]->falselist, yyvsp[0]->falselist);
+					backpatch((yyvsp[-3].exp)->truelist, (yyvsp[-1].next_quad));
+					(yyval.exp)->truelist = (yyvsp[0].exp)->truelist;
+					(yyval.exp)->falselist = merge((yyvsp[-3].exp)->falselist, (yyvsp[0].exp)->falselist);
 
 				}
-#line 2072 "parser.tab.c"
+#line 2067 "parser.tab.c"
     break;
 
   case 67: /* exp_a_b: BI_NO exp_a_b  */
-#line 848 "src/parser.y"
+#line 897 "src/parser.y"
                                 {
 
 					/**
@@ -2083,20 +2078,20 @@ yyreduce:
 					 * }
 					 */
 					
-					yyval = new_exp_a_b(BOOLEAN);
-					yyval->s = new_symbol("_tmp");
-					yyval->s->type = BOOLEAN;
-					add_symbol( st, yyval->s );
+					(yyval.exp) = new_exp_a_b(BOOLEAN);
+					(yyval.exp)->s = new_symbol("_tmp");
+					(yyval.exp)->s->type = BOOLEAN;
+					add_symbol( st, (yyval.exp)->s );
 
-					yyval->truelist = yyvsp[0]->falselist;
-					yyval->falselist = yyvsp[0]->truelist;
+					(yyval.exp)->truelist = (yyvsp[0].exp)->falselist;
+					(yyval.exp)->falselist = (yyvsp[0].exp)->truelist;
 
 				}
-#line 2096 "parser.tab.c"
+#line 2091 "parser.tab.c"
     break;
 
   case 68: /* exp_a_b: BI_PAR_APER exp_a_b BI_PAR_CIER  */
-#line 868 "src/parser.y"
+#line 917 "src/parser.y"
                                 {
 
 					/**
@@ -2107,20 +2102,20 @@ yyreduce:
 					 * 	}
 					 */
 					
-					yyval = new_exp_a_b(BOOLEAN);
-					yyval->s = new_symbol("_tmp");
-					yyval->s->type = BOOLEAN;
-					add_symbol( st, yyval->s );
+					(yyval.exp) = new_exp_a_b(BOOLEAN);
+					(yyval.exp)->s = new_symbol("_tmp");
+					(yyval.exp)->s->type = BOOLEAN;
+					add_symbol( st, (yyval.exp)->s );
 
-					yyval->truelist = yyvsp[-1]->truelist;
-					yyval->falselist = yyvsp[-1]->falselist;
+					(yyval.exp)->truelist = (yyvsp[-1].exp)->truelist;
+					(yyval.exp)->falselist = (yyvsp[-1].exp)->falselist;
 
 				}
-#line 2120 "parser.tab.c"
+#line 2115 "parser.tab.c"
     break;
 
   case 69: /* exp_a_b: expresion oprel expresion  */
-#line 888 "src/parser.y"
+#line 937 "src/parser.y"
                                 {
 
 					/**
@@ -2133,116 +2128,116 @@ yyreduce:
 					 * }
 					 */
 
-					yyval = new_exp_a_b(BOOLEAN);
+					(yyval.exp) = new_exp_a_b(BOOLEAN);
 
 					 /* We create new tmp variable and add to symbol table*/
-					yyval->s = new_symbol("_tmp");
-					yyval->s->type = BOOLEAN;
-					add_symbol( st, yyval->s );
+					(yyval.exp)->s = new_symbol("_tmp");
+					(yyval.exp)->s->type = BOOLEAN;
+					add_symbol( st, (yyval.exp)->s );
 
 					/* We generate new quadruples */ 
-					Quad *quad1 = new_quad(yyvsp[-1], yyvsp[-2]->s->is, yyvsp[-1]->s->id, QUAD_OP_NOGOTO);
-					Quad *quad2 = new_quad(QUAD_OP_GOTO, yyval->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
+					Quad *quad1 = new_quad((yyvsp[-1].oprel_val), (yyvsp[-2].exp)->s->is, (yyvsp[-1].oprel_val)->s->id, QUAD_OP_NOGOTO);
+					Quad *quad2 = new_quad(QUAD_OP_GOTO, (yyval.exp)->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
 
 					gen( qt, quad1 );
 					gen( qt, quad2 );
 
-					yyval->truelist = makelist( quad1 );
-					yyval->falselist = makelist( quad2 );
+					(yyval.exp)->truelist = makelist( quad1 );
+					(yyval.exp)->falselist = makelist( quad2 );
 
 				}
-#line 2155 "parser.tab.c"
+#line 2150 "parser.tab.c"
     break;
 
   case 70: /* exp_a_b: BI_VERDADERO  */
-#line 919 "src/parser.y"
+#line 968 "src/parser.y"
                                 {
 					/** 
 					  * Production 6: E --> true
 					  * { E.truelist := makelist(nextaddr) } 
 					  * 
 					  */
-					yyval = new_exp_a_b(BOOLEAN);
-					yyval->s = new_symbol("_tmp");
-					yyval->s->type = BOOLEAN;
+					(yyval.exp) = new_exp_a_b(BOOLEAN);
+					(yyval.exp)->s = new_symbol("_tmp");
+					(yyval.exp)->s->type = BOOLEAN;
       				/*$$->s->value.bool = $1;*/
-      				add_symbol(st, yyval->s);
+      				add_symbol(st, (yyval.exp)->s);
 
-					Quad *quad = new_quad(GOTO, yyval->s->id, OP_QUAD_TRUE, NOTGOTO);
+					Quad *quad = new_quad(GOTO, (yyval.exp)->s->id, OP_QUAD_TRUE, NOTGOTO);
 					gen(qt, quad);
-					yyval->truelist = makelist( quad );
+					(yyval.exp)->truelist = makelist( quad );
 
 
 				}
-#line 2178 "parser.tab.c"
+#line 2173 "parser.tab.c"
     break;
 
   case 71: /* exp_a_b: BI_FALSO  */
-#line 938 "src/parser.y"
+#line 987 "src/parser.y"
                                 {
 					/** 
 					  * Production 7: E --> false
 					  * { E.falselist := makelist(nextaddr) } 
 					  * 
 					  */
-					yyval = new_exp_a_b(BOOLEAN);
-					yyval->s = new_symbol("_tmp");
-					yyval->s->type = BOOLEAN;
+					(yyval.exp) = new_exp_a_b(BOOLEAN);
+					(yyval.exp)->s = new_symbol("_tmp");
+					(yyval.exp)->s->type = BOOLEAN;
       				/*$$->s->value.bool = $1;*/
-      				add_symbol(st, yyval->s);
+      				add_symbol(st, (yyval.exp)->s);
 
-					Quad *quad = new_quad(GOTO, yyval->s->id, OP_QUAD_FALSE, NOTGOTO);
+					Quad *quad = new_quad(GOTO, (yyval.exp)->s->id, OP_QUAD_FALSE, NOTGOTO);
 					gen(qt, quad);
-					yyval->falselist = makelist( quad );
+					(yyval.exp)->falselist = makelist( quad );
 
 				}
-#line 2200 "parser.tab.c"
+#line 2195 "parser.tab.c"
     break;
 
   case 72: /* M: %empty  */
-#line 965 "src/parser.y"
-                                              { yyval = next_quad() }
-#line 2206 "parser.tab.c"
+#line 1014 "src/parser.y"
+                                              { (yyval.next_quad) = next_quad() }
+#line 2201 "parser.tab.c"
     break;
 
   case 73: /* oprel: BI_IGUALDAD  */
-#line 969 "src/parser.y"
-                                                { yyval = QUAD_OP_EQ }
-#line 2212 "parser.tab.c"
+#line 1018 "src/parser.y"
+                                                { (yyval.oprel_val) = QUAD_OP_EQ }
+#line 2207 "parser.tab.c"
     break;
 
   case 74: /* oprel: BI_DISTINTO  */
-#line 970 "src/parser.y"
-                                                        { yyval = QUAD_OP_NE }
-#line 2218 "parser.tab.c"
+#line 1019 "src/parser.y"
+                                                        { (yyval.oprel_val) = QUAD_OP_NE }
+#line 2213 "parser.tab.c"
     break;
 
   case 75: /* oprel: BI_MAYOR  */
-#line 971 "src/parser.y"
-                                                                { yyval = QUAD_OP_GT }
-#line 2224 "parser.tab.c"
+#line 1020 "src/parser.y"
+                                                                { (yyval.oprel_val) = QUAD_OP_GT }
+#line 2219 "parser.tab.c"
     break;
 
   case 76: /* oprel: BI_MAYOR_IGUAL  */
-#line 972 "src/parser.y"
-                                                        { yyval = QUAD_OP_GE }
-#line 2230 "parser.tab.c"
+#line 1021 "src/parser.y"
+                                                        { (yyval.oprel_val) = QUAD_OP_GE }
+#line 2225 "parser.tab.c"
     break;
 
   case 77: /* oprel: BI_MENOR  */
-#line 973 "src/parser.y"
-                                                                { yyval = QUAD_OP_LT }
-#line 2236 "parser.tab.c"
+#line 1022 "src/parser.y"
+                                                                { (yyval.oprel_val) = QUAD_OP_LT }
+#line 2231 "parser.tab.c"
     break;
 
   case 78: /* oprel: BI_MENOR_IGUAL  */
-#line 974 "src/parser.y"
-                                                        { yyval = QUAD_OP_LE }
-#line 2242 "parser.tab.c"
+#line 1023 "src/parser.y"
+                                                        { (yyval.oprel_val) = QUAD_OP_LE }
+#line 2237 "parser.tab.c"
     break;
 
   case 79: /* operando: BI_IDENTIFICADOR  */
-#line 987 "src/parser.y"
+#line 1036 "src/parser.y"
                                 {
 					/**
 					 * Prodcution 6: E --> id
@@ -2253,26 +2248,26 @@ yyreduce:
 					 *	}
 					 */
 					
-					Symbol *symbol = lookup( st, yyvsp[0] );
+					Symbol *symbol = lookup( st, (yyvsp[0].sval) );
 					if ( symbol )
 					{
-						yyval = new_exp_a_b( UNDEFINED_EXP );					
-						yyval->s = symbol;
+						(yyval.exp) = new_exp_a_b( UNDEFINED_EXP );					
+						(yyval.exp)->s = symbol;
 
 					}
 					else
 					{
-						fprintf(stderr, "Error: Symbol %s doesnt exist in symbom table", yyvsp[0]);
+						fprintf(stderr, "Error: Symbol %s doesnt exist in symbom table", (yyvsp[0].sval));
 					}
 
 
 					
 				}
-#line 2272 "parser.tab.c"
+#line 2267 "parser.tab.c"
     break;
 
   case 90: /* asignacion: operando BI_ASIGNACION expresion  */
-#line 1032 "src/parser.y"
+#line 1081 "src/parser.y"
                                 {
 
 
@@ -2282,50 +2277,50 @@ yyreduce:
 					 *
 					 */
 
-					if ( yyvsp[-2]->s->type == yyvsp[0]->s->type )
+					if ( (yyvsp[-2].exp)->s->type == (yyvsp[0].exp)->s->type )
 					{
-						Quad *quad = new_quad( QUAD_OP_ASSIGN, yyvsp[-2]->s->id, yyvsp[0]->s->id, QUAD_OP_VOID, yyval->s->id );
+						Quad *quad = new_quad( QUAD_OP_ASSIGN, (yyvsp[-2].exp)->s->id, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyvsp[-2].exp)->s->id );
 						gen( qt, quad );
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER ) && ( yyvsp[0]->s->type == DATA_TYPE_REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER ) && ( (yyvsp[0].exp)->s->type == DATA_TYPE_REAL ) )
 					{
-						Quad *quad = new_quad( REAL2INT, yyvsp[0]->s->id, QUAD_OP_VOID, yyvsp[-2]->s->id );
+						Quad *quad = new_quad( REAL2INT, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyvsp[-2].exp)->s->id );
 						gen( qt, quad );
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_REAL ) && ( yyvsp[0]->s->type == DATA_TYPE_INTEGER ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_REAL ) && ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER ) )
 					{
-						Quad *quad = new_quad( INT2REAL, yyvsp[0]->s->id, QUAD_OP_VOID, yyvsp[-2]->s->id );
+						Quad *quad = new_quad( INT2REAL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyvsp[-2].exp)->s->id );
 						gen( qt, quad );	
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_INTEGER ) && ( yyvsp[0]->s->type == DATA_TYPE_BOOLEAN ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_INTEGER ) && ( (yyvsp[0].exp)->s->type == DATA_TYPE_BOOLEAN ) )
 					{
-						Quad *quad = new_quad( BOOL2INT, yyvsp[0]->s->id, QUAD_OP_VOID, yyvsp[-2]->s->id );
+						Quad *quad = new_quad( BOOL2INT, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyvsp[-2].exp)->s->id );
 						gen( qt, quad );	
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[0]->s->type == DATA_TYPE_INTEGER ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER ) )
 					{
-						Quad *quad = new_quad( INT2BOOL, yyvsp[0]->s->id, QUAD_OP_VOID, yyvsp[-2]->s->id );
+						Quad *quad = new_quad( INT2BOOL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyvsp[-2].exp)->s->id );
 						gen( qt, quad );
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[0]->s->type == DATA_TYPE_REAL ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[0].exp)->s->type == DATA_TYPE_REAL ) )
 					{
-						Quad *quad = new_quad( INT2BOOL, yyvsp[0]->s->id, QUAD_OP_VOID, yyvsp[-2]->s->id );
+						Quad *quad = new_quad( INT2BOOL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyvsp[-2].exp)->s->id );
 						gen( qt, quad );	
 					}
-					else if ( ( yyvsp[-2]->s->type == DATA_TYPE_BOOLEAN ) && ( yyvsp[0]->s->type == DATA_TYPE_INTEGER ) )
+					else if ( ( (yyvsp[-2].exp)->s->type == DATA_TYPE_BOOLEAN ) && ( (yyvsp[0].exp)->s->type == DATA_TYPE_INTEGER ) )
 					{
-						Quad *quad = new_quad( INT2BOOL, yyvsp[0]->s->id, QUAD_OP_VOID, yyvsp[-2]->s->id );
+						Quad *quad = new_quad( INT2BOOL, (yyvsp[0].exp)->s->id, QUAD_OP_VOID, (yyvsp[-2].exp)->s->id );
 						gen( qt, quad );
 					}
 					
 
 
 				}
-#line 2325 "parser.tab.c"
+#line 2320 "parser.tab.c"
     break;
 
 
-#line 2329 "parser.tab.c"
+#line 2324 "parser.tab.c"
 
       default: break;
     }
@@ -2519,7 +2514,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 1134 "src/parser.y"
+#line 1183 "src/parser.y"
 
 
 

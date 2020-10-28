@@ -177,7 +177,26 @@ char *get_attr(Symbol *table[], char *name, char *attr) {
 
 }
 
+Data_type get_type(Symbol *table[], char *name) {
 
+	Symbol *s = lookup( table, name );
+
+	( s ) ? s->type : UNKNOWN_SYMBOL;
+}
+
+int set_type(Symbol *table[], char *name, Data_type type) {
+
+	if ( type < DATA_TYPE_STRING || type > DATA_TYPE_BOOLEAN )
+	{
+		return UNKNOWN_DATA_TYPE;
+	}
+
+	Symbol *s = lookup( table, name );
+
+	if ( s ) { s->type = type; }
+
+	return UNKNOWN_SYMBOL;
+}
 
 void print_symbol_table(Symbol *table[])
 {
