@@ -11,6 +11,7 @@
 	#include <math.h>
 	#include <limits.h>
 	#include <float.h>
+	#include "scanner.tab.h"
 
 	/* Checks for Pow operation Overflow beetween intergers */ 
 	long int checkPowOverflowInt( int a, int b);
@@ -138,34 +139,7 @@ regex_menor_igual <=
 
 {regex_comentario} {printf("%s - Comentario detectado\n", yytext); return (BI_COMENTARIO);}
 
-{regex_literal_entero} {
-
-	char *p;
-	
-	char *str = (char*) malloc( sizeof( yytext ) );
-	strcpy(str, yytext);
-
-	if ( ( p = strchr( str, 'e' ) ) || ( p = strchr( str, 'E' ) ) ) {
-
-		*p = 0;
-		p++;
-		
-		long int exp;
-		if (  ( exp = checkPowOverflowInt( 10, atoi( p ) ) ) == -1 )
-		{
-			printf("Literal integer exponent Overflow: %s\n", yytext);
-		} else {
-			printf("Lietral entero: %ld\n", ( atoi( str ) * exp ) );	
-		}
-
-	} else {
-	
-	 	printf("Literal entero: %d\n", atoi( yytext ) );
-
-	}
-
-	return (BI_LIT_ENTERO);
-}
+{regex_literal_entero} {return (BI_LIT_ENTERO);}
 
 {regex_literal_real} {
 

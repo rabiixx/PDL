@@ -93,31 +93,42 @@
 
 %%
 
-desc_algoritmo	: 	BI_ALGORITMO BI_IDENTIFICADOR BI_COMP_SEQ cabecera_alg bloque_alg BI_FALGORITMO
+desc_algoritmo	: 	BI_ALGORITMO BI_IDENTIFICADOR BI_COMP_SEQ cabecera_alg bloque_alg BI_FALGORITMO 
+				{printf("desc_algoritmo")}
 				;
 
 cabecera_alg	:	decl_globales decl_a_f decl_ent_sal BI_COMENTARIO
+				{printf("cabecera_alg")}
 				;
 
 bloque_alg		:	bloque BI_COMENTARIO
+				{printf("bloque_alg")}
 				;
 
 decl_globales	:	declaracion_tipo decl_globales
+				{printf("decl_globales")}
 				| 	declaracion_cte decl_globales
+				{printf("decl_globales")}
 				|	/* cadena vacia */
 				;
 
 decl_a_f		:	accion_d decl_a_f
+				{printf("decl_accion")}
 				|	funcion_d decl_a_f
+				{printf("decl_funcion")}
 				|	/* cadena vacia */
 				;
 
 bloque 			: declaraciones instrucciones
+				{printf("bloque")}
 				;
 
 declaraciones	:	declaracion_tipo declaraciones
+				{printf("declaraciones")}
 				| 	declaracion_cte declaraciones
+				{printf("declaraciones")}
 				|	declaracion_var declaraciones
+				{printf("declaraciones")}
 				|	/* cadena vacia */
 				;
 
@@ -133,6 +144,7 @@ tipo
 ftipo;
 */
 declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
+					{printf("declaracion_tipo")}
 					;
 /* 
 const
@@ -141,9 +153,11 @@ fconst;
 */
 
 declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST BI_COMP_SEQ
+					{printf("declaracion_cte")}
 					;
 
 declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
+					{printf("declaraciones_var")}
 					;
 
 /* Declaraciones de tipos */
@@ -185,23 +199,9 @@ State analiysis
 
 
 d_tipo 			:	tipo_base 						/* base case */
-				{
-					/****duda: es integer? */
-				}
+				{printf("d_tipo")}
 				|	BI_IDENTIFICADOR 				/* base case */
-				{
-
-					char *type = get_attr(st, $1, "type");
-
-					if ( !type ) {
-						printf("Identifier %s doesnt exist", $1);
-					} else {
-						// strcpy();
-						$$ = type;
-					}
-
-
-				}
+				{printf("d_tipo")}
 				|	BI_REF d_tipo 								/* recursive by d_tipo */
 				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
 				| 	BI_TUPLA lista_campos BI_FTUPLA				/* recursive by lista_campos */
@@ -212,7 +212,9 @@ d_tipo 			:	tipo_base 						/* base case */
 				;
 
 expresion_t		: 	expresion
+				{printf("expresion_t")}
 				|	BI_LIT_CARACTER
+				{printf("expresion_t")}
 				;
 /* x = tupla
 			y : entero;
@@ -222,8 +224,6 @@ expresion_t		: 	expresion
 lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 				{
 
-					insertSymbol(st, $1);
-					set_attr(st, $1, "type", $3);
 
 				}
 				|	/* cadena vacia */
@@ -231,24 +231,16 @@ lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 
 tipo_base 		: 	BI_PR_ENTERO
 				{
-					$$ = INTEGER;
+					printf("tipo_base entero")
 				}
 				|	BI_PR_REAL
-				{
-					$$ = FLOAT;
-				}
+				{printf("tipo_base real")}
 				|	BI_PR_BOOLEANO
-				{
-					$$ = BOOLEAN;
-				}
+				{printf("tipo_base booleano")}
 				|	BI_PR_CARACTER
-				{
-					$$ = CHARACTER;
-				}
+				{printf("tipo_base caracter")}	
 				|	BI_PR_CADENA
-				{
-					$$ = STRING;
-				}
+				{printf("tipo_base cadena")}
 				;
 
 
@@ -260,26 +252,15 @@ tipo_base 		: 	BI_PR_ENTERO
   */
 
 literal			:	BI_LIT_ENTERO 
-				{
-
-					printf("LITERAL_ENTERO");
-
-					$$ = INTEGER;
-				}
+				{printf("literal entero")}
 				|	BI_LIT_REAL
-				{
-					$$ = FLOAT;
-				}
-				|	BI_LIT_BOOLEANO{
-					$$ = BOOLEAN;
-				}
-				|	BI_LIT_CARACTER{
-
-					$$ = CHARACTER;
-				}
-				|	BI_LIT_CADENA{
-					$$ = STRING;
-				}
+				{printf("literal real")}
+				|	BI_LIT_BOOLEANO
+				{printf("literal booleano")}
+				|	BI_LIT_CARACTER
+				{printf("literal caracter")}
+				|	BI_LIT_CADENA
+				{printf("literal cadena")}
 				;
 
 
@@ -301,9 +282,7 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 					  * We insert the identifier into the symbol table and we define its scope and type.
 					  * in this case scope will be, const. The type is returned by literal grammar rule 
 					  */
-					insertSymbol(st, $1);
-					set_attr(st, $1, "scope", "cte");
-					set_attr(st, $1, "type", $3)
+					
 				}
 				|	/* cadena vacia */
 				;
@@ -312,56 +291,7 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
   *	x, y, z : suma; 
   *	x, y, z : d_tipo;
   */
-lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var {
-
-				/* Debug */
-				if ( lookup(st, $3) ) {
-
-					char *type;
-
-					if ( ( type = get_attr(st, %3) ) ) {
-						
-						/* 
-						 * Now we need to assign type to all identifiers reduced by lista_id grammar rule.
-						 * Those identifiers have been added to symbol table and they have been added to 
-						 * stack. For each identifier, we set the type and we remove it from the stack.
-						 */
-
-						while ( !esNulaPila( stack ) ) {
-
-							char *id = cima( stack );
-
-							if ( set_attr(st, id, type) == -1 ) {
-								printf("Identifier %s is not in the symbol table", id);
-							}
-
-							desapilar( stack );
-
-						}
-
-					} else {
-						printf("Symbol %s type is not defined\n", $3);
-					}
-
-
-				} else {
-					printf("The symbol %s doesnt seem to be decalred\n", $3);
-				}
-
-
-				/* 
-				 * get_attr() function includes lookup, so its not necessary 
-				 * to make a lookup before get_attr(). In this case is done for
-				 * debugginf reesons 
-				 */
-				if ( get_attr(st, %3) ) {
-
-				} else {
-					printf("Symbol %s type is not defined\n", $3);
-				}
-
-
-}
+lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 				| 	lista_id BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_d_var
 				|	/* cadena vacia */
 				;
@@ -393,40 +323,15 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 
 
 lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id 
-				{
-
-					if ( !lookup(st, $1) ) {
-
-						insertSymbol(st, $1);
-						
-						/* 
-						 * We add identifiers to stack, to be able to set their type
-						 * when we know it 
-						 */
-						apilar(stack, $1);
-
-
-					} else {
-						printf("Identifier alredy exists")
-					}
-				}
 				|	BI_IDENTIFICADOR
-				{
-
-					if ( !lookup(st, $1) ) {
-						
-						insertSymbol(st, $1);
-						apilar(stack, $1);
-
-					} else {
-						printf("Identifier alredy exists")
-					}
-				}
 				;
 
 decl_ent_sal	:	decl_ent
+				{printf("decl_ent_sal")}
 				|	decl_ent decl_sal
+				{printf("decl_ent_sal")}
 				|	decl_sal
+				{printf("decl_ent_sal")}
 				;
 
 /* 
@@ -434,21 +339,26 @@ decl_ent_sal	:	decl_ent
 		x, y : entero
 */ 
 decl_ent 		:	BI_ENT lista_d_var
+				{printf("decl_ent")}
 				;
 
 decl_sal 		:	BI_SAL lista_d_var
+				{printf("decl_sal")}
 				;
 
 /* Expresiones */
 
 
-expresion 		:	exp_a 
-				|	exp_b
+expresion 		:	exp_a_b
+				{printf("expresion")}
 				|	funcion_ll
+				{printf("expresion")}
 				;
 
 literal_numerico	:	BI_LIT_ENTERO
+					{printf("literal_entero")}
 					|	BI_LIT_REAL
+					{printf("literal_real")}
 					;
 
 exp_a_b			:	exp_a_b BI_SUMA exp_a_b
@@ -462,7 +372,6 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				|	BI_RESTA exp_a_b
 				|	exp_a_b BI_Y exp_a_b
 				|	exp_a_b BI_O exp_a_b
-				|	BI_PAR_APER exp_a_b BI_PAR_CIER
 				|	BI_NO exp_a_b
 				|	expresion oprel expresion
 				|	operando
@@ -479,12 +388,12 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
   * LT: LESS THAN
   * LE: LESS EQUAL
   */
-oprel			: 	BI_IGUALDAD 	{ $$ = EQ }
-				|	BI_DISTINTO 	{ $$ = NE }
-				|	BI_MAYOR 		{ $$ = GT }
-				|	BI_MAYOR_IGUAL 	{ $$ = GE }
-				|	BI_MENOR 		{ $$ = LT }
-				|	BI_MENOR_IGUAL 	{ $$ = LE }
+oprel			: 	BI_IGUALDAD 	{printf("igualdad")}
+				|	BI_DISTINTO 	{printf("distino")}
+				|	BI_MAYOR 		{printf("mayor")}
+				|	BI_MAYOR_IGUAL 	{printf("mayor_igual")}
+				|	BI_MENOR 		{printf("menor")}
+				|	BI_MENOR_IGUAL 	{printf("menor_igual")}
 				;
 
 
@@ -497,29 +406,42 @@ oprel			: 	BI_IGUALDAD 	{ $$ = EQ }
 */
 
 operando		:	BI_IDENTIFICADOR
+				{printf("operando")}
 				|	operando BI_PUNTO operando
+				{printf("operando")}
 				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
+				{printf("operando")}
 				|	operando BI_REF
+				{printf("operando")}
 				;
 
 
 
 /* Instrucciones */
 instrucciones 	:	instruccion BI_COMP_SEQ instrucciones
+				{printf("instrucciones")}
 				|	instruccion
+				{printf("instrucciones")}
 				;
 
 instruccion 	:	BI_CONTINUAR
+				{printf("continuar")}
 				|	asignacion
+				{printf("instruccion")}
 				|	alternativa
+				{printf("instruccion")}
 				| 	iteracion
+				{printf("instruccion")}
 				|	accion_ll
+				{printf("instruccion")}
 				;
 
 asignacion 		:	operando BI_ASIGNACION expresion
+				{printf("asignacion")}
 				;
 
 alternativa		:	BI_SI expresion BI_ENTONCES instrucciones lista_opciones BI_FSI
+				{printf("alternativa")}
 				;
 
 lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES instrucciones lista_opciones
@@ -527,30 +449,39 @@ lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES instrucciones lista_opciones
 				;
 
 iteracion 		:	it_cota_fija
+				{printf("iteracion")}
 				|	it_cota_exp
+				{printf("iteracion")}
 				;
 
 it_cota_exp		:	BI_MIENTRAS expresion BI_HACER instrucciones BI_FMIENTRAS
+				{printf("it_cota_exp")}
 				;
 
 it_cota_fija	:	BI_PARA BI_IDENTIFICADOR BI_ASIGNACION expresion 
 					BI_HASTA expresion BI_HACER instrucciones BI_FPARA
+				{printf("it_cota_fija")}
 				;
 
 /* Acciones y Funciones */
 accion_d 		:	BI_ACCION a_cabecera bloque BI_FACCION
+				{printf("accion_d")}
 				;
 
 funcion_d		:	BI_FUNCION f_cabecera bloque BI_DEV expresion BI_FFUNCION
+				{printf("funcion_d")}
 				;
 
 a_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER d_par_form
+				{printf("a_cabecera")}
 				;
 
 f_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER lista_d_var BI_PAR_CIER BI_COMP_SEQ
+				{printf("f_cabecera")}
 				;
 
 d_par_form		:	d_p_form BI_COMP_SEQ d_par_form
+				{printf("d_par_form")}
 				|	/* cadena vacia */
 				;
 
@@ -560,13 +491,17 @@ d_p_form 		:	BI_ENT lista_id BI_DEF_TYPEVAR d_tipo
 				;
 
 accion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
+				{printf("accion_ll")}
 				;
 
 funcion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
+				{printf("funcion_ll")}
 				;
 
 l_ll			:	expresion BI_SEPARADOR l_ll
+				{printf("l_ll")}
 				|	expresion
+				{printf("l_ll")}
 				;
 
 

@@ -1,0 +1,11 @@
+modules = symbol_table.c quadruples.c
+
+all: parser scanner $(modulos)
+	gcc lex.yy.c quadruples.c symbol_table.c -o scanner -lfl -lm
+
+parser:
+	bison -d parser.y
+
+scanner:
+	flex scanner.l
+pro
