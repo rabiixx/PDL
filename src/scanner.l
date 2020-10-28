@@ -8,12 +8,11 @@
 
 %{
 
+	#include "lib/util.h"
+	#include "lib/exp_a_b/exp_a_b.h"
 	#include "parser.tab.h"
 
 %}
-
-
-
 
 	/* Special Characters */
 regex_special_char (\n|\t|)

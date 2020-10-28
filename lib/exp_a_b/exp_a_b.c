@@ -28,22 +28,6 @@ Exp_a_b *new_exp_a_b( Expression_type type ) {
 
 }
 
-void set_type( Exp_a_b *exp, Expression_type type ) { exp->type = type; }
+void set_exp_type( Exp_a_b *exp, Expression_type type ) { exp->type = type; }
 
-Expression_type get_type( Exp_a_b* exp) { return exp->type; }
-
-int main(int argc, char const *argv[])
-{
-	
-	Exp_a_b *exp = new_exp_a_b( UNDEFINED );
-	printf("type: %d\n", get_type( exp ));
-
-	set_type(exp, BOOLEAN);
-	printf("type: %d\n", get_type( exp ));
-
-	set_type(exp, ARITHMETIC);
-	printf("type: %d\n", get_type( exp ));
-
-
-	return 0;
-}
+Expression_type get_exp_type( Exp_a_b* exp) { return exp->type; }

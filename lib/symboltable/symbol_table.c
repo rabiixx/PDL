@@ -34,23 +34,23 @@ Symbol *new_symbol( char *name ) {
 	return s;
 }
 
-void add_symbol(Symbol *table[], char *name) {
-
+void add_symbol(Symbol *table[], Symbol *symbol) {
 
 	const unsigned int index = hash( name );
 	
 	if ( table[ index ] == NULL )
 	{
-		table[ index ] = new_symbol( name );
+		table[ index ] = symbol;
 		table[ index ]->id = NUMSYM++;
-
-	} else {
+	}
+	else
+	{
 
 		Symbol *tmp = table[ index ];
 
 		while ( tmp->next != NULL ) { tmp = tmp->next; }
 
-		tmp->next = new_symbol( name );
+		tmp->next = symbol;
 		tmp->next->id = NUMSYM++;
 	}
 	
@@ -177,14 +177,14 @@ char *get_attr(Symbol *table[], char *name, char *attr) {
 
 }
 
-Data_type get_type(Symbol *table[], char *name) {
+Data_type get_symbol_type(Symbol *table[], char *name) {
 
 	Symbol *s = lookup( table, name );
 
 	( s ) ? s->type : UNKNOWN_SYMBOL;
 }
 
-int set_type(Symbol *table[], char *name, Data_type type) {
+int set_symbol_type(Symbol *table[], char *name, Data_type type) {
 
 	if ( type < DATA_TYPE_STRING || type > DATA_TYPE_BOOLEAN )
 	{

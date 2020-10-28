@@ -67,7 +67,7 @@ typedef struct Symbol {
 	} value;
 } Symbol;
 
-unsigned int NUMSYM = 0;
+unsigned int NUM_SYM = 0;
 
 
 /*----------  Function Declaration  ----------*/
@@ -76,7 +76,7 @@ void init_symbol_table( Symbol *table[] );
 
 Symbol *new_symbol(char *name);
 
-void add_symbol(Symbol *table[], char *name);
+void add_symbol(Symbol *table[], Symbol *Symbol);
 
 int remove_symbol(Symbol *table[], const char *name);
 
@@ -86,9 +86,9 @@ int set_attr(Symbol *table[], char *name, char *attr, char *value);
 
 char *get_attr(Symbol *table[], char *name, char *attr);
 
-Data_type get_type(Symbol *table[], char *name);
+Data_type get_symbol_type(Symbol *table[], char *name);
 
-int set_type(Symbol *table[], char *name, Data_type type); 
+int set_symbol_type(Symbol *table[], char *name, Data_type type); 
 
 /*----------  Utils  ----------*/
 

@@ -7,13 +7,12 @@
 	#include "lib/quadruples/quadruples.h"
 	#include "lib/exp_a_b/exp_a_b.h"
 	#include "lib/stack/stack.h"
-	#include "../lib/util.h"
+	#include "lib/util.h"
 
 
 	extern int yylex();
 	extern FILE *yyin;
-	extern yylineno;
-
+	
 	void yyerror (char const *);
 
 	Symbol *st[HT_SIZE];
@@ -23,19 +22,19 @@
 
 %}
 
-
-
 %union {
 	char *sval;
 	Data_type data_type;
 	Exp_a_b *exp;
 	int next_quad;
 	Quad_op_code oprel_val;
-	%union {
+}
+
+/*	%union {
 		char id;
 		Data_type type;
 	} type_d_tipo;
-}
+*/
 
 %token BI_COMENTARIO
 %token BI_LIT_ENTERO
@@ -251,7 +250,7 @@ d_tipo 			:	tipo_base 						/* base case */
 				{
 					
 				}
-				|	BI_IDENTIFICADOR 				/* base case */
+				|	BI_IDENTIFICADOR				/* base case */
 				{
 
 					/*cchar *type = get_type( st, $1 );
@@ -284,8 +283,8 @@ expresion_t		: 	expresion
 lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 				{
 
-					insertSymbol(st, $1);
-					set_type(st, $1, $3);
+					/*add_symbol(st, $1);
+					set_symbol_type(st, $1, $3);*/
 
 				}
 				|	/* cadena vacia */
@@ -362,9 +361,9 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 					  * We insert the identifier into the symbol table and we define its scope and type.
 					  * in this case scope will be, const. The type is returned by literal grammar rule 
 					  */
-					insertSymbol(st, $1);
-					set_attr(st, $1, "scope", "cte");
-					set_attr(st, $1, "type", $3)
+					add_symbol(st, $1);
+					//set_attr(st, $1, "scope", "cte");
+					set_symbol_type(st, $1, $3);
 				}
 				|	/* cadena vacia */
 				;
@@ -378,9 +377,9 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 				/* Debug */
 				if ( lookup(st, $3) ) {
 
-					char *type;
+					Data_type type;
 
-					if ( ( type = get_attr(st, %3) ) ) {
+					if ( ( type = get_symbol_type(st, $3) ) ) {
 						
 						/* 
 						 * Now we need to assign type to all identifiers reduced by lista_id grammar rule.
@@ -388,7 +387,7 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 						 * stack. For each identifier, we set the type and we remove it from the stack.
 						 */
 
-						while ( !esNulaPila( stack ) ) {
+						/*while ( !esNulaPila( stack ) ) {
 
 							char *id = cima( stack );
 
@@ -398,7 +397,7 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 
 							desapilar( stack );
 
-						}
+						}*/
 
 					} else {
 						printf("Symbol %s type is not defined\n", $3);
@@ -415,7 +414,7 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 				 * to make a lookup before get_attr(). In this case is done for
 				 * debugginf reesons 
 				 */
-				if ( get_attr(st, %3) ) {
+				if ( get_symbol_type(st, $3) ) {
 
 				} else {
 					printf("Symbol %s type is not defined\n", $3);
@@ -458,17 +457,17 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 
 					if ( !lookup(st, $1) ) {
 
-						insertSymbol(st, $1);
+						add_symbol(st, $1);
 						
 						/* 
 						 * We add identifiers to stack, to be able to set their type
 						 * when we know it 
 						 */
-						apilar(stack, $1);
+						//apilar(stack, $1);
 
 
 					} else {
-						printf("Identifier alredy exists")
+						printf("Identifier alredy exists");
 					}
 				}
 				|	BI_IDENTIFICADOR
@@ -476,11 +475,11 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 
 					if ( !lookup(st, $1) ) {
 						
-						insertSymbol(st, $1);
-						apilar(stack, $1);
+						add_symbol(st, $1);
+						//apilar(stack, $1);
 
 					} else {
-						printf("Identifier alredy exists")
+						printf("Identifier alredy exists");
 					}
 				}
 				;
@@ -1220,6 +1219,7 @@ int main(int argc, char const *argv[])
 		
 			init_symbol_table( st );
 			qt = new_quad_table();
+			stack = nuevaPila( &stack );
 
 		} else {
 			printf("Error: Not supported input file extension.\n\n");

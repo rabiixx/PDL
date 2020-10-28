@@ -1,160 +1,338 @@
-src/parser.y:267.41-53: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  267 | 				|	BI_REF d_tipo			...
-      |                                         ^~~~~~~~~~~~~
-src/parser.y:268.41-75: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  268 | 				|	expresion_t BI_SUBRANGO expre...
-      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/parser.y:273.41-123: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  273 | 				|	BI_TABLA BI_INI_ARRAY expresi...
-      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/parser.y:507.41-50: warning: type clash on default action: <exp> != <> [-Wother]
-  507 | 				|	funcion_ll
-      |                                         ^~~~~~~~~~
-src/parser.y: warning: 18 shift/reduce conflicts [-Wconflicts-sr]
-src/parser.y: warning: 60 reduce/reduce conflicts [-Wconflicts-rr]
-src/parser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
-In file included from src/scanner.l:11:
-src/parser.y:30:2: error: unknown type name ‘Data_type’
-   30 |  Data_type data_type;
-      |  ^~~~~~~~~
-src/parser.y:31:2: error: unknown type name ‘Exp_a_b’
-   31 |  Exp_a_b *exp;
-      |  ^~~~~~~
-src/parser.y:33:2: error: unknown type name ‘Quad_op_code’
-   33 |  Quad_op_code oprel_val;
-      |  ^~~~~~~~~~~~
-src/parser.y:34:2: error: expected specifier-qualifier-list before ‘%’ token
-   34 |  %union {
-      |  ^
-In file included from src/parser.y:8:
-lib/exp_a_b/exp_a_b.h:18:6: error: conflicting types for ‘set_type’
-   18 | void set_type( Exp_a_b *exp, Expression_type type );
-      |      ^~~~~~~~
-In file included from src/parser.y:6:
-lib/symboltable/symbol_table.h:91:5: note: previous declaration of ‘set_type’ was here
-   91 | int set_type(Symbol *table[], char *name, Data_type type);
-      |     ^~~~~~~~
-In file included from src/parser.y:8:
-lib/exp_a_b/exp_a_b.h:20:17: error: conflicting types for ‘get_type’
-   20 | Expression_type get_type( Exp_a_b *exp );
-      |                 ^~~~~~~~
-In file included from src/parser.y:6:
-lib/symboltable/symbol_table.h:89:11: note: previous declaration of ‘get_type’ was here
-   89 | Data_type get_type(Symbol *table[], char *name);
-      |           ^~~~~~~~
-src/parser.y:10:11: fatal error: ../lib/util.h: No such file or directory
-   10 |  #include "../lib/util.h"
-      |           ^~~~~~~~~~~~~~~
-compilation terminated.
+src/parser.y:266.41-53: aviso: incompatibilidad de tipos en la acción por defecto: <typo_d_tipo> != <> [-Wother]
+ 				|	BI_REF d_tipo								/* recursive by d_tipo */
+                                         ^^^^^^^^^^^^^
+src/parser.y:267.41-75: aviso: incompatibilidad de tipos en la acción por defecto: <typo_d_tipo> != <> [-Wother]
+ 				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/parser.y:272.41-123: aviso: incompatibilidad de tipos en la acción por defecto: <typo_d_tipo> != <> [-Wother]
+ 				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo 	/* recursive by expresion_t and d_tipo */
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/parser.y:506.41-50: aviso: incompatibilidad de tipos en la acción por defecto: <exp> != <> [-Wother]
+ 				|	funcion_ll
+                                         ^^^^^^^^^^
+src/parser.y: aviso: 18 conflictos desplazamiento/reducción [-Wconflicts-sr]
+src/parser.y: aviso: 60 conflictos reducción/reducción [-Wconflicts-rr]
+src/parser.y: In function ‘yyparse’:
+src/parser.y:364:21: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+      add_symbol(st, $1);
+                     ^
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:460:22: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+       add_symbol(st, $1);
+                      ^
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:478:22: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+       add_symbol(st, $1);
+                      ^
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:513:34: warning: passing argument 1 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+      $$->s = add_symbol("_tmp");
+                                  ^     
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: expected ‘Symbol ** {aka struct Symbol **}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:513:23: error: too few arguments to function ‘add_symbol’
+      $$->s = add_symbol("_tmp");
+                       ^~~~~~~~~~
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: declared here
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:516:41: error: ‘INTEGER’ undeclared (first use in this function)
+      if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+                                         ^~~~~~~
+src/parser.y:516:41: note: each undeclared identifier is reported only once for each function it appears in
+src/parser.y:523:46: error: ‘REAL’ undeclared (first use in this function)
+      else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+                                              ^~~~
+src/parser.y:662:19: warning: passing argument 1 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+       add_symbol( tmp_symbol );
+                   ^~~~~~~~~~
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: expected ‘Symbol ** {aka struct Symbol **}’ but argument is of type ‘Symbol * {aka struct Symbol *}’
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:662:7: error: too few arguments to function ‘add_symbol’
+       add_symbol( tmp_symbol );
+       ^~~~~~~~~~
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: declared here
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:720:29: error: ‘QUAD_OP_MODREAL’ undeclared (first use in this function); did you mean ‘QUAD_OP_BOOL2REAL’?
+       Quad *quad = new_quad(QUAD_OP_MODREAL, $1->s->id, $3->s->id, $$->s->id);
+                             ^~~~~~~~~~~~~~~
+                             QUAD_OP_BOOL2REAL
+src/parser.y:762:19: warning: passing argument 1 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+       add_symbol( tmp_symbol );
+                   ^~~~~~~~~~
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: expected ‘Symbol ** {aka struct Symbol **}’ but argument is of type ‘Symbol * {aka struct Symbol *}’
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:762:7: error: too few arguments to function ‘add_symbol’
+       add_symbol( tmp_symbol );
+       ^~~~~~~~~~
+In file included from src/parser.y:6:0:
+lib/symboltable/symbol_table.h:79:6: note: declared here
+ void add_symbol(Symbol *table[], Symbol *symbol);
+      ^~~~~~~~~~
+src/parser.y:809:17: error: ‘Exp_a_b {aka struct _exp_a_b}’ has no member named ‘S’
+      $$->S->type = DATA_TYPE_INTEGER;
+                 ^~
+src/parser.y:817:17: error: ‘Exp_a_b {aka struct _exp_a_b}’ has no member named ‘S’
+      $$->S->type = DATA_TYPE_REAL;
+                 ^~
+src/parser.y:841:6: error: expected ‘,’ or ‘;’ before ‘}’ token
+      }
+      ^
+src/parser.y:842:6: error: expected ‘}’ before ‘else’
+      else if ( $2->s->type == DATA_TYPE_REAL )
+      ^~~~
+src/parser.y:845:6: error: expected ‘,’ or ‘;’ before ‘}’ token
+      }
+      ^
+src/parser.y:864:32: error: ‘BOOLEAN’ undeclared (first use in this function); did you mean ‘EUCLEAN’?
+      $$ = new_exp_a_b(BOOLEAN);
+                                ^      
+                                EUCLEAN
+src/parser.y:869:6: warning: implicit declaration of function ‘backpatch’ [-Wimplicit-function-declaration]
+      backpatch($1->falselist, $3);
+      ^~~~~~~~~
+src/parser.y:956:72: error: ‘Symbol {aka struct Symbol}’ has no member named ‘is’; did you mean ‘id’?
+      Quad *quad1 = new_quad($2, $1->s->is, $2->s->id, QUAD_OP_NOGOTO);
+                                                                        ^ 
+                                                                        id
+src/parser.y:956:97: error: invalid type argument of ‘->’ (have ‘unsigned int’)
+      Quad *quad1 = new_quad($2, $1->s->is, $2->s->id, QUAD_OP_NOGOTO);
+                                                                                                 ^ 
+src/parser.y:979:28: error: ‘GOTO’ undeclared (first use in this function)
+      Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_TRUE, NOTGOTO);
+                            ^~~~
+src/parser.y:979:54: error: ‘OP_QUAD_TRUE’ undeclared (first use in this function); did you mean ‘__SQUAD_TYPE’?
+      Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_TRUE, NOTGOTO);
+                                                      ^~~~~~~~~~~~
+                                                      __SQUAD_TYPE
+src/parser.y:979:68: error: ‘NOTGOTO’ undeclared (first use in this function); did you mean ‘GOTO’?
+      Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_TRUE, NOTGOTO);
+                                                                    ^      
+                                                                    GOTO
+src/parser.y:998:54: error: ‘OP_QUAD_FALSE’ undeclared (first use in this function); did you mean ‘OP_QUAD_TRUE’?
+      Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_FALSE, NOTGOTO);
+                                                      ^~~~~~~~~~~~~
+                                                      OP_QUAD_TRUE
+src/parser.y:1013:27: warning: implicit declaration of function ‘next_quad’; did you mean ‘new_quad’? [-Wimplicit-function-declaration]
+ M     : /* empty */ { $$ = next_quad() }
+                           ^~~~~~~~~
+                           new_quad
+src/parser.y:1013:39: error: expected ‘;’ before ‘}’ token
+ M     : /* empty */ { $$ = next_quad() }
+                                       ^
+src/parser.y:1017:38: error: expected ‘;’ before ‘}’ token
+ oprel   :  BI_IGUALDAD  { $$ = QUAD_OP_EQ }
+                                      ^
+src/parser.y:1018:38: error: expected ‘;’ before ‘}’ token
+     | BI_DISTINTO  { $$ = QUAD_OP_NE }
+                                      ^
+src/parser.y:1019:38: error: expected ‘;’ before ‘}’ token
+     | BI_MAYOR   { $$ = QUAD_OP_GT }
+                                      ^
+src/parser.y:1020:38: error: expected ‘;’ before ‘}’ token
+     | BI_MAYOR_IGUAL  { $$ = QUAD_OP_GE }
+                                      ^
+src/parser.y:1021:38: error: expected ‘;’ before ‘}’ token
+     | BI_MENOR   { $$ = QUAD_OP_LT }
+                                      ^
+src/parser.y:1022:38: error: expected ‘;’ before ‘}’ token
+     | BI_MENOR_IGUAL  { $$ = QUAD_OP_LE }
+                                      ^
+src/parser.y:1091:20: error: too many arguments to function ‘new_quad’
+       Quad *quad = new_quad( QUAD_OP_ASSIGN, $1->s->id, $3->s->id, QUAD_OP_VOID, $1->s->id );
+                    ^~~~~~~~
+In file included from src/parser.y:7:0:
+lib/quadruples/quadruples.h:39:7: note: declared here
+ Quad *new_quad(const int op, const int op1, const unsigned int op2, const unsigned int res);
+       ^~~~~~~~
+src/parser.y:1096:30: error: ‘REAL2INT’ undeclared (first use in this function); did you mean ‘REAL’?
+       Quad *quad = new_quad( REAL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
+                              ^~~~~~~~
+                              REAL
+src/parser.y:1101:30: error: ‘INT2REAL’ undeclared (first use in this function); did you mean ‘REAL’?
+       Quad *quad = new_quad( INT2REAL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+                              ^~~~~~~~
+                              REAL
+src/parser.y:1106:30: error: ‘BOOL2INT’ undeclared (first use in this function); did you mean ‘REAL2INT’?
+       Quad *quad = new_quad( BOOL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
+                              ^~~~~~~~
+                              REAL2INT
+src/parser.y:1111:30: error: ‘INT2BOOL’ undeclared (first use in this function); did you mean ‘INT2REAL’?
+       Quad *quad = new_quad( INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+                              ^~~~~~~~
+                              INT2REAL
+src/parser.y: In function ‘main’:
+src/parser.y:1189:22: warning: implicit declaration of function ‘strcmp’ [-Wimplicit-function-declaration]
+  if ( argc == 2 && ( strcmp( argv[1], "--help" ) == 0 || strcmp( argv[1], "--help" ) == 0 ) )
+                      ^~~~~~
+src/parser.y:1198:15: warning: implicit declaration of function ‘strrchr’ [-Wimplicit-function-declaration]
+   char *ext = strrchr( argv[1], '.' );
+               ^~~~~~~
+src/parser.y:1198:15: warning: incompatible implicit declaration of built-in function ‘strrchr’
+src/parser.y:1198:15: note: include ‘<string.h>’ or provide a declaration of ‘strrchr’
+src/parser.y:1214:28: warning: implicit declaration of function ‘strerror’; did you mean ‘yyerror’? [-Wimplicit-function-declaration]
+     fprintf("Error: %s\n", strerror( errno ) );
+                            ^~~~~~~~
+                            yyerror
+src/parser.y:1214:13: warning: passing argument 1 of ‘fprintf’ from incompatible pointer type [-Wincompatible-pointer-types]
+     fprintf("Error: %s\n", strerror( errno ) );
+             ^~~~~~~~~~~~~
+In file included from src/parser.y:3:0:
+/usr/include/stdio.h:312:12: note: expected ‘FILE * restrict {aka struct _IO_FILE * restrict}’ but argument is of type ‘char *’
+ extern int fprintf (FILE *__restrict __stream,
+            ^~~~~~~
+src/parser.y:1214:28: warning: passing argument 2 of ‘fprintf’ makes pointer from integer without a cast [-Wint-conversion]
+     fprintf("Error: %s\n", strerror( errno ) );
+                            ^~~~~~~~
+In file included from src/parser.y:3:0:
+/usr/include/stdio.h:312:12: note: expected ‘const char * restrict’ but argument is of type ‘int’
+ extern int fprintf (FILE *__restrict __stream,
+            ^~~~~~~
+src/parser.y:1214:5: warning: format not a string literal and no format arguments [-Wformat-security]
+     fprintf("Error: %s\n", strerror( errno ) );
+     ^~~~~~~
+src/parser.y:1222:23: warning: passing argument 1 of ‘nuevaPila’ from incompatible pointer type [-Wincompatible-pointer-types]
+    stack = nuevaPila( &stack );
+                       ^
+In file included from src/parser.y:9:0:
+lib/stack/stack.h:11:6: note: expected ‘Stack ** {aka struct _stack **}’ but argument is of type ‘Stack * {aka struct _stack *}’
+ void nuevaPila(Stack **);
+      ^~~~~~~~~
+src/parser.y:1222:10: error: void value not ignored as it ought to be
+    stack = nuevaPila( &stack );
+          ^
+src/parser.y: In function ‘yyparse’:
+src/parser.y:1234:1: error: expected declaration or statement at end of input
+ }
+ ^
+lib/symboltable/symbol_table.c: In function ‘add_symbol’:
+lib/symboltable/symbol_table.c:39:35: error: ‘name’ undeclared (first use in this function); did you mean ‘rename’?
+  const unsigned int index = hash( name );
+                                   ^~~~
+                                   rename
+lib/symboltable/symbol_table.c:39:35: note: each undeclared identifier is reported only once for each function it appears in
 lib/symboltable/symbol_table.c: In function ‘set_attr’:
-lib/symboltable/symbol_table.c:139:14: error: incompatible types when assigning to type ‘Data_type’ {aka ‘enum <anonymous>’} from type ‘char *’
-  139 |    s->type = (char*) calloc( strlen( value ), sizeof( char ) );
-      |              ^
-lib/symboltable/symbol_table.c:140:13: error: incompatible type for argument 1 of ‘strcpy’
-  140 |    strcpy( s->type, value );
-      |            ~^~~~~~
-      |             |
-      |             Data_type {aka enum <anonymous>}
-In file included from lib/symboltable/symbol_table.c:3:
-/usr/include/string.h:122:14: note: expected ‘char * restrict’ but argument is of type ‘Data_type’ {aka ‘enum <anonymous>’}
-  122 | extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-      |              ^~~~~~
-lib/symboltable/symbol_table.c:145:13: error: incompatible type for argument 1 of ‘strcpy’
-  145 |    strcpy( s->type, value );
-      |            ~^~~~~~
-      |             |
-      |             Data_type {aka enum <anonymous>}
-In file included from lib/symboltable/symbol_table.c:3:
-/usr/include/string.h:122:14: note: expected ‘char * restrict’ but argument is of type ‘Data_type’ {aka ‘enum <anonymous>’}
-  122 | extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
-      |              ^~~~~~
+lib/symboltable/symbol_table.c:139:12: error: incompatible types when assigning to type ‘Data_type {aka enum <anonymous>}’ from type ‘char *’
+    s->type = (char*) calloc( strlen( value ), sizeof( char ) );
+            ^
+lib/symboltable/symbol_table.c:140:12: error: incompatible type for argument 1 of ‘strcpy’
+    strcpy( s->type, value );
+            ^
+In file included from lib/symboltable/symbol_table.c:3:0:
+/usr/include/string.h:121:14: note: expected ‘char * restrict’ but argument is of type ‘Data_type {aka enum <anonymous>}’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^~~~~~
+lib/symboltable/symbol_table.c:145:12: error: incompatible type for argument 1 of ‘strcpy’
+    strcpy( s->type, value );
+            ^
+In file included from lib/symboltable/symbol_table.c:3:0:
+/usr/include/string.h:121:14: note: expected ‘char * restrict’ but argument is of type ‘Data_type {aka enum <anonymous>}’
+ extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+              ^~~~~~
 lib/symboltable/symbol_table.c: In function ‘get_attr’:
-lib/symboltable/symbol_table.c:168:12: error: incompatible types when returning type ‘Data_type’ {aka ‘enum <anonymous>’} but ‘char *’ was expected
-  168 |    return s->type;
-      |           ~^~~~~~
+lib/symboltable/symbol_table.c:168:12: error: incompatible types when returning type ‘Data_type {aka enum <anonymous>}’ but ‘char *’ was expected
+    return s->type;
+           ~^~~~~~
+lib/symboltable/symbol_table.c: In function ‘main’:
+lib/symboltable/symbol_table.c:227:20: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+  add_symbol(table, "rabiixx"); // 4
+                    ^~~~~~~~~
+lib/symboltable/symbol_table.c:37:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol) {
+      ^~~~~~~~~~
+lib/symboltable/symbol_table.c:228:20: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+  add_symbol(table, "rabiixx2"); // 4
+                    ^~~~~~~~~~
+lib/symboltable/symbol_table.c:37:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol) {
+      ^~~~~~~~~~
+lib/symboltable/symbol_table.c:229:20: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+  add_symbol(table, "rabiixx13"); // 4
+                    ^~~~~~~~~~~
+lib/symboltable/symbol_table.c:37:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol) {
+      ^~~~~~~~~~
+lib/symboltable/symbol_table.c:230:20: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+  add_symbol(table, "root");  // 2
+                    ^~~~~~
+lib/symboltable/symbol_table.c:37:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol) {
+      ^~~~~~~~~~
+lib/symboltable/symbol_table.c:231:20: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+  add_symbol(table, "rabiixx16"); // 2
+                    ^~~~~~~~~~~
+lib/symboltable/symbol_table.c:37:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol) {
+      ^~~~~~~~~~
+lib/symboltable/symbol_table.c:232:20: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+  add_symbol(table, "rabiixx11"); // 2
+                    ^~~~~~~~~~~
+lib/symboltable/symbol_table.c:37:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol) {
+      ^~~~~~~~~~
+lib/symboltable/symbol_table.c:233:20: warning: passing argument 2 of ‘add_symbol’ from incompatible pointer type [-Wincompatible-pointer-types]
+  add_symbol(table, "rabiixx14"); // 0
+                    ^~~~~~~~~~~
+lib/symboltable/symbol_table.c:37:6: note: expected ‘Symbol * {aka struct Symbol *}’ but argument is of type ‘char *’
+ void add_symbol(Symbol *table[], Symbol *symbol) {
+      ^~~~~~~~~~
 lib/stack/stack.c: In function ‘apilar’:
 lib/stack/stack.c:28:2: error: unknown type name ‘celdaPila’
-   28 |  celdaPila *nuevo;
-      |  ^~~~~~~~~
-lib/stack/stack.c:29:9: error: ‘celdaPila’ undeclared (first use in this function)
-   29 |  nuevo=(celdaPila*)malloc(sizeof(celdaPila));
-      |         ^~~~~~~~~
+  celdaPila *nuevo;
+  ^~~~~~~~~
+lib/stack/stack.c:29:9: error: ‘celdaPila’ undeclared (first use in this function); did you mean ‘nuevaPila’?
+  nuevo=(celdaPila*)malloc(sizeof(celdaPila));
+         ^~~~~~~~~
+         nuevaPila
 lib/stack/stack.c:29:9: note: each undeclared identifier is reported only once for each function it appears in
 lib/stack/stack.c:29:19: error: expected expression before ‘)’ token
-   29 |  nuevo=(celdaPila*)malloc(sizeof(celdaPila));
-      |                   ^
+  nuevo=(celdaPila*)malloc(sizeof(celdaPila));
+                   ^
 lib/stack/stack.c:30:7: error: request for member ‘elem’ in something not a structure or union
-   30 |  nuevo->elem=elemento;
-      |       ^~
+  nuevo->elem=elemento;
+       ^~
 lib/stack/stack.c:31:7: error: request for member ‘sig’ in something not a structure or union
-   31 |  nuevo->sig = *p;
-      |       ^~
-lib/stack/stack.c:32:5: warning: assignment to ‘Stack *’ {aka ‘struct _stack *’} from incompatible pointer type ‘int *’ [-Wincompatible-pointer-types]
-   32 |  *p = nuevo;
-      |     ^
+  nuevo->sig = *p;
+       ^~
+lib/stack/stack.c:32:5: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+  *p = nuevo;
+     ^
 lib/stack/stack.c: In function ‘desapilar’:
 lib/stack/stack.c:39:3: error: unknown type name ‘celdaPila’
-   39 |   celdaPila *aux;
-      |   ^~~~~~~~~
-lib/stack/stack.c:40:6: warning: assignment to ‘int *’ from incompatible pointer type ‘Stack *’ {aka ‘struct _stack *’} [-Wincompatible-pointer-types]
-   40 |   aux=*p;
-      |      ^
-In file included from lib/exp_a_b/exp_a_b.c:4:
-lib/exp_a_b/exp_a_b.h:18:6: error: conflicting types for ‘set_type’
-   18 | void set_type( Exp_a_b *exp, Expression_type type );
-      |      ^~~~~~~~
-In file included from lib/exp_a_b/exp_a_b.h:4,
-                 from lib/exp_a_b/exp_a_b.c:4:
-lib/exp_a_b/../symboltable/symbol_table.h:91:5: note: previous declaration of ‘set_type’ was here
-   91 | int set_type(Symbol *table[], char *name, Data_type type);
-      |     ^~~~~~~~
-In file included from lib/exp_a_b/exp_a_b.c:4:
-lib/exp_a_b/exp_a_b.h:20:17: error: conflicting types for ‘get_type’
-   20 | Expression_type get_type( Exp_a_b *exp );
-      |                 ^~~~~~~~
-In file included from lib/exp_a_b/exp_a_b.h:4,
-                 from lib/exp_a_b/exp_a_b.c:4:
-lib/exp_a_b/../symboltable/symbol_table.h:89:11: note: previous declaration of ‘get_type’ was here
-   89 | Data_type get_type(Symbol *table[], char *name);
-      |           ^~~~~~~~
+   celdaPila *aux;
+   ^~~~~~~~~
+lib/stack/stack.c:40:6: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+   aux=*p;
+      ^
 lib/exp_a_b/exp_a_b.c: In function ‘new_exp_a_b’:
 lib/exp_a_b/exp_a_b.c:9:14: error: ‘BOOLEAN’ undeclared (first use in this function); did you mean ‘BOOLEAN_EXP’?
-    9 |  if ( type < BOOLEAN || type > UNDEFINED )
-      |              ^~~~~~~
-      |              BOOLEAN_EXP
+  if ( type < BOOLEAN || type > UNDEFINED )
+              ^~~~~~~
+              BOOLEAN_EXP
 lib/exp_a_b/exp_a_b.c:9:14: note: each undeclared identifier is reported only once for each function it appears in
 lib/exp_a_b/exp_a_b.c:9:32: error: ‘UNDEFINED’ undeclared (first use in this function); did you mean ‘UNDEFINED_EXP’?
-    9 |  if ( type < BOOLEAN || type > UNDEFINED )
-      |                                ^~~~~~~~~
-      |                                UNDEFINED_EXP
-lib/exp_a_b/exp_a_b.c: At top level:
-lib/exp_a_b/exp_a_b.c:31:6: error: conflicting types for ‘set_type’
-   31 | void set_type( Exp_a_b *exp, Expression_type type ) { exp->type = type; }
-      |      ^~~~~~~~
-In file included from lib/exp_a_b/exp_a_b.h:4,
-                 from lib/exp_a_b/exp_a_b.c:4:
-lib/exp_a_b/../symboltable/symbol_table.h:91:5: note: previous declaration of ‘set_type’ was here
-   91 | int set_type(Symbol *table[], char *name, Data_type type);
-      |     ^~~~~~~~
-lib/exp_a_b/exp_a_b.c:33:17: error: conflicting types for ‘get_type’
-   33 | Expression_type get_type( Exp_a_b* exp) { return exp->type; }
-      |                 ^~~~~~~~
-In file included from lib/exp_a_b/exp_a_b.h:4,
-                 from lib/exp_a_b/exp_a_b.c:4:
-lib/exp_a_b/../symboltable/symbol_table.h:89:11: note: previous declaration of ‘get_type’ was here
-   89 | Data_type get_type(Symbol *table[], char *name);
-      |           ^~~~~~~~
-lib/exp_a_b/exp_a_b.c: In function ‘main’:
-lib/exp_a_b/exp_a_b.c:38:30: error: ‘UNDEFINED’ undeclared (first use in this function); did you mean ‘UNDEFINED_EXP’?
-   38 |  Exp_a_b *exp = new_exp_a_b( UNDEFINED );
-      |                              ^~~~~~~~~
-      |                              UNDEFINED_EXP
-lib/exp_a_b/exp_a_b.c:41:16: error: ‘BOOLEAN’ undeclared (first use in this function); did you mean ‘BOOLEAN_EXP’?
-   41 |  set_type(exp, BOOLEAN);
-      |                ^~~~~~~
-      |                BOOLEAN_EXP
-lib/exp_a_b/exp_a_b.c:44:16: error: ‘ARITHMETIC’ undeclared (first use in this function); did you mean ‘ARITHMETIC_EXP’?
-   44 |  set_type(exp, ARITHMETIC);
-      |                ^~~~~~~~~~
-      |                ARITHMETIC_EXP
-make: *** [Makefile:10: all] Error 1
+  if ( type < BOOLEAN || type > UNDEFINED )
+                                ^~~~~~~~~
+                                UNDEFINED_EXP
+lib/exp_a_b/exp_a_b.c:11:23: warning: format ‘%d’ expects a matching ‘int’ argument [-Wformat=]
+   printf("Expression %d is not a valud expression type");
+                      ~^
+make: *** [all] Error 1

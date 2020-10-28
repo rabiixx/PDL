@@ -15,8 +15,8 @@ typedef struct _exp_a_b
 
 Exp_a_b *new_exp_a_b( Expression_type type );
 
-void set_type( Exp_a_b *exp, Expression_type type );
+void set_exp_type( Exp_a_b *exp, Expression_type type );
 
-Expression_type get_type( Exp_a_b *exp );
+Expression_type get_exp_type( Exp_a_b *exp );
 
 #endif
