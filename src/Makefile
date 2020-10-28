@@ -1,4 +1,4 @@
-modules = symbol_table.c quadruples.c
+modules = ../lib/symbol_table/symbol_table.c ..quadruples.c
 
 all: parser scanner $(modulos)
 	gcc lex.yy.c quadruples.c symbol_table.c -o scanner -lfl -lm

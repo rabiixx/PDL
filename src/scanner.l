@@ -1,22 +1,15 @@
 /**
-  * [+] ProAlg Language Scanner
+  * [+] Description: ProAlg Language Scanner
   * [+] Authors: Ruben Cherif & Lorenzo Otermin
-  * [+] Date: 
+  * [+] Date: 28/10/2020
   * [+] GitHub: https://github.com/rabiixx/PDL
-  * [+] Version
+  * [+] Version: v1.0
   */
 
 %{
 
-	#include <math.h>
-	#include <limits.h>
-	#include <float.h>
+	#include "parser.tab.h"
 
-	/* Checks for Pow operation Overflow beetween intergers */ 
-	long int checkPowOverflowInt( int a, int b);
-
-	/* Checks for Pow operation Overflow between floats */ 
-	double checkPowOverflowFloat( double a, double b);
 %}
 
 
@@ -136,66 +129,11 @@ regex_menor_igual <=
 
 %%
 
-{regex_comentario} {printf("%s - Comentario detectado\n", yytext); return (BI_COMENTARIO);}
+{regex_comentario} 			{printf("%s - Comentario detectado\n", yytext); return (BI_COMENTARIO); }
 
-{regex_literal_entero} {
+{regex_literal_entero} 		{ printf("Literal entero: %d\n", atoi( yytext ) ); return (BI_LIT_ENTERO); }
 
-	char *p;
-	
-	char *str = (char*) malloc( sizeof( yytext ) );
-	strcpy(str, yytext);
-
-	if ( ( p = strchr( str, 'e' ) ) || ( p = strchr( str, 'E' ) ) ) {
-
-		*p = 0;
-		p++;
-		
-		long int exp;
-		if (  ( exp = checkPowOverflowInt( 10, atoi( p ) ) ) == -1 )
-		{
-			printf("Literal integer exponent Overflow: %s\n", yytext);
-		} else {
-			printf("Lietral entero: %ld\n", ( atoi( str ) * exp ) );	
-		}
-
-	} else {
-	
-	 	printf("Literal entero: %d\n", atoi( yytext ) );
-
-	}
-
-	return (BI_LIT_ENTERO);
-}
-
-{regex_literal_real} {
-
-	char *p;
-	
-	char *str = (char*) malloc( sizeof( yytext ) );
-	strcpy(str, yytext);
-
-	if ( ( p = strchr( str, 'e' ) ) || ( p = strchr( str, 'E' ) ) ) {
-
-		*p = 0;
-		p++;
-		
-		double exp;
-		if (  ( exp = checkPowOverflowFloat( 10, atof( p ) ) ) == -1 )
-		{
-			printf("Literal real exponent Overflow: %s\n", yytext);
-		} else {
-			printf("Lietral real: %.2f\n", ( atof( str ) * exp ) );	
-		}
-
-	} else {
-	
-	 	printf("Literal real: %f\n", atof( yytext ) );
-
-	}
-
-	return (BI_LIT_REAL);
-
-}
+{regex_literal_real} 		{ printf("Literal real: %f\n", atof( yytext ) ); return (BI_LIT_REAL); }
 
 {regex_literal_booleano} 	{printf("%s - Booleano\n", yytext); return (BI_LIT_BOOLEANO);}
 
@@ -204,16 +142,15 @@ regex_menor_igual <=
 {regex_literal_cadena} 		{printf("%s - String\n", yytext); return (BI_LIT_CADENA);}
 
 
-{regex_entero} 				{printf("%s - Palabra reservada entero detectada \n", yytext); return (BI_ENTERO);}
+{regex_entero} 				{printf("%s - Palabra reservada entero detectada \n", yytext); return (BI_PR_ENTERO);}
 
-{regex_real} 				{printf("%s - Palabra reservada real detectada \n", yytext); return (BI_REAL);}
+{regex_real} 				{printf("%s - Palabra reservada real detectada \n", yytext); return (BI_PR_REAL);}
 
 {regex_booleano} 			{printf("%s - Palabra reservada boolenao detectada \n", yytext); return (BI_PR_BOOLEANO);}
 
 {regex_caracter} 			{printf("%s - Palabra reservada caracter detectada \n", yytext); return (BI_PR_CARACTER);}
 
 {regex_cadena} 				{printf("%s - Palabra reservada cadena detectada \n", yytext); return (BI_PR_CADENA);}
-
 
 
 {regex_accion} 				{printf("%s - Palabra reservada accion detectada \n", yytext); return (BI_ACCION);}
@@ -241,20 +178,13 @@ regex_menor_igual <=
 {regex_ftipo} 				{printf("%s - Palabra reservada ftipo detectada \n", yytext); return (BI_FTIPO);}
 
 {regex_tupla} 				{printf("%s - Palabra reservada tupla detectada \n", yytext); return (BI_TUPLA);}
-{regex_ftupla} 				{printf("%s - Palabra reservada ftupla detectada \n", yytext); return (BI_FTUPLAS);}
+{regex_ftupla} 				{printf("%s - Palabra reservada ftupla detectada \n", yytext); return (BI_FTUPLA);}
 
 {regex_var} 				{printf("%s - Palabra reservada var detectada \n", yytext); return (BI_VAR);}
 
 {regex_fvar} 				{printf("%s - Palabra reservada fvar detectada \n", yytext); return (BI_FVAR);}
 
 {regex_punto} 				{printf("%s - Token punto \n", yytext); return (BI_PUNTO);}
-
-
-
-
-
-
-
 
 
 {regex_continuar} 			{printf("%s - Palabra reservada continuar detectada \n", yytext); return (BI_CONTINUAR);}
@@ -292,10 +222,9 @@ regex_menor_igual <=
 {regex_y} 					{printf("%s - Palabra reservada y detectada \n", yytext); return (BI_Y);}
 
 
-
 {regex_asignacion} 			{printf("%s - *Token asignacion(:=) detectada \n", yytext); return (BI_ASIGNACION);}
 
-{regex_comp_seq} 			{printf("%s - *Token composicion sequencial(;) detectada \n", yytext) return (BI_COMP_SEQ);}
+{regex_comp_seq} 			{printf("%s - *Token composicion sequencial(;) detectada \n", yytext); return (BI_COMP_SEQ);}
 
 {regex_separador} 			{printf("%s - *Token separador(,) detectada \n", yytext); return (BI_SEPARADOR);}
 	
@@ -332,7 +261,7 @@ regex_menor_igual <=
 
 {regex_menor} 				{printf("Operador Relacional Menor: %s\n", yytext); return (BI_MENOR);}
 
-{regex_mayor_igual} 		{printf("Operador Relacional Mayor o Igual: %s\n", yytext); return (MAYOR_IGUAL);}
+{regex_mayor_igual} 		{printf("Operador Relacional Mayor o Igual: %s\n", yytext); return (BI_MAYOR_IGUAL);}
 
 {regex_menor_igual} 		{printf("Operador Relacional Menor o Igual: %s\n", yytext); return (BI_MENOR_IGUAL);}
 
@@ -346,7 +275,7 @@ regex_menor_igual <=
 
 %%
 
-long int checkPowOverflowInt( int a, int b) {
+/*long int checkPowOverflowInt( int a, int b) {
 
 	for (int i = 0; i < b; ++i)
 	    if ( (i * log(a)) >= log(LONG_MAX))
@@ -362,12 +291,12 @@ double checkPowOverflowFloat( double a, double b) {
 			return -1;
 
 	return (double) pow(a, b);
-}
+}*/
 
-int yywrap(){}
+/*int yywrap(){}
 int main(){
 
 	yylex();
 
 	return 0;
-}
+}*/

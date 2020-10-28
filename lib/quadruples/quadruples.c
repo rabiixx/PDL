@@ -1,6 +1,6 @@
 #include "quadruples.h"
 
-QuadTable *new_quad_tb() {
+QuadTable *new_quad_table() {
 
 	QuadTable *qt = (QuadTable*) calloc(1, sizeof( QuadTable ));
 
@@ -203,94 +203,4 @@ void deleteList2(QuadTable *qt)
 	
 	qt->head = NULL;
 }
-
-int main(int argc, char const *argv[])
-{
-	
-	QuadTable *qt = new_quad_tb();
-	
-	Quad *quad1 = new_quad(99, 1, 2 , 3);
-	Quad *quad2 = new_quad(100, 1, 2 , 3);
-	Quad *quad3 = new_quad(101, 1, 2 , 3);
-	gen(qt, quad1);
-	gen(qt, quad2);
-	gen(qt, quad3);
-
-/*	Quad *quad2 = (Quad*) calloc(1, sizeof( Quad ) );
-	*quad2 = *quad1;
-	quad2->op = 100;*/
-
-
-	Quad *tmp = qt->head;
-	int i = 0;
-
-	while ( tmp ) {
-
-		printf("MA qt[%d]: %p\n", i, tmp);
-		printf("\top: %d\n", tmp->op);
-		printf("\top1: %d\n", tmp->op1);
-		printf("\top2: %d\n", tmp->op2);
-		printf("\tres: %d\n\n", tmp->res);
-		printf("*****************\n");
-
-		tmp = tmp->next;
-		++i;
-	}
-
-
-	//free_quad_table( &(qt->head) );
-	free_quad_table2( qt->head);
-	//free_quads_qt(qt->head);
-	//deleteList( &(qt->head) );
-	//deleteList2( qt );
-
-
-	tmp = qt->head;
-	i = 0;
-
-	while ( tmp ) {
-
-		printf("MA qt[%d]: %p\n", i, tmp);
-		printf("\top: %d\n", tmp->op);
-		printf("\top1: %d\n", tmp->op1);
-		printf("\top2: %d\n", tmp->op2);
-		printf("\tres: %d\n", tmp->res);
-
-		tmp = tmp->next;
-		++i;
-	}
-
-
-
-/*	LinkedList *list = new_linked_list();
-	
-	Node *node1 = new_node(quad1);
-	Node *node2 = new_node(quad2);
-
-	insert_node(list, node1);
-	insert_node(list, node2);
-	
-
-	Node *tmp = list->head; 
-
-	int i = 0;
-	while ( tmp ) {
-
-		printf("list[%d]: \n", i);
-
-		printf("\top: %d\n", tmp->q->op);
-		printf("\top1: %d\n", tmp->q->op1);
-		printf("\top2: %d\n", tmp->q->op2);
-		printf("\tres: %d\n", tmp->q->res);
-
-		tmp = tmp->next;
-		++i;
-	}*/
-
-
-
-
-	return 0;
-}
-
 

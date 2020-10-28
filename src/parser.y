@@ -1,10 +1,22 @@
 %{
-	/* fichero scanner.y */
+	#include <stdlib.h>
 	#include <stdio.h>
-	#include <stdbool.h>
-	#include "libs/hash_table.h"
+	#include <errno.h>
+
+	#include "lib/symboltable/symbol_table.h"
+	#include "lib/quadruples/quadruples.h"
+	#include "lib/exp_a_b/exp_a_b.h"
+	#include "lib/stack/stack.h"
+
+
+	extern int yylex();
+	extern FILE *yyin;
+	extern yylineno;
+
+	void yyerror (char const *);
 
 	Symbol *hash_table[HT_SIZE];
+	QuadTable *qt = new_quad_table();
 
 	Stack stack;
 
@@ -441,13 +453,9 @@ decl_sal 		:	BI_SAL lista_d_var
 /* Expresiones */
 
 
-expresion 		:	exp_a b
+expresion 		:	exp_a_b
 				|	funcion_ll
 				;
-
-literal_numerico	:	BI_LIT_ENTERO
-					|	BI_LIT_REAL
-					;
 
 exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				{
@@ -743,25 +751,6 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					gen(qt, q);
 					
 					$$->s->type = DATA_TYPE_INTEGER;
-				}
-				|	BI_PAR_APER exp_a_b BI_PAR_CIER
-				{
-					/**
-					 * Production 5: E --> ( E1 )
-					 * Semantic Rule:
-					 * 	{
-					 *		E.place := E1.place 
-					 *		E.type = E1.type
-					 *	}
-					 */
-
-					if ( !( $2->type == BOOLEAN_EXP ) && !( $2->type == ARITHMETIC_EXP ) )	
-					{
-				 		fprintf(stderr, "Error: Not valid expresion type\n");
-				 	} else {
-						$$ = $2;
-				 	}
-
 				}
 				|	BI_LIT_ENTERO
 				{
@@ -1149,8 +1138,46 @@ int main(int argc, char const *argv[])
 	
 	init_symbol_table( st );
 
+	if ( argc == 2 && ( strcmp( argv[1], "--help" ) == 0 || strcmp( argv[1], "--help" ) == 0 ) )
+	{
+		printf("Usage: compiler <input-file>\n");
+		printf("Supported input file extensions: .txt and .alg\n");
+		return EXIT_SUCCESS;
+	}
+	else if ( argc == 2 )
+	{
+		
+		char *ext = strrchr( argv[1], '.' );
+		++ext;
 
-	return 0;
+		/* No extension */
+		if ( !ext ) {
+			printf("Usage: compiler <input-file>\n");
+			printf("Supported input file extensions: .txt and .alg\n");
+			return EXIT_SUCCESS;
+		}
+
+		if ( ( strcmp( ext, "txt" ) == 0 ) || ( strcmp( ext, "alg") ) )
+		{
+			FILE *file = fopen( argv[1], "r");
+			
+			if ( !file )
+			{
+				fprintf("Error: %s\n",	strerror( errno ) );
+				return EXIT_FAILURE;
+			}
+
+			yyin = file;			
+		} else {
+			printf("Error: Not supported input file extension.\n\n");
+			printf("Usage: compiler <input-file>\n");
+			printf("Supported input file extensions: .txt and .alg\n");
+			return EXIT_SUCCESS;
+
+		}
+	}
+
+	return EXIT_SUCCESS;
 }
 
 
@@ -1169,7 +1196,24 @@ int main(int argc, char const *argv[])
 
 
 
+/*
+|	BI_PAR_APER exp_a_b BI_PAR_CIER
+				{
+					**
+					 * Production 5: E --> ( E1 )
+					 * Semantic Rule:
+					 * 	{
+					 *		E.place := E1.place 
+					 *		E.type = E1.type
+					 *	}
+					 *
 
+					if ( !( $2->type == BOOLEAN_EXP ) && !( $2->type == ARITHMETIC_EXP ) )	
+					{
+				 		fprintf(stderr, "Error: Not valid expresion type\n");
+				 	} else {
+						$$ = $2;
+				 	}
 
-
-
+				}
+*/
