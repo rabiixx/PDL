@@ -67,15 +67,17 @@
 	/* fichero scanner.y */
 	#include <stdio.h>
 	#include <stdbool.h>
-	#include "libs/hash_table.h"
+	#include "../lib/symboltable/hash_table.h"
 
 	Symbol *hash_table[HT_SIZE];
 
-	Stack stack;
+	//Stack stack;
+
+	int yylex();
+	void yyerror(const char *s);
 
 
-
-#line 79 "scanner.tab.c" /* yacc.c:339  */
+#line 81 "scanner.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -201,7 +203,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 205 "scanner.tab.c" /* yacc.c:358  */
+#line 207 "scanner.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -505,10 +507,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    96,    96,   100,   104,   108,   110,   112,   115,   117,
-     119,   122,   126,   128,   130,   132,   146,   155,   159,   171,
-     176,   201,   203,   205,   206,   207,   211,   214,   216,   224,
-     229,   232,   236,   238,   240,   242,   254,   256,   258,   260,
+       0,    98,    98,   102,   106,   110,   112,   114,   117,   119,
+     121,   124,   128,   130,   132,   134,   148,   157,   161,   173,
+     178,   203,   205,   207,   208,   209,   213,   216,   218,   226,
+     231,   234,   236,   238,   240,   242,   254,   256,   258,   260,
      262,   277,   287,   294,   295,   296,   325,   326,   329,   331,
      333,   341,   345,   352,   354,   358,   360,   364,   365,   366,
      367,   368,   369,   370,   371,   372,   373,   374,   375,   376,
@@ -1477,198 +1479,196 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 97 "scanner.y" /* yacc.c:1646  */
-    {printf("desc_algoritmo")}
-#line 1483 "scanner.tab.c" /* yacc.c:1646  */
+#line 99 "scanner.y" /* yacc.c:1646  */
+    {printf("desc_algoritmo");}
+#line 1485 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 101 "scanner.y" /* yacc.c:1646  */
-    {printf("cabecera_alg")}
-#line 1489 "scanner.tab.c" /* yacc.c:1646  */
+#line 103 "scanner.y" /* yacc.c:1646  */
+    {printf("cabecera_alg");}
+#line 1491 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 105 "scanner.y" /* yacc.c:1646  */
-    {printf("bloque_alg")}
-#line 1495 "scanner.tab.c" /* yacc.c:1646  */
+#line 107 "scanner.y" /* yacc.c:1646  */
+    {printf("bloque_alg");}
+#line 1497 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 109 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_globales")}
-#line 1501 "scanner.tab.c" /* yacc.c:1646  */
+#line 111 "scanner.y" /* yacc.c:1646  */
+    {printf("decl_globales");}
+#line 1503 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 111 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_globales")}
-#line 1507 "scanner.tab.c" /* yacc.c:1646  */
+#line 113 "scanner.y" /* yacc.c:1646  */
+    {printf("decl_globales");}
+#line 1509 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 116 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_accion")}
-#line 1513 "scanner.tab.c" /* yacc.c:1646  */
+#line 118 "scanner.y" /* yacc.c:1646  */
+    {printf("decl_accion");}
+#line 1515 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 118 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_funcion")}
-#line 1519 "scanner.tab.c" /* yacc.c:1646  */
+#line 120 "scanner.y" /* yacc.c:1646  */
+    {printf("decl_funcion");}
+#line 1521 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 123 "scanner.y" /* yacc.c:1646  */
-    {printf("bloque")}
-#line 1525 "scanner.tab.c" /* yacc.c:1646  */
+#line 125 "scanner.y" /* yacc.c:1646  */
+    {printf("bloque");}
+#line 1527 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 127 "scanner.y" /* yacc.c:1646  */
-    {printf("declaraciones")}
-#line 1531 "scanner.tab.c" /* yacc.c:1646  */
+#line 129 "scanner.y" /* yacc.c:1646  */
+    {printf("declaraciones");}
+#line 1533 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 129 "scanner.y" /* yacc.c:1646  */
-    {printf("declaraciones")}
-#line 1537 "scanner.tab.c" /* yacc.c:1646  */
+#line 131 "scanner.y" /* yacc.c:1646  */
+    {printf("declaraciones");}
+#line 1539 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 131 "scanner.y" /* yacc.c:1646  */
-    {printf("declaraciones")}
-#line 1543 "scanner.tab.c" /* yacc.c:1646  */
+#line 133 "scanner.y" /* yacc.c:1646  */
+    {printf("declaraciones");}
+#line 1545 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 147 "scanner.y" /* yacc.c:1646  */
-    {printf("declaracion_tipo")}
-#line 1549 "scanner.tab.c" /* yacc.c:1646  */
+#line 149 "scanner.y" /* yacc.c:1646  */
+    {printf("declaracion_tipo");}
+#line 1551 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 156 "scanner.y" /* yacc.c:1646  */
-    {printf("declaracion_cte")}
-#line 1555 "scanner.tab.c" /* yacc.c:1646  */
+#line 158 "scanner.y" /* yacc.c:1646  */
+    {printf("declaracion_cte");}
+#line 1557 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 160 "scanner.y" /* yacc.c:1646  */
-    {printf("declaraciones_var")}
-#line 1561 "scanner.tab.c" /* yacc.c:1646  */
+#line 162 "scanner.y" /* yacc.c:1646  */
+    {printf("declaraciones_var");}
+#line 1563 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 172 "scanner.y" /* yacc.c:1646  */
+#line 174 "scanner.y" /* yacc.c:1646  */
     {
 
 
 				}
-#line 1570 "scanner.tab.c" /* yacc.c:1646  */
+#line 1572 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 202 "scanner.y" /* yacc.c:1646  */
-    {printf("d_tipo")}
-#line 1576 "scanner.tab.c" /* yacc.c:1646  */
+#line 204 "scanner.y" /* yacc.c:1646  */
+    {printf("d_tipo");}
+#line 1578 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 204 "scanner.y" /* yacc.c:1646  */
-    {printf("d_tipo")}
-#line 1582 "scanner.tab.c" /* yacc.c:1646  */
+#line 206 "scanner.y" /* yacc.c:1646  */
+    {printf("d_tipo");}
+#line 1584 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 208 "scanner.y" /* yacc.c:1646  */
+#line 210 "scanner.y" /* yacc.c:1646  */
     {
 					/* Que devolver ??? tupla*/
 				}
-#line 1590 "scanner.tab.c" /* yacc.c:1646  */
+#line 1592 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 215 "scanner.y" /* yacc.c:1646  */
-    {printf("expresion_t")}
-#line 1596 "scanner.tab.c" /* yacc.c:1646  */
+#line 217 "scanner.y" /* yacc.c:1646  */
+    {printf("expresion_t");}
+#line 1598 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 217 "scanner.y" /* yacc.c:1646  */
-    {printf("expresion_t")}
-#line 1602 "scanner.tab.c" /* yacc.c:1646  */
+#line 219 "scanner.y" /* yacc.c:1646  */
+    {printf("expresion_t");}
+#line 1604 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 225 "scanner.y" /* yacc.c:1646  */
+#line 227 "scanner.y" /* yacc.c:1646  */
     {
 
 
 				}
-#line 1611 "scanner.tab.c" /* yacc.c:1646  */
+#line 1613 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 233 "scanner.y" /* yacc.c:1646  */
-    {
-					printf("tipo_base entero")
-				}
+#line 235 "scanner.y" /* yacc.c:1646  */
+    {printf("tipo_base entero");}
 #line 1619 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 237 "scanner.y" /* yacc.c:1646  */
-    {printf("tipo_base real")}
+    {printf("tipo_base real");}
 #line 1625 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 239 "scanner.y" /* yacc.c:1646  */
-    {printf("tipo_base booleano")}
+    {printf("tipo_base booleano");}
 #line 1631 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 241 "scanner.y" /* yacc.c:1646  */
-    {printf("tipo_base caracter")}
+    {printf("tipo_base caracter");}
 #line 1637 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 243 "scanner.y" /* yacc.c:1646  */
-    {printf("tipo_base cadena")}
+    {printf("tipo_base cadena");}
 #line 1643 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
 #line 255 "scanner.y" /* yacc.c:1646  */
-    {printf("literal entero")}
+    {printf("literal entero");}
 #line 1649 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
 #line 257 "scanner.y" /* yacc.c:1646  */
-    {printf("literal real")}
+    {printf("literal real");}
 #line 1655 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
 #line 259 "scanner.y" /* yacc.c:1646  */
-    {printf("literal booleano")}
+    {printf("literal booleano");}
 #line 1661 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
 #line 261 "scanner.y" /* yacc.c:1646  */
-    {printf("literal caracter")}
+    {printf("literal caracter");}
 #line 1667 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
 #line 263 "scanner.y" /* yacc.c:1646  */
-    {printf("literal cadena")}
+    {printf("literal cadena");}
 #line 1673 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1688,247 +1688,247 @@ yyreduce:
 
   case 48:
 #line 330 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_ent_sal")}
+    {printf("decl_ent_sal");}
 #line 1693 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
 #line 332 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_ent_sal")}
+    {printf("decl_ent_sal");}
 #line 1699 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
 #line 334 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_ent_sal")}
+    {printf("decl_ent_sal");}
 #line 1705 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
 #line 342 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_ent")}
+    {printf("decl_ent");}
 #line 1711 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
 #line 346 "scanner.y" /* yacc.c:1646  */
-    {printf("decl_sal")}
+    {printf("decl_sal");}
 #line 1717 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
 #line 353 "scanner.y" /* yacc.c:1646  */
-    {printf("expresion")}
+    {printf("expresion");}
 #line 1723 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
 #line 355 "scanner.y" /* yacc.c:1646  */
-    {printf("expresion")}
+    {printf("expresion");}
 #line 1729 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
 #line 359 "scanner.y" /* yacc.c:1646  */
-    {printf("literal_entero")}
+    {printf("literal_entero");}
 #line 1735 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
 #line 361 "scanner.y" /* yacc.c:1646  */
-    {printf("literal_real")}
+    {printf("literal_real");}
 #line 1741 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
 #line 391 "scanner.y" /* yacc.c:1646  */
-    {printf("igualdad")}
+    {printf("igualdad");}
 #line 1747 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
 #line 392 "scanner.y" /* yacc.c:1646  */
-    {printf("distino")}
+    {printf("distino");}
 #line 1753 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
 #line 393 "scanner.y" /* yacc.c:1646  */
-    {printf("mayor")}
+    {printf("mayor");}
 #line 1759 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
 #line 394 "scanner.y" /* yacc.c:1646  */
-    {printf("mayor_igual")}
+    {printf("mayor_igual");}
 #line 1765 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
 #line 395 "scanner.y" /* yacc.c:1646  */
-    {printf("menor")}
+    {printf("menor");}
 #line 1771 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
 #line 396 "scanner.y" /* yacc.c:1646  */
-    {printf("menor_igual")}
+    {printf("menor_igual");}
 #line 1777 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
 #line 409 "scanner.y" /* yacc.c:1646  */
-    {printf("operando")}
+    {printf("operando");}
 #line 1783 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
 #line 411 "scanner.y" /* yacc.c:1646  */
-    {printf("operando")}
+    {printf("operando");}
 #line 1789 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
 #line 413 "scanner.y" /* yacc.c:1646  */
-    {printf("operando")}
+    {printf("operando");}
 #line 1795 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
 #line 415 "scanner.y" /* yacc.c:1646  */
-    {printf("operando")}
+    {printf("operando");}
 #line 1801 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
 #line 422 "scanner.y" /* yacc.c:1646  */
-    {printf("instrucciones")}
+    {printf("instrucciones");}
 #line 1807 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
 #line 424 "scanner.y" /* yacc.c:1646  */
-    {printf("instrucciones")}
+    {printf("instrucciones");}
 #line 1813 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
 #line 428 "scanner.y" /* yacc.c:1646  */
-    {printf("continuar")}
+    {printf("continuar");}
 #line 1819 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
 #line 430 "scanner.y" /* yacc.c:1646  */
-    {printf("instruccion")}
+    {printf("instruccion");}
 #line 1825 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
 #line 432 "scanner.y" /* yacc.c:1646  */
-    {printf("instruccion")}
+    {printf("instruccion");}
 #line 1831 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
 #line 434 "scanner.y" /* yacc.c:1646  */
-    {printf("instruccion")}
+    {printf("instruccion");}
 #line 1837 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
 #line 436 "scanner.y" /* yacc.c:1646  */
-    {printf("instruccion")}
+    {printf("instruccion");}
 #line 1843 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
 #line 440 "scanner.y" /* yacc.c:1646  */
-    {printf("asignacion")}
+    {printf("asignacion");}
 #line 1849 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
 #line 444 "scanner.y" /* yacc.c:1646  */
-    {printf("alternativa")}
+    {printf("alternativa");}
 #line 1855 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
 #line 452 "scanner.y" /* yacc.c:1646  */
-    {printf("iteracion")}
+    {printf("iteracion");}
 #line 1861 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
 #line 454 "scanner.y" /* yacc.c:1646  */
-    {printf("iteracion")}
+    {printf("iteracion");}
 #line 1867 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
 #line 458 "scanner.y" /* yacc.c:1646  */
-    {printf("it_cota_exp")}
+    {printf("it_cota_exp");}
 #line 1873 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
 #line 463 "scanner.y" /* yacc.c:1646  */
-    {printf("it_cota_fija")}
+    {printf("it_cota_fija");}
 #line 1879 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
 #line 468 "scanner.y" /* yacc.c:1646  */
-    {printf("accion_d")}
+    {printf("accion_d");}
 #line 1885 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
 #line 472 "scanner.y" /* yacc.c:1646  */
-    {printf("funcion_d")}
+    {printf("funcion_d");}
 #line 1891 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
 #line 476 "scanner.y" /* yacc.c:1646  */
-    {printf("a_cabecera")}
+    {printf("a_cabecera");}
 #line 1897 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
 #line 480 "scanner.y" /* yacc.c:1646  */
-    {printf("f_cabecera")}
+    {printf("f_cabecera");}
 #line 1903 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
 #line 484 "scanner.y" /* yacc.c:1646  */
-    {printf("d_par_form")}
+    {printf("d_par_form");}
 #line 1909 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
 #line 494 "scanner.y" /* yacc.c:1646  */
-    {printf("accion_ll")}
+    {printf("accion_ll");}
 #line 1915 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
 #line 498 "scanner.y" /* yacc.c:1646  */
-    {printf("funcion_ll")}
+    {printf("funcion_ll");}
 #line 1921 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
 #line 502 "scanner.y" /* yacc.c:1646  */
-    {printf("l_ll")}
+    {printf("l_ll");}
 #line 1927 "scanner.tab.c" /* yacc.c:1646  */
     break;
 
   case 110:
 #line 504 "scanner.y" /* yacc.c:1646  */
-    {printf("l_ll")}
+    {printf("l_ll");}
 #line 1933 "scanner.tab.c" /* yacc.c:1646  */
     break;
 

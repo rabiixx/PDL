@@ -139,37 +139,9 @@ regex_menor_igual <=
 
 {regex_comentario} {printf("%s - Comentario detectado\n", yytext); return (BI_COMENTARIO);}
 
-{regex_literal_entero} {return (BI_LIT_ENTERO);}
+{regex_literal_entero} {printf("%s - literal entero detectado\n", yytext);return (BI_LIT_ENTERO);}
 
-{regex_literal_real} {
-
-	char *p;
-	
-	char *str = (char*) malloc( sizeof( yytext ) );
-	strcpy(str, yytext);
-
-	if ( ( p = strchr( str, 'e' ) ) || ( p = strchr( str, 'E' ) ) ) {
-
-		*p = 0;
-		p++;
-		
-		double exp;
-		if (  ( exp = checkPowOverflowFloat( 10, atof( p ) ) ) == -1 )
-		{
-			printf("Literal real exponent Overflow: %s\n", yytext);
-		} else {
-			printf("Lietral real: %.2f\n", ( atof( str ) * exp ) );	
-		}
-
-	} else {
-	
-	 	printf("Literal real: %f\n", atof( yytext ) );
-
-	}
-
-	return (BI_LIT_REAL);
-
-}
+{regex_literal_real} {printf("%s - literal real detectado\n", yytext);return (BI_LIT_REAL);}
 
 {regex_literal_booleano} 	{printf("%s - Booleano\n", yytext); return (BI_LIT_BOOLEANO);}
 
@@ -178,9 +150,9 @@ regex_menor_igual <=
 {regex_literal_cadena} 		{printf("%s - String\n", yytext); return (BI_LIT_CADENA);}
 
 
-{regex_entero} 				{printf("%s - Palabra reservada entero detectada \n", yytext); return (BI_ENTERO);}
+{regex_entero} 				{printf("%s - Palabra reservada entero detectada \n", yytext); return (BI_PR_ENTERO);}
 
-{regex_real} 				{printf("%s - Palabra reservada real detectada \n", yytext); return (BI_REAL);}
+{regex_real} 				{printf("%s - Palabra reservada real detectada \n", yytext); return (BI_PR_REAL);}
 
 {regex_booleano} 			{printf("%s - Palabra reservada boolenao detectada \n", yytext); return (BI_PR_BOOLEANO);}
 
@@ -215,7 +187,7 @@ regex_menor_igual <=
 {regex_ftipo} 				{printf("%s - Palabra reservada ftipo detectada \n", yytext); return (BI_FTIPO);}
 
 {regex_tupla} 				{printf("%s - Palabra reservada tupla detectada \n", yytext); return (BI_TUPLA);}
-{regex_ftupla} 				{printf("%s - Palabra reservada ftupla detectada \n", yytext); return (BI_FTUPLAS);}
+{regex_ftupla} 				{printf("%s - Palabra reservada ftupla detectada \n", yytext); return (BI_FTUPLA);}
 
 {regex_var} 				{printf("%s - Palabra reservada var detectada \n", yytext); return (BI_VAR);}
 
@@ -269,7 +241,7 @@ regex_menor_igual <=
 
 {regex_asignacion} 			{printf("%s - *Token asignacion(:=) detectada \n", yytext); return (BI_ASIGNACION);}
 
-{regex_comp_seq} 			{printf("%s - *Token composicion sequencial(;) detectada \n", yytext) return (BI_COMP_SEQ);}
+{regex_comp_seq} 			{printf("%s - *Token composicion sequencial(;) detectada \n", yytext); return (BI_COMP_SEQ);}
 
 {regex_separador} 			{printf("%s - *Token separador(,) detectada \n", yytext); return (BI_SEPARADOR);}
 	
@@ -306,7 +278,7 @@ regex_menor_igual <=
 
 {regex_menor} 				{printf("Operador Relacional Menor: %s\n", yytext); return (BI_MENOR);}
 
-{regex_mayor_igual} 		{printf("Operador Relacional Mayor o Igual: %s\n", yytext); return (MAYOR_IGUAL);}
+{regex_mayor_igual} 		{printf("Operador Relacional Mayor o Igual: %s\n", yytext); return (BI_MAYOR_IGUAL);}
 
 {regex_menor_igual} 		{printf("Operador Relacional Menor o Igual: %s\n", yytext); return (BI_MENOR_IGUAL);}
 

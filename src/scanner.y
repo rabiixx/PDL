@@ -2,12 +2,14 @@
 	/* fichero scanner.y */
 	#include <stdio.h>
 	#include <stdbool.h>
-	#include "libs/hash_table.h"
+	#include "../lib/symboltable/hash_table.h"
 
 	Symbol *hash_table[HT_SIZE];
 
-	Stack stack;
+	//Stack stack;
 
+	int yylex();
+	void yyerror(const char *s);
 
 %}
 
@@ -94,41 +96,41 @@
 %%
 
 desc_algoritmo	: 	BI_ALGORITMO BI_IDENTIFICADOR BI_COMP_SEQ cabecera_alg bloque_alg BI_FALGORITMO 
-				{printf("desc_algoritmo")}
+				{printf("desc_algoritmo");}
 				;
 
 cabecera_alg	:	decl_globales decl_a_f decl_ent_sal BI_COMENTARIO
-				{printf("cabecera_alg")}
+				{printf("cabecera_alg");}
 				;
 
 bloque_alg		:	bloque BI_COMENTARIO
-				{printf("bloque_alg")}
+				{printf("bloque_alg");}
 				;
 
 decl_globales	:	declaracion_tipo decl_globales
-				{printf("decl_globales")}
+				{printf("decl_globales");}
 				| 	declaracion_cte decl_globales
-				{printf("decl_globales")}
+				{printf("decl_globales");}
 				|	/* cadena vacia */
 				;
 
 decl_a_f		:	accion_d decl_a_f
-				{printf("decl_accion")}
+				{printf("decl_accion");}
 				|	funcion_d decl_a_f
-				{printf("decl_funcion")}
+				{printf("decl_funcion");}
 				|	/* cadena vacia */
 				;
 
 bloque 			: declaraciones instrucciones
-				{printf("bloque")}
+				{printf("bloque");}
 				;
 
 declaraciones	:	declaracion_tipo declaraciones
-				{printf("declaraciones")}
+				{printf("declaraciones");}
 				| 	declaracion_cte declaraciones
-				{printf("declaraciones")}
+				{printf("declaraciones");}
 				|	declaracion_var declaraciones
-				{printf("declaraciones")}
+				{printf("declaraciones");}
 				|	/* cadena vacia */
 				;
 
@@ -144,7 +146,7 @@ tipo
 ftipo;
 */
 declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
-					{printf("declaracion_tipo")}
+					{printf("declaracion_tipo");}
 					;
 /* 
 const
@@ -153,11 +155,11 @@ fconst;
 */
 
 declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST BI_COMP_SEQ
-					{printf("declaracion_cte")}
+					{printf("declaracion_cte");}
 					;
 
 declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
-					{printf("declaraciones_var")}
+					{printf("declaraciones_var");}
 					;
 
 /* Declaraciones de tipos */
@@ -199,9 +201,9 @@ State analiysis
 
 
 d_tipo 			:	tipo_base 						/* base case */
-				{printf("d_tipo")}
+				{printf("d_tipo");}
 				|	BI_IDENTIFICADOR 				/* base case */
-				{printf("d_tipo")}
+				{printf("d_tipo");}
 				|	BI_REF d_tipo 								/* recursive by d_tipo */
 				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
 				| 	BI_TUPLA lista_campos BI_FTUPLA				/* recursive by lista_campos */
@@ -212,9 +214,9 @@ d_tipo 			:	tipo_base 						/* base case */
 				;
 
 expresion_t		: 	expresion
-				{printf("expresion_t")}
+				{printf("expresion_t");}
 				|	BI_LIT_CARACTER
-				{printf("expresion_t")}
+				{printf("expresion_t");}
 				;
 /* x = tupla
 			y : entero;
@@ -230,17 +232,15 @@ lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 				;
 
 tipo_base 		: 	BI_PR_ENTERO
-				{
-					printf("tipo_base entero")
-				}
+				{printf("tipo_base entero");}
 				|	BI_PR_REAL
-				{printf("tipo_base real")}
+				{printf("tipo_base real");}
 				|	BI_PR_BOOLEANO
-				{printf("tipo_base booleano")}
+				{printf("tipo_base booleano");}
 				|	BI_PR_CARACTER
-				{printf("tipo_base caracter")}	
+				{printf("tipo_base caracter");}	
 				|	BI_PR_CADENA
-				{printf("tipo_base cadena")}
+				{printf("tipo_base cadena");}
 				;
 
 
@@ -252,15 +252,15 @@ tipo_base 		: 	BI_PR_ENTERO
   */
 
 literal			:	BI_LIT_ENTERO 
-				{printf("literal entero")}
+				{printf("literal entero");}
 				|	BI_LIT_REAL
-				{printf("literal real")}
+				{printf("literal real");}
 				|	BI_LIT_BOOLEANO
-				{printf("literal booleano")}
+				{printf("literal booleano");}
 				|	BI_LIT_CARACTER
-				{printf("literal caracter")}
+				{printf("literal caracter");}
 				|	BI_LIT_CADENA
-				{printf("literal cadena")}
+				{printf("literal cadena");}
 				;
 
 
@@ -327,11 +327,11 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				;
 
 decl_ent_sal	:	decl_ent
-				{printf("decl_ent_sal")}
+				{printf("decl_ent_sal");}
 				|	decl_ent decl_sal
-				{printf("decl_ent_sal")}
+				{printf("decl_ent_sal");}
 				|	decl_sal
-				{printf("decl_ent_sal")}
+				{printf("decl_ent_sal");}
 				;
 
 /* 
@@ -339,26 +339,26 @@ decl_ent_sal	:	decl_ent
 		x, y : entero
 */ 
 decl_ent 		:	BI_ENT lista_d_var
-				{printf("decl_ent")}
+				{printf("decl_ent");}
 				;
 
 decl_sal 		:	BI_SAL lista_d_var
-				{printf("decl_sal")}
+				{printf("decl_sal");}
 				;
 
 /* Expresiones */
 
 
 expresion 		:	exp_a_b
-				{printf("expresion")}
+				{printf("expresion");}
 				|	funcion_ll
-				{printf("expresion")}
+				{printf("expresion");}
 				;
 
 literal_numerico	:	BI_LIT_ENTERO
-					{printf("literal_entero")}
+					{printf("literal_entero");}
 					|	BI_LIT_REAL
-					{printf("literal_real")}
+					{printf("literal_real");}
 					;
 
 exp_a_b			:	exp_a_b BI_SUMA exp_a_b
@@ -388,12 +388,12 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
   * LT: LESS THAN
   * LE: LESS EQUAL
   */
-oprel			: 	BI_IGUALDAD 	{printf("igualdad")}
-				|	BI_DISTINTO 	{printf("distino")}
-				|	BI_MAYOR 		{printf("mayor")}
-				|	BI_MAYOR_IGUAL 	{printf("mayor_igual")}
-				|	BI_MENOR 		{printf("menor")}
-				|	BI_MENOR_IGUAL 	{printf("menor_igual")}
+oprel			: 	BI_IGUALDAD 	{printf("igualdad");}
+				|	BI_DISTINTO 	{printf("distino");}
+				|	BI_MAYOR 		{printf("mayor");}
+				|	BI_MAYOR_IGUAL 	{printf("mayor_igual");}
+				|	BI_MENOR 		{printf("menor");}
+				|	BI_MENOR_IGUAL 	{printf("menor_igual");}
 				;
 
 
@@ -406,42 +406,42 @@ oprel			: 	BI_IGUALDAD 	{printf("igualdad")}
 */
 
 operando		:	BI_IDENTIFICADOR
-				{printf("operando")}
+				{printf("operando");}
 				|	operando BI_PUNTO operando
-				{printf("operando")}
+				{printf("operando");}
 				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
-				{printf("operando")}
+				{printf("operando");}
 				|	operando BI_REF
-				{printf("operando")}
+				{printf("operando");}
 				;
 
 
 
 /* Instrucciones */
 instrucciones 	:	instruccion BI_COMP_SEQ instrucciones
-				{printf("instrucciones")}
+				{printf("instrucciones");}
 				|	instruccion
-				{printf("instrucciones")}
+				{printf("instrucciones");}
 				;
 
 instruccion 	:	BI_CONTINUAR
-				{printf("continuar")}
+				{printf("continuar");}
 				|	asignacion
-				{printf("instruccion")}
+				{printf("instruccion");}
 				|	alternativa
-				{printf("instruccion")}
+				{printf("instruccion");}
 				| 	iteracion
-				{printf("instruccion")}
+				{printf("instruccion");}
 				|	accion_ll
-				{printf("instruccion")}
+				{printf("instruccion");}
 				;
 
 asignacion 		:	operando BI_ASIGNACION expresion
-				{printf("asignacion")}
+				{printf("asignacion");}
 				;
 
 alternativa		:	BI_SI expresion BI_ENTONCES instrucciones lista_opciones BI_FSI
-				{printf("alternativa")}
+				{printf("alternativa");}
 				;
 
 lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES instrucciones lista_opciones
@@ -449,39 +449,39 @@ lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES instrucciones lista_opciones
 				;
 
 iteracion 		:	it_cota_fija
-				{printf("iteracion")}
+				{printf("iteracion");}
 				|	it_cota_exp
-				{printf("iteracion")}
+				{printf("iteracion");}
 				;
 
 it_cota_exp		:	BI_MIENTRAS expresion BI_HACER instrucciones BI_FMIENTRAS
-				{printf("it_cota_exp")}
+				{printf("it_cota_exp");}
 				;
 
 it_cota_fija	:	BI_PARA BI_IDENTIFICADOR BI_ASIGNACION expresion 
 					BI_HASTA expresion BI_HACER instrucciones BI_FPARA
-				{printf("it_cota_fija")}
+				{printf("it_cota_fija");}
 				;
 
 /* Acciones y Funciones */
 accion_d 		:	BI_ACCION a_cabecera bloque BI_FACCION
-				{printf("accion_d")}
+				{printf("accion_d");}
 				;
 
 funcion_d		:	BI_FUNCION f_cabecera bloque BI_DEV expresion BI_FFUNCION
-				{printf("funcion_d")}
+				{printf("funcion_d");}
 				;
 
 a_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER d_par_form
-				{printf("a_cabecera")}
+				{printf("a_cabecera");}
 				;
 
 f_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER lista_d_var BI_PAR_CIER BI_COMP_SEQ
-				{printf("f_cabecera")}
+				{printf("f_cabecera");}
 				;
 
 d_par_form		:	d_p_form BI_COMP_SEQ d_par_form
-				{printf("d_par_form")}
+				{printf("d_par_form");}
 				|	/* cadena vacia */
 				;
 
@@ -491,17 +491,17 @@ d_p_form 		:	BI_ENT lista_id BI_DEF_TYPEVAR d_tipo
 				;
 
 accion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
-				{printf("accion_ll")}
+				{printf("accion_ll");}
 				;
 
 funcion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
-				{printf("funcion_ll")}
+				{printf("funcion_ll");}
 				;
 
 l_ll			:	expresion BI_SEPARADOR l_ll
-				{printf("l_ll")}
+				{printf("l_ll");}
 				|	expresion
-				{printf("l_ll")}
+				{printf("l_ll");}
 				;
 
 
