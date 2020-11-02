@@ -2,6 +2,7 @@
 	#include <stdlib.h>
 	#include <stdio.h>
 	#include <errno.h>
+	#include <string.h>
 
 	#include "lib/symboltable/symbol_table.h"
 	#include "lib/quadruples/quadruples.h"
@@ -12,8 +13,9 @@
 
 	extern int yylex();
 	extern FILE *yyin;
+	extern int yylineno;
 	
-	void yyerror (char const *);
+	void yyerror (const char *);
 
 	Symbol *st[HT_SIZE];
 	QuadTable *qt;
@@ -361,7 +363,7 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 					  * We insert the identifier into the symbol table and we define its scope and type.
 					  * in this case scope will be, const. The type is returned by literal grammar rule 
 					  */
-					add_symbol(st, $1);
+					add_symbol( st, new_symbol( $1 ) );
 					//set_attr(st, $1, "scope", "cte");
 					set_symbol_type(st, $1, $3);
 				}
@@ -457,7 +459,7 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 
 					if ( !lookup(st, $1) ) {
 
-						add_symbol(st, $1);
+						add_symbol( st, new_symbol( $1 ) );
 						
 						/* 
 						 * We add identifiers to stack, to be able to set their type
@@ -475,7 +477,8 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 
 					if ( !lookup(st, $1) ) {
 						
-						add_symbol(st, $1);
+
+						add_symbol( st, new_symbol( $1 ) );
 						//apilar(stack, $1);
 
 					} else {
@@ -513,14 +516,14 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					$$->s = new_symbol("_tmp");
 					add_symbol(st, $$->s);
 
-					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
 						$$->s->type = DATA_TYPE_INTEGER;
 						Quad *quad = new_quad(QUAD_OP_INTSUM, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
 
 					}
-					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
 						$$->s->type = DATA_TYPE_REAL;
 						Quad *quad = new_quad(QUAD_OP_REALSUM, $1->s->id, $3->s->id, $$->s->id);
@@ -558,14 +561,14 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					$$->s = new_symbol("_tmp");
 					add_symbol(st, $$->s);
 
-					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
 						$$->s->type = DATA_TYPE_INTEGER;
 						Quad *quad = new_quad(QUAD_OP_INTSUBS, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
 
 					}
-					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
 						$$->s->type = DATA_TYPE_REAL;
 						Quad *quad = new_quad(QUAD_OP_REALSUBS, $1->s->id, $3->s->id, $$->s->id);
@@ -602,14 +605,14 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					$$->s = new_symbol("_tmp");
 					add_symbol(st, $$->s);
 
-					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
 						$$->s->type = DATA_TYPE_INTEGER;
 						Quad *quad = new_quad(QUAD_OP_INTMULT, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
 
 					}
-					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
 						$$->s->type = DATA_TYPE_REAL;
 						Quad *quad = new_quad(QUAD_OP_REALMULT, $1->s->id, $3->s->id, $$->s->id);
@@ -656,10 +659,10 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					add_symbol(st, $$->s);
 
 
-					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
 						Symbol *tmp_symbol = new_symbol("_tmp");
-						add_symbol( tmp_symbol );
+						add_symbol( st, tmp_symbol );
 						
 						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
 						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, tmp_symbol->id);
@@ -671,7 +674,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 
 						$$->s->type = DATA_TYPE_REAL;
 					}
-					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
 						Quad *quad = new_quad(QUAD_OP_REALDIV, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
@@ -709,15 +712,15 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					$$->s = new_symbol("_tmp");
 					add_symbol(st, $$->s);
 
-					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
 						Quad *quad = new_quad(QUAD_OP_INTMOD, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
 						$$->s->type = DATA_TYPE_INTEGER;
 					}
-					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
-						Quad *quad = new_quad(QUAD_OP_MODREAL, $1->s->id, $3->s->id, $$->s->id);
+						Quad *quad = new_quad(QUAD_OP_REALMOD, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
 						$$->s->type = DATA_TYPE_REAL;
 					}
@@ -756,10 +759,10 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					add_symbol(st, $$->s);
 
 
-					if ( ( $1->s->type == INTEGER ) && ( $3->s->type == INTEGER ) )
+					if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
 						Symbol *tmp_symbol = new_symbol("_tmp");
-						add_symbol( tmp_symbol );
+						add_symbol( st, tmp_symbol );
 
 						Quad *quad1 = new_quad(QUAD_OP_INT2REAL, $1->s->id, QUAD_OP_VOID, $$->s->id);
 						Quad *quad2 = new_quad(QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, tmp_symbol->id);
@@ -769,7 +772,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 						gen(qt, quad2);
 						gen(qt, quad3);
 					}
-					else if ( ( $1->s->type == REAL ) && ( $3->s->type == REAL ) )
+					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
 						Quad *quad = new_quad(QUAD_OP_REALDIV, $1->s->id, $3->s->id, $$->s->id);
 						gen(qt, quad);
@@ -806,7 +809,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 
 					$$ = new_exp_a_b( ARITHMETIC_EXP );
 					$$->s = new_symbol( "_tmp" );
-					$$->S->type = DATA_TYPE_INTEGER;
+					$$->s->type = DATA_TYPE_INTEGER;
 					add_symbol(st, $$->s);
 
 				}
@@ -814,7 +817,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				{
 					$$ = new_exp_a_b( ARITHMETIC_EXP );
 					$$->s = new_symbol( "_tmp" );
-					$$->S->type = DATA_TYPE_REAL;
+					$$->s->type = DATA_TYPE_REAL;
 					add_symbol(st, $$->s);
 				}
 				|	BI_RESTA exp_a_b
@@ -837,11 +840,11 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 
 					if ( $2->s->type == DATA_TYPE_INTEGER )
 					{
-						Quad *quad = new_quad(QUAD_OP_INTUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id)
+						Quad *quad = new_quad(QUAD_OP_INTUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id);
 					}
 					else if ( $2->s->type == DATA_TYPE_REAL )
 					{
-						Quad *quad = new_quad(QUAD_OP_REALUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id)
+						Quad *quad = new_quad(QUAD_OP_REALUNIMUS, $2->s->id, QUAD_OP_VOID, $$->s->id);
 					}
 
 				}
@@ -861,9 +864,9 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					 *	}
 					 */
 
-					$$ = new_exp_a_b(BOOLEAN);
+					$$ = new_exp_a_b(BOOLEAN_EXP);
 					$$->s = new_symbol("_tmp");
-					$$->s->type = BOOLEAN;
+					$$->s->type = DATA_TYPE_BOOLEAN;
 					add_symbol( st, $$->s );
 					
 					backpatch($1->falselist, $3);
@@ -882,9 +885,9 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					 *	}
 					 */
 
-					$$ = new_exp_a_b(BOOLEAN);
+					$$ = new_exp_a_b(BOOLEAN_EXP);
 					$$->s = new_symbol("_tmp");
-					$$->s->type = BOOLEAN;
+					$$->s->type = DATA_TYPE_BOOLEAN;
 					add_symbol( st, $$->s );
 					
 					backpatch($1->truelist, $3);
@@ -903,9 +906,9 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					 * }
 					 */
 					
-					$$ = new_exp_a_b(BOOLEAN);
+					$$ = new_exp_a_b(BOOLEAN_EXP);
 					$$->s = new_symbol("_tmp");
-					$$->s->type = BOOLEAN;
+					$$->s->type = DATA_TYPE_BOOLEAN;
 					add_symbol( st, $$->s );
 
 					$$->truelist = $2->falselist;
@@ -923,9 +926,9 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					 * 	}
 					 */
 					
-					$$ = new_exp_a_b(BOOLEAN);
+					$$ = new_exp_a_b(BOOLEAN_EXP);
 					$$->s = new_symbol("_tmp");
-					$$->s->type = BOOLEAN;
+					$$->s->type = DATA_TYPE_BOOLEAN;
 					add_symbol( st, $$->s );
 
 					$$->truelist = $2->truelist;
@@ -945,15 +948,15 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					 * }
 					 */
 
-					$$ = new_exp_a_b(BOOLEAN);
+					$$ = new_exp_a_b(BOOLEAN_EXP);
 
 					 /* We create new tmp variable and add to symbol table*/
 					$$->s = new_symbol("_tmp");
-					$$->s->type = BOOLEAN;
+					$$->s->type = DATA_TYPE_BOOLEAN;
 					add_symbol( st, $$->s );
 
 					/* We generate new quadruples */ 
-					Quad *quad1 = new_quad($2, $1->s->is, $2->s->id, QUAD_OP_NOGOTO);
+					Quad *quad1 = new_quad($2, $1->s->id, $3->s->id, QUAD_OP_NOGOTO);
 					Quad *quad2 = new_quad(QUAD_OP_GOTO, $$->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
 
 					gen( qt, quad1 );
@@ -970,13 +973,13 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					  * { E.truelist := makelist(nextaddr) } 
 					  * 
 					  */
-					$$ = new_exp_a_b(BOOLEAN);
+					$$ = new_exp_a_b(BOOLEAN_EXP);
 					$$->s = new_symbol("_tmp");
-					$$->s->type = BOOLEAN;
+					$$->s->type = DATA_TYPE_BOOLEAN;
       				/*$$->s->value.bool = $1;*/
       				add_symbol(st, $$->s);
 
-					Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_TRUE, NOTGOTO);
+					Quad *quad = new_quad(QUAD_OP_GOTO, $$->s->id, QUAD_OP_TRUE, QUAD_OP_NOGOTO);
 					gen(qt, quad);
 					$$->truelist = makelist( quad );
 
@@ -989,13 +992,13 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					  * { E.falselist := makelist(nextaddr) } 
 					  * 
 					  */
-					$$ = new_exp_a_b(BOOLEAN);
+					$$ = new_exp_a_b(BOOLEAN_EXP);
 					$$->s = new_symbol("_tmp");
-					$$->s->type = BOOLEAN;
+					$$->s->type = DATA_TYPE_BOOLEAN;
       				/*$$->s->value.bool = $1;*/
       				add_symbol(st, $$->s);
 
-					Quad *quad = new_quad(GOTO, $$->s->id, OP_QUAD_FALSE, NOTGOTO);
+					Quad *quad = new_quad(QUAD_OP_GOTO, $$->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
 					gen(qt, quad);
 					$$->falselist = makelist( quad );
 
@@ -1010,16 +1013,16 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
  *		M.quad := nextaddr
  *	}
  */
-M 				: /* empty */ { $$ = next_quad() }
+M 				: /* empty */ { $$ = next_quad(); }
 
 
 
-oprel			: 	BI_IGUALDAD 	{ $$ = QUAD_OP_EQ }
-				|	BI_DISTINTO 	{ $$ = QUAD_OP_NE }
-				|	BI_MAYOR 		{ $$ = QUAD_OP_GT }
-				|	BI_MAYOR_IGUAL 	{ $$ = QUAD_OP_GE }
-				|	BI_MENOR 		{ $$ = QUAD_OP_LT }
-				|	BI_MENOR_IGUAL 	{ $$ = QUAD_OP_LE }
+oprel			: 	BI_IGUALDAD 	{ $$ = QUAD_OP_EQ; }
+				|	BI_DISTINTO 	{ $$ = QUAD_OP_NE; }
+				|	BI_MAYOR 		{ $$ = QUAD_OP_GT; }
+				|	BI_MAYOR_IGUAL 	{ $$ = QUAD_OP_GE; }
+				|	BI_MENOR 		{ $$ = QUAD_OP_LT; }
+				|	BI_MENOR_IGUAL 	{ $$ = QUAD_OP_LE; }
 				;
 
 
@@ -1088,37 +1091,37 @@ asignacion 		:	operando BI_ASIGNACION expresion
 
 					if ( $1->s->type == $3->s->type )
 					{
-						Quad *quad = new_quad( QUAD_OP_ASSIGN, $1->s->id, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						Quad *quad = new_quad( QUAD_OP_ASSIGN, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );
 					}
 					else if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
-						Quad *quad = new_quad( REAL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						Quad *quad = new_quad( QUAD_OP_REAL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );
 					}
 					else if ( ( $1->s->type == DATA_TYPE_REAL ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
-						Quad *quad = new_quad( INT2REAL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						Quad *quad = new_quad( QUAD_OP_INT2REAL, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );	
 					}
 					else if ( ( $1->s->type == DATA_TYPE_INTEGER ) && ( $3->s->type == DATA_TYPE_BOOLEAN ) )
 					{
-						Quad *quad = new_quad( BOOL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						Quad *quad = new_quad( QUAD_OP_BOOL2INT, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );	
 					}
 					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
-						Quad *quad = new_quad( INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						Quad *quad = new_quad( QUAD_OP_INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );
 					}
 					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $3->s->type == DATA_TYPE_REAL ) )
 					{
-						Quad *quad = new_quad( INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						Quad *quad = new_quad( QUAD_OP_INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );	
 					}
 					else if ( ( $1->s->type == DATA_TYPE_BOOLEAN ) && ( $3->s->type == DATA_TYPE_INTEGER ) )
 					{
-						Quad *quad = new_quad( INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
+						Quad *quad = new_quad( QUAD_OP_INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );
 					}
 					
@@ -1205,21 +1208,23 @@ int main(int argc, char const *argv[])
 			return EXIT_SUCCESS;
 		}
 
-		if ( ( strcmp( ext, "txt" ) == 0 ) || ( strcmp( ext, "alg") ) )
+		if ( ( strcmp( ext, "txt" ) == 0 ) || ( strcmp( ext, "alg") == 0 ) )
 		{
 			FILE *file = fopen( argv[1], "r");
 			
 			if ( !file )
 			{
-				fprintf("Error: %s\n",	strerror( errno ) );
+				fprintf(stderr, "Error: %s\n",	strerror( errno ) );
 				return EXIT_FAILURE;
 			}
+
+			printf("SISISISIISISISIIS\n");
 
 			yyin = file;			
 		
 			init_symbol_table( st );
 			qt = new_quad_table();
-			stack = nuevaPila( &stack );
+			//stack = nuevaPila( &stack );
 
 		} else {
 			printf("Error: Not supported input file extension.\n\n");
@@ -1234,7 +1239,11 @@ int main(int argc, char const *argv[])
 }
 
 
-
+void yyerror (const char *str)
+{
+	fprintf (stderr, "Unexpected error has ocurred on line %d: %s\n", yylineno, str);
+	exit(-1);
+}
 
 
 

@@ -36,12 +36,13 @@ Symbol *new_symbol( char *name ) {
 
 void add_symbol(Symbol *table[], Symbol *symbol) {
 
-	const unsigned int index = hash( name );
+	const unsigned int index = hash( symbol->name );
 	
 	if ( table[ index ] == NULL )
 	{
 		table[ index ] = symbol;
-		table[ index ]->id = NUMSYM++;
+		NUM_SYM = 0;
+		table[ index ]->id = NUM_SYM++;
 	}
 	else
 	{
@@ -51,7 +52,7 @@ void add_symbol(Symbol *table[], Symbol *symbol) {
 		while ( tmp->next != NULL ) { tmp = tmp->next; }
 
 		tmp->next = symbol;
-		tmp->next->id = NUMSYM++;
+		tmp->next->id = NUM_SYM++;
 	}
 	
 }
@@ -75,7 +76,7 @@ int remove_symbol(Symbol *table[], const char *name) {
         {
             *link = tmp->next;
 			free(tmp);
-            --NUMSYM;
+            --NUM_SYM;
             return 0;
         }
         else
@@ -126,64 +127,6 @@ Symbol *lookup(Symbol *table[], char *name) {
 	return NULL;
 }
 
-
-int set_attr(Symbol *table[], char *name, char *attr, char *value) {
-
-	Symbol *s = lookup(table, name);
-
-	if ( s )
-	{
-
-		if ( strcmp("type", attr) == 0 )
-		{
-			s->type = (char*) calloc( strlen( value ), sizeof( char ) );
-			strcpy( s->type, value );
-		}
-		else if ( strcmp("scope", attr) == 0 )
-		{
-			s->scope = (char*) calloc( strlen( value ), sizeof( char ) );
-			strcpy( s->type, value );
-		}
-		else
-		{
-			printf("Attribute %s doesnt exist.\n", attr);
-			return -1;
-		}
-
-		return 0;
-	}
-
-	return -1;
-
-}
-
-char *get_attr(Symbol *table[], char *name, char *attr) {
-
-	Symbol *s = lookup(table, name);
-
-	if ( s ) {
-
-		if ( strcmp(attr, "type") == 0 )
-		{
-			return s->type;
-		}
-		else if ( strcmp(attr, "scope") == 0 )
-		{
-			return s->scope;
-		}
-	}
-
-	return NULL;
-
-}
-
-Data_type get_symbol_type(Symbol *table[], char *name) {
-
-	Symbol *s = lookup( table, name );
-
-	( s ) ? s->type : UNKNOWN_SYMBOL;
-}
-
 int set_symbol_type(Symbol *table[], char *name, Data_type type) {
 
 	if ( type < DATA_TYPE_STRING || type > DATA_TYPE_BOOLEAN )
@@ -197,6 +140,14 @@ int set_symbol_type(Symbol *table[], char *name, Data_type type) {
 
 	return UNKNOWN_SYMBOL;
 }
+
+Data_type get_symbol_type(Symbol *table[], char *name) {
+
+	Symbol *s = lookup( table, name );
+
+	( s ) ? s->type : UNKNOWN_SYMBOL;
+}
+
 
 void print_symbol_table(Symbol *table[])
 {
@@ -217,7 +168,7 @@ void print_symbol_table(Symbol *table[])
 
 }
 
-int main(int argc, char const *argv[])
+/*int main(int argc, char const *argv[])
 {
 
 	Symbol *table[ 5 ];
@@ -267,4 +218,4 @@ int main(int argc, char const *argv[])
 
 
 	return 0;
-}
+}*/

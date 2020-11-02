@@ -10,19 +10,6 @@
 /* MACROS */
 #define HT_SIZE 5
 
-/* Data Types */
-#define STR 9
-#define INT 6
-#define FLOAT 7
-#define CHAR 8
-
-/* Indexes */
-#define VAR 0
-#define FUNCT 1
-#define ACT 2
-#define CTE 3
-
-/* Data Structures */
 
 /*----------  Data Structures  ----------*/
 
@@ -67,7 +54,7 @@ typedef struct Symbol {
 	} value;
 } Symbol;
 
-unsigned int NUM_SYM = 0;
+unsigned int NUM_SYM;
 
 
 /*----------  Function Declaration  ----------*/
@@ -81,10 +68,6 @@ void add_symbol(Symbol *table[], Symbol *Symbol);
 int remove_symbol(Symbol *table[], const char *name);
 
 Symbol *lookup(Symbol *table[], char *name);
-
-int set_attr(Symbol *table[], char *name, char *attr, char *value);
-
-char *get_attr(Symbol *table[], char *name, char *attr);
 
 Data_type get_symbol_type(Symbol *table[], char *name);
 

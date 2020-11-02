@@ -207,3 +207,7 @@ void deleteList2(QuadTable *qt)
 	qt->head = NULL;
 }
 
+int next_quad() {
+
+	return 0;
+}
