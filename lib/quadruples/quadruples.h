@@ -65,4 +65,9 @@ void deleteList2(QuadTable *q);
 
 int next_quad();
 
+void print_title( char *title );
+void print_header( char *header[] );
+void print_row( Quad *q );
+void print_quadruples( QuadTable *qt );
+
 #endif

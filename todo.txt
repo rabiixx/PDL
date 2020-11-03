@@ -7,3 +7,5 @@ TODO LIST
 - add_symbol function
 
 - change hash table structure to a structura with number of symbols and a pointer to the hash table
+
+- we need a fucking _debug mode now 

@@ -211,3 +211,69 @@ int next_quad() {
 
 	return 0;
 }
+
+
+void print_title( char *title ) {
+	for (int i = 0; i < 49	; ++i){
+		printf("=");
+	}
+	printf("\n");
+
+
+	printf("%1c%18c\e[4;31m\e[1;31m%12s\e[0m%17c%1c\n", '|', ' ', title, ' ', '|');
+
+	for (int i = 0; i < 49	; ++i){
+		printf("=");
+	}
+	printf("\n");
+}
+
+void print_header( char *header[] ) {
+
+	printf("\e[1;32m%12s\e[0m", header[0]);
+	printf("\e[1;33m%12s\e[0m", header[1]);
+	printf("\e[1;34m%12s\e[0m", header[2]);
+	printf("\e[1;35m%13s\e[0m\n", header[3]);
+
+	for (int i = 0; i < 49; ++i){
+		printf("=");
+	}
+
+	printf("\n");
+}
+
+void print_row( Quad *q ) {
+
+	printf("%1c\e[42m%9d%2s\e[0m", '|', q->op, "");
+	printf("%1c\e[43m%9d%2s\e[0m", '|', q->op1, "");
+	printf("%1c\e[44m%9d%2s\e[0m", '|', q->op2, "");
+	printf("%1c\e[45m%9d%2s\e[0m%1c\n", '|', q->res, "", '|');
+
+}
+
+void print_quadruples( QuadTable *qt ) {
+
+	char *title = "Symbol Table";
+	char * header[4] = 	{
+								"Operating",
+								"Operator1",
+								"Operator2",
+								"Result"
+							};
+
+
+	print_title( title );
+	print_header( header );
+
+	Quad *aux = qt->head;
+	
+	while ( aux ) {
+		print_row( aux );
+		aux = aux->next;
+	}
+
+
+}
+
+
+

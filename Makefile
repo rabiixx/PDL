@@ -8,3 +8,7 @@ scanner:
 
 all: parser scanner $(modules)
 	gcc lex.yy.c parser.tab.c $(modules) -o compiler -lfl
+
+debug: parser scanner $(modules)
+	gcc lex.yy.c parser.tab.c $(modules) -o compiler -lfl -D _DEBUG
+

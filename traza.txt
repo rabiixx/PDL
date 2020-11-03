@@ -1,14 +1,14 @@
-src/parser.y:268.41-53: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  268 | 				|	BI_REF d_tipo			...
+src/parser.y:269.41-53: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
+  269 | 				|	BI_REF d_tipo			...
       |                                         ^~~~~~~~~~~~~
-src/parser.y:269.41-75: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  269 | 				|	expresion_t BI_SUBRANGO expre...
+src/parser.y:270.41-75: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
+  270 | 				|	expresion_t BI_SUBRANGO expre...
       |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/parser.y:274.41-123: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  274 | 				|	BI_TABLA BI_INI_ARRAY expresi...
+src/parser.y:275.41-123: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
+  275 | 				|	BI_TABLA BI_INI_ARRAY expresi...
       |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/parser.y:509.41-50: warning: type clash on default action: <exp> != <> [-Wother]
-  509 | 				|	funcion_ll
+src/parser.y:512.41-50: warning: type clash on default action: <exp> != <> [-Wother]
+  512 | 				|	funcion_ll
       |                                         ^~~~~~~~~~
 src/parser.y: warning: 18 shift/reduce conflicts [-Wconflicts-sr]
 src/parser.y: warning: 60 reduce/reduce conflicts [-Wconflicts-rr]

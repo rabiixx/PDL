@@ -248,13 +248,18 @@ State analiysis
 */
 
 
+
+
+
 d_tipo 			:	tipo_base 						/* base case */
 				{
 					
 				}
 				|	BI_IDENTIFICADOR				/* base case */
 				{
-
+					#ifdef
+					printf("d_tipo:BI_IDENTIFICADOR");
+					printf("debug: d_tipo");
 					/*cchar *type = get_type( st, $1 );
 
 					if ( type == UNKNOWN_SYMBOL ) {
@@ -474,6 +479,8 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				}
 				|	BI_IDENTIFICADOR
 				{
+
+					printf("debug: list_id");
 
 					if ( !lookup(st, $1) ) {
 						
@@ -1044,6 +1051,8 @@ operando		:	BI_IDENTIFICADOR
 					 *		E.type := consultar_tipo_TS( id.val );
 					 *	}
 					 */
+
+					 printf("debug: operando");
 					
 					Symbol *symbol = lookup( st, $1 );
 					if ( symbol )
@@ -1088,6 +1097,8 @@ asignacion 		:	operando BI_ASIGNACION expresion
 					 * 
 					 *
 					 */
+
+					printf("***********HEllo world***********\n");
 
 					if ( $1->s->type == $3->s->type )
 					{
@@ -1218,12 +1229,25 @@ int main(int argc, char const *argv[])
 				return EXIT_FAILURE;
 			}
 
-			printf("SISISISIISISISIIS\n");
-
 			yyin = file;			
 		
 			init_symbol_table( st );
 			qt = new_quad_table();
+
+			    int ret;
+
+		    do{
+		       	ret = yyparse();
+		    } while ( !feof( yyin ) );
+
+		    if ( ret == 0 )
+		    {
+		      	printf("\nCOMPILACION EXITOSA\n");
+		      	print_quadruples( qt );
+		    }
+		    else
+		      printf("\nOCURRIÓ UN ERROR EN LA COMPILACION\n");   
+
 			//stack = nuevaPila( &stack );
 
 		} else {
