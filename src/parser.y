@@ -22,6 +22,8 @@
 
 	Stack stack;
 
+	FILE *fdebug;
+
 %}
 
 %union {
@@ -204,10 +206,10 @@ const
 fconst;
 */
 
-declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST BI_COMP_SEQ
+declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST
 					;
 
-declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
+declaracion_var		:	BI_VAR lista_d_var BI_FVAR
 					;
 
 /* Declaraciones de tipos */
@@ -247,19 +249,16 @@ State analiysis
 	tabla[1+2..5-3] de 
 */
 
-
-
-
-
 d_tipo 			:	tipo_base 						/* base case */
 				{
 					
 				}
 				|	BI_IDENTIFICADOR				/* base case */
 				{
-					#ifdef
+					#ifdef _DEBUG
 					printf("d_tipo:BI_IDENTIFICADOR");
 					printf("debug: d_tipo");
+					#endif
 					/*cchar *type = get_type( st, $1 );
 
 					if ( type == UNKNOWN_SYMBOL ) {
@@ -270,13 +269,13 @@ d_tipo 			:	tipo_base 						/* base case */
 
 
 				}
-				|	BI_REF d_tipo								/* recursive by d_tipo */
-				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
+				|	BI_REF d_tipo{}								/* recursive by d_tipo */
+				|	expresion_t BI_SUBRANGO expresion_t{}			/* recursive by expresion_t */
 				| 	BI_TUPLA lista_campos BI_FTUPLA				/* recursive by lista_campos */
 				{
 					/* Que devolver ??? tupla*/
 				}
-				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo 	/* recursive by expresion_t and d_tipo */
+				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo{} 	/* recursive by expresion_t and d_tipo */
 				;
 
 expresion_t		: 	expresion
@@ -289,6 +288,11 @@ expresion_t		: 	expresion
 
 lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 				{
+
+					#ifdef _DEBUG
+					printf("lista de campos:\n");
+					printf("BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos\n");
+					#endif
 
 					/*add_symbol(st, $1);
 					set_symbol_type(st, $1, $3);*/
@@ -363,6 +367,9 @@ decla_cte: BI_CTE lista_d_cte B
 lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 				{
 
+					#ifdef _DEBUG
+					printf("lista_d_cte");
+					#endif
 
 					/** 
 					  * We insert the identifier into the symbol table and we define its scope and type.
@@ -513,7 +520,7 @@ decl_sal 		:	BI_SAL lista_d_var
 
 
 expresion 		:	exp_a_b
-				|	funcion_ll
+				|	funcion_ll{}
 				;
 
 exp_a_b			:	exp_a_b BI_SUMA exp_a_b
@@ -1221,6 +1228,9 @@ int main(int argc, char const *argv[])
 
 		if ( ( strcmp( ext, "txt" ) == 0 ) || ( strcmp( ext, "alg") == 0 ) )
 		{
+			
+			fdebug = fopen("debug.txt", "w");
+
 			FILE *file = fopen( argv[1], "r");
 			
 			if ( !file )
@@ -1240,14 +1250,7 @@ int main(int argc, char const *argv[])
 		       	ret = yyparse();
 		    } while ( !feof( yyin ) );
 
-		    if ( ret == 0 )
-		    {
-		      	printf("\nCOMPILACION EXITOSA\n");
-		      	print_quadruples( qt );
-		    }
-		    else
-		      printf("\nOCURRIÓ UN ERROR EN LA COMPILACION\n");   
-
+		    if ( ret == 0 ) { print_quadruples( qt ); }
 			//stack = nuevaPila( &stack );
 
 		} else {

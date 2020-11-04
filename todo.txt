@@ -4,8 +4,10 @@ TODO LIST
 
 - change tmp varianles name
 
-- add_symbol function
+- add_symbol function: done
 
 - change hash table structure to a structura with number of symbols and a pointer to the hash table
 
-- we need a fucking _debug mode now 
+- we need a fucking _debug mode now
+
+- change var ... fvar compseq to fvar ... fvar

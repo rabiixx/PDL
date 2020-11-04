@@ -8,7 +8,7 @@ Exp_a_b *new_exp_a_b( Expression_type type ) {
 
 	if ( type < BOOLEAN_EXP || type > UNDEFINED_EXP )
 	{
-		printf("Expression %d is not a valud expression type");
+		printf("Expression %d is not a valud expression type", type);
 	}
 
 

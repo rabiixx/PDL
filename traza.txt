@@ -1,15 +1,39 @@
-src/parser.y:269.41-53: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  269 | 				|	BI_REF d_tipo			...
-      |                                         ^~~~~~~~~~~~~
-src/parser.y:270.41-75: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  270 | 				|	expresion_t BI_SUBRANGO expre...
-      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/parser.y:275.41-123: warning: type clash on default action: <typo_d_tipo> != <> [-Wother]
-  275 | 				|	BI_TABLA BI_INI_ARRAY expresi...
-      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/parser.y:512.41-50: warning: type clash on default action: <exp> != <> [-Wother]
-  512 | 				|	funcion_ll
-      |                                         ^~~~~~~~~~
-src/parser.y: warning: 18 shift/reduce conflicts [-Wconflicts-sr]
-src/parser.y: warning: 60 reduce/reduce conflicts [-Wconflicts-rr]
-src/parser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+src/parser.y:276.41-53: aviso: incompatibilidad de tipos en la acción por defecto: <typo_d_tipo> != <> [-Wother]
+ 				|	BI_REF d_tipo								/* recursive by d_tipo */
+                                         ^^^^^^^^^^^^^
+src/parser.y:277.41-75: aviso: incompatibilidad de tipos en la acción por defecto: <typo_d_tipo> != <> [-Wother]
+ 				|	expresion_t BI_SUBRANGO expresion_t			/* recursive by expresion_t */
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/parser.y:282.41-123: aviso: incompatibilidad de tipos en la acción por defecto: <typo_d_tipo> != <> [-Wother]
+ 				|	BI_TABLA BI_INI_ARRAY expresion_t BI_SUBRANGO expresion_t BI_FIN_ARRAY BI_DE d_tipo 	/* recursive by expresion_t and d_tipo */
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/parser.y:526.41-50: aviso: incompatibilidad de tipos en la acción por defecto: <exp> != <> [-Wother]
+ 				|	funcion_ll
+                                         ^^^^^^^^^^
+src/parser.y: aviso: 18 conflictos desplazamiento/reducción [-Wconflicts-sr]
+src/parser.y: aviso: 60 conflictos reducción/reducción [-Wconflicts-rr]
+src/parser.y: In function ‘yyparse’:
+src/parser.y:374:12: error: no macro name given in #ifdef directive
+      #ifdef
+            ^
+src/parser.y:374:0: error: unterminated #ifdef
+      #ifdef
+ 
+src/parser.y:372:5: error: expected declaration or statement at end of input
+     {
+     ^
+src/parser.y:372:5: error: expected declaration or statement at end of input
+src/parser.y:372:5: error: expected declaration or statement at end of input
+parser.tab.c:1483:5: error: label ‘yyerrlab’ used but not defined
+     goto yyerrlab;
+     ^~~~
+parser.tab.c:1407:5: error: label ‘yyacceptlab’ used but not defined
+     YYACCEPT;
+     ^~~~~~~~
+parser.tab.c:1401:9: error: label ‘yyabortlab’ used but not defined
+         YYABORT;
+         ^~~~~~~
+parser.tab.c:1384:11: error: label ‘yyexhaustedlab’ used but not defined
+           goto yyexhaustedlab;
+           ^~~~
+make: *** [debug] Error 1

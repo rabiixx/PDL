@@ -11,4 +11,3 @@ all: parser scanner $(modules)
 
 debug: parser scanner $(modules)
 	gcc lex.yy.c parser.tab.c $(modules) -o compiler -lfl -D _DEBUG
-
