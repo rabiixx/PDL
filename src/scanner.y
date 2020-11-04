@@ -192,7 +192,7 @@ tipo
 
 ftipo;
 */
-declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
+declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO
 					{
 					#ifdef _DEBUG
 						printf("declaracion_tipo\n");
@@ -205,7 +205,7 @@ const
 fconst;
 */
 
-declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST BI_COMP_SEQ
+declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST
 					{
 					#ifdef _DEBUG
 						printf("declaracion_cte\n");
@@ -213,7 +213,7 @@ declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST BI_COMP_SEQ
 					}
 					;
 
-declaracion_var		:	BI_VAR lista_d_var BI_FVAR BI_COMP_SEQ
+declaracion_var		:	BI_VAR lista_d_var BI_FVAR
 					{
 					#ifdef _DEBUG
 						printf("declaraciones_var\n");
