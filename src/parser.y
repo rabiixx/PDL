@@ -160,30 +160,87 @@
 %%
 
 desc_algoritmo	: 	BI_ALGORITMO BI_IDENTIFICADOR BI_COMP_SEQ cabecera_alg bloque_alg BI_FALGORITMO
+				{
+					#ifdef _DEBUG
+						printf("desc_algoritmo\n");
+					#endif
+				}
+				;
+
 				;
 
 cabecera_alg	:	decl_globales decl_a_f decl_ent_sal BI_COMENTARIO
+				{
+					#ifdef _DEBUG
+						printf("cabecera_alg\n");
+					#endif
+				}
 				;
 
 bloque_alg		:	bloque BI_COMENTARIO
+				{
+					#ifdef _DEBUG
+						printf("bloque_alg\n");
+					#endif
+				}
 				;
 
 decl_globales	:	declaracion_tipo decl_globales
+				{
+					#ifdef _DEBUG
+						printf("decl_globales\n");
+					#endif
+				}
 				| 	declaracion_cte decl_globales
+				{
+					#ifdef _DEBUG
+						printf("decl_globales\n");
+					#endif
+				}
 				|	/* cadena vacia */
 				;
 
 decl_a_f		:	accion_d decl_a_f
+				{
+					#ifdef _DEBUG
+						printf("decl_a_f: accion_d decl_a_f\n");
+					#endif
+				}
 				|	funcion_d decl_a_f
+				{
+					#ifdef _DEBUG
+						printf("decl_a_f: funcion_d decl_a_f\n");
+					#endif
+				}
 				|	/* cadena vacia */
 				;
 
 bloque 			: declaraciones instrucciones
+				{
+					#ifdef _DEBUG
+						printf("bloque\n");
+					#endif
+				}
 				;
 
 declaraciones	:	declaracion_tipo declaraciones
+				{
+					#ifdef _DEBUG
+						printf("declaraciones\n");
+					#endif
+				}
 				| 	declaracion_cte declaraciones
+				{
+					#ifdef _DEBUG
+						printf("declaraciones\n");
+					#endif
+				}
 				|	declaracion_var declaraciones
+				{
+					#ifdef _DEBUG
+						printf("declaraciones\n");
+					#endif
+				}
 				|	/* cadena vacia */
 				;
 
@@ -199,6 +256,11 @@ tipo
 ftipo;
 */
 declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
+					{
+						#ifdef _DEBUG
+							printf("declaracion_tipo\n");
+						#endif
+					}
 					;
 /* 
 const
@@ -207,9 +269,19 @@ fconst;
 */
 
 declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST
+					{
+						#ifdef _DEBUG
+							printf("declaracion_cte\n");
+						#endif
+					}
 					;
 
 declaracion_var		:	BI_VAR lista_d_var BI_FVAR
+					{
+						#ifdef _DEBUG
+							printf("declaraciones_var\n");
+						#endif
+					}
 					;
 
 /* Declaraciones de tipos */
@@ -222,13 +294,18 @@ declaracion_var		:	BI_VAR lista_d_var BI_FVAR
 */
 lista_d_tipo	:	BI_IDENTIFICADOR BI_CREACION_TIPO d_tipo BI_COMP_SEQ lista_d_tipo
 				{
-
-
+					#ifdef _DEBUG
+						printf("lista_d_tipo\n");
+					#endif
 				}
 				| 	/* cadena vacia */
 				;
 
 /** Ejemplo d_tipo
+var
+	x, y, z : integer;
+fvar
+
 
 G4: tupla
 		x : tabla[1 o 0..3] de entero;
@@ -251,13 +328,15 @@ State analiysis
 
 d_tipo 			:	tipo_base 						/* base case */
 				{
-					
+					#ifdef _DEBUG
+						printf("d_tipo: tipo_base\n");
+					#endif
 				}
 				|	BI_IDENTIFICADOR				/* base case */
 				{
 					#ifdef _DEBUG
-					printf("d_tipo:BI_IDENTIFICADOR");
-					printf("debug: d_tipo");
+						printf("d_tipo: BI_IDENTIFICADOR");
+						printf("debug: d_tipo");
 					#endif
 					/*cchar *type = get_type( st, $1 );
 
@@ -279,7 +358,17 @@ d_tipo 			:	tipo_base 						/* base case */
 				;
 
 expresion_t		: 	expresion
+				{
+					#ifdef _DEBUG
+						printf("expresion_t: expresion\n");
+					#endif
+				}
 				|	BI_LIT_CARACTER
+				{
+					#ifdef _DEBUG
+						printf("expresion_t: literal caracter\n");
+					#endif
+				}
 				;
 /* x = tupla
 			y : entero;
@@ -303,22 +392,37 @@ lista_campos	:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_campos
 
 tipo_base 		: 	BI_PR_ENTERO
 				{
+					#ifdef _DEBUG
+						printf("tipo_base entero\n");
+					#endif
 					$$ = DATA_TYPE_INTEGER;
 				}
 				|	BI_PR_REAL
 				{
+					#ifdef _DEBUG
+						printf("tipo_base real\n");
+					#endif
 					$$ = DATA_TYPE_REAL;
 				}
 				|	BI_PR_BOOLEANO
 				{
+					#ifdef _DEBUG
+						printf("tipo_base booleano\n");
+					#endif
 					$$ = DATA_TYPE_BOOLEAN;
 				}
 				|	BI_PR_CARACTER
 				{
+					#ifdef _DEBUG
+						printf("tipo_base caracter\n");
+					#endif
 					$$ = DATA_TYPE_CHAR;
 				}
 				|	BI_PR_CADENA
 				{
+					#ifdef _DEBUG
+						printf("tipo_base cadena\n");
+					#endif
 					$$ = DATA_TYPE_STRING;
 				}
 				;
@@ -333,22 +437,42 @@ tipo_base 		: 	BI_PR_ENTERO
 
 literal			:	BI_LIT_ENTERO 
 				{
+					#ifdef _DEBUG
+						printf("literal entero\n");
+					#endif
+
 					$$ = DATA_TYPE_INTEGER;
 				}
 				|	BI_LIT_REAL
 				{
+					#ifdef _DEBUG
+						printf("literal real\n");
+					#endif
+
 					$$ = DATA_TYPE_REAL;
 				}
 				|	BI_LIT_BOOLEANO
 				{
+					#ifdef _DEBUG
+						printf("literal booleano\n");
+					#endif
+
 					$$ = DATA_TYPE_BOOLEAN;
 				}
 				|	BI_LIT_CARACTER
 				{
+					#ifdef _DEBUG
+						printf("literal caracter\n");
+					#endif
+
 					$$ = DATA_TYPE_CHAR;
 				}
 				|	BI_LIT_CADENA
 				{
+					#ifdef _DEBUG
+						printf("literal cadena\n");
+					#endif
+
 					$$ = DATA_TYPE_STRING;
 				}
 				;
@@ -368,7 +492,7 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 				{
 
 					#ifdef _DEBUG
-					printf("lista_d_cte");
+						printf("lista_d_cte");
 					#endif
 
 					/** 
@@ -469,6 +593,10 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id 
 				{
 
+					#ifdef _DEBUG
+						printf("lista_id: BI_IDENTIFICADOR BI_SEPARADOR lista_id\n");
+					#endif
+
 					if ( !lookup(st, $1) ) {
 
 						add_symbol( st, new_symbol( $1 ) );
@@ -487,11 +615,12 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				|	BI_IDENTIFICADOR
 				{
 
-					printf("debug: list_id");
+					#ifdef _DEBUG
+						printf("lista_id: BI_IDENTIFICADOR\n");
+					#endif
 
 					if ( !lookup(st, $1) ) {
 						
-
 						add_symbol( st, new_symbol( $1 ) );
 						//apilar(stack, $1);
 
@@ -502,8 +631,23 @@ lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				;
 
 decl_ent_sal	:	decl_ent
+				{
+					#ifdef _DEBUG
+						printf("decl_ent_sal: decl_ent\n");
+					#endif
+				}
 				|	decl_ent decl_sal
+				{
+					#ifdef _DEBUG
+						printf("decl_ent_sal: decl_ent decl_sal\n");
+					#endif
+				}
 				|	decl_sal
+				{
+					#ifdef _DEBUG
+						printf("decl_ent_sal: decl_sal\n");
+					#endif
+				}
 				;
 
 /* 
@@ -511,16 +655,36 @@ decl_ent_sal	:	decl_ent
 		x, y : entero
 */ 
 decl_ent 		:	BI_ENT lista_d_var
+				{
+					#ifdef _DEBUG
+						printf("decl_ent\n");
+					#endif
+				}
 				;
 
 decl_sal 		:	BI_SAL lista_d_var
+				{
+					#ifdef _DEBUG
+						printf("decl_sal\n");
+					#endif
+				}
 				;
 
 /* Expresiones */
 
 
 expresion 		:	exp_a_b
-				|	funcion_ll{}
+				{
+					#ifdef _DEBUG
+						printf("expresion exp_a_b\n");
+					#endif
+				}
+				|	funcion_ll
+				{
+					#ifdef _DEBUG
+						printf("expresion funcion_ll\n");
+					#endif
+				}
 				;
 
 exp_a_b			:	exp_a_b BI_SUMA exp_a_b
@@ -1031,12 +1195,54 @@ M 				: /* empty */ { $$ = next_quad(); }
 
 
 
-oprel			: 	BI_IGUALDAD 	{ $$ = QUAD_OP_EQ; }
-				|	BI_DISTINTO 	{ $$ = QUAD_OP_NE; }
-				|	BI_MAYOR 		{ $$ = QUAD_OP_GT; }
-				|	BI_MAYOR_IGUAL 	{ $$ = QUAD_OP_GE; }
-				|	BI_MENOR 		{ $$ = QUAD_OP_LT; }
-				|	BI_MENOR_IGUAL 	{ $$ = QUAD_OP_LE; }
+oprel			: 	BI_IGUALDAD
+				{
+					#ifdef _DEBUG
+						printf("igualdad\n");
+					#endif
+					
+					$$ = QUAD_OP_EQ;
+				}
+				|	BI_DISTINTO
+				{
+					#ifdef _DEBUG
+						printf("distino\n");
+					#endif
+					
+					$$ = QUAD_OP_NE;
+				}
+				|	BI_MAYOR
+				{
+					#ifdef _DEBUG
+						printf("mayor\n");
+					#endif
+
+					$$ = QUAD_OP_GT;
+				}
+				|	BI_MAYOR_IGUAL
+				{
+					#ifdef _DEBUG
+						printf("mayor_igual\n");
+					#endif
+
+					$$ = QUAD_OP_GE;
+				}
+				|	BI_MENOR
+				{
+					#ifdef _DEBUG
+						printf("menor\n");
+					#endif
+
+					$$ = QUAD_OP_LT;
+				}
+				|	BI_MENOR_IGUAL
+				{
+					#ifdef _DEBUG
+						printf("menor_igual\n");
+					#endif
+
+					$$ = QUAD_OP_LE;
+				}
 				;
 
 
@@ -1059,7 +1265,9 @@ operando		:	BI_IDENTIFICADOR
 					 *	}
 					 */
 
-					 printf("debug: operando");
+					#ifdef _DEBUG
+						printf("operando: identificador\n");
+					#endif
 					
 					Symbol *symbol = lookup( st, $1 );
 					if ( symbol )
@@ -1077,35 +1285,80 @@ operando		:	BI_IDENTIFICADOR
 					
 				}
 				|	operando BI_PUNTO operando
+				{
+					#ifdef _DEBUG
+						printf("operando: operando BI_PUNTO operando\n");
+					#endif
+				}
 				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
+				{
+					#ifdef _DEBUG
+						printf("operando: operando BI_INI_ARRAY expresion BI_FIN_ARRAY\n");
+					#endif
+				}
 				|	operando BI_REF
+				{
+					#ifdef _DEBUG
+						printf("operando BI_REF\n");
+					#endif
+				}
 				;
 
 
 
 /* Instrucciones */
 instrucciones 	:	instruccion BI_COMP_SEQ instrucciones
+				{
+					#ifdef _DEBUG
+						printf("instrucciones: instruccion BI_COMP_SEQ instrucciones\n");
+					#endif
+				}
 				|	instruccion
+				{
+					#ifdef _DEBUG
+						printf("instrucciones: instruccion\n");
+					#endif
+				}
 				;
 
 instruccion 	:	BI_CONTINUAR
+				{
+					#ifdef _DEBUG
+						printf("instruccion: continuar\n");
+					#endif
+				}
 				|	asignacion
+				{
+					#ifdef _DEBUG
+						printf("instruccion: asignacion\n");
+					#endif
+				}
 				|	alternativa
+				{
+					#ifdef _DEBUG
+						printf("instruccion: alternativa\n");
+					#endif
+				}
 				| 	iteracion
+				{
+					#ifdef _DEBUG
+						printf("instruccion: iteracion\n");
+					#endif
+				}
 				|	accion_ll
+				{
+					#ifdef _DEBUG
+						printf("instruccion: accion_ll\n");
+					#endif
+				}
 				;
 
 asignacion 		:	operando BI_ASIGNACION expresion
 				{
 
-
-					/**
-					 *
-					 * 
-					 *
-					 */
-
-					printf("***********HEllo world***********\n");
+					#ifdef _DEBUG
+						printf("asignacion\n");
+					#endif
 
 					if ( $1->s->type == $3->s->type )
 					{
@@ -1142,60 +1395,148 @@ asignacion 		:	operando BI_ASIGNACION expresion
 						Quad *quad = new_quad( QUAD_OP_INT2BOOL, $3->s->id, QUAD_OP_VOID, $1->s->id );
 						gen( qt, quad );
 					}
-					
-
-
+				
 				}
 				;
 
 alternativa		:	BI_SI expresion BI_ENTONCES instrucciones lista_opciones BI_FSI
+				{
+					#ifdef _DEBUG
+						printf("alternativa\n");
+					#endif
+				}
 				;
 
 lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES instrucciones lista_opciones
+				{
+					#ifdef _DEBUG
+						printf("lista_opciones\n");
+					#endif
+				}
 				|	/* cadena vacia */
 				;
 
 iteracion 		:	it_cota_fija
+				{
+					#ifdef _DEBUG
+						printf("iteracion: it_cota_fija\n");
+					#endif
+				}
 				|	it_cota_exp
+				{
+					#ifdef _DEBUG
+						printf("iteracion: it_cota_exp\n");
+					#endif
+				}
 				;
 
 it_cota_exp		:	BI_MIENTRAS expresion BI_HACER instrucciones BI_FMIENTRAS
+				{
+					#ifdef _DEBUG
+						printf("it_cota_exp\n");
+					#endif
+				}
 				;
 
 it_cota_fija	:	BI_PARA BI_IDENTIFICADOR BI_ASIGNACION expresion 
 					BI_HASTA expresion BI_HACER instrucciones BI_FPARA
+				{
+					#ifdef _DEBUG
+						printf("it_cota_fija\n");
+					#endif
+				}
 				;
 
 /* Acciones y Funciones */
 accion_d 		:	BI_ACCION a_cabecera bloque BI_FACCION
+				{
+					#ifdef _DEBUG
+						printf("accion_d\n");
+					#endif
+				}
 				;
 
 funcion_d		:	BI_FUNCION f_cabecera bloque BI_DEV expresion BI_FFUNCION
+				{
+					#ifdef _DEBUG
+						printf("funcion_d\n");
+					#endif
+				}
 				;
 
 a_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER d_par_form
+				{
+					#ifdef _DEBUG
+						printf("a_cabecera\n");
+					#endif
+				}
 				;
 
 f_cabecera		:	BI_IDENTIFICADOR BI_PAR_APER lista_d_var BI_PAR_CIER BI_COMP_SEQ
+				{
+					#ifdef _DEBUG
+						printf("f_cabecera\n");
+					#endif
+				}
 				;
 
 d_par_form		:	d_p_form BI_COMP_SEQ d_par_form
+				{
+					#ifdef _DEBUG
+						printf("d_par_form\n");
+					#endif
+				}
 				|	/* cadena vacia */
 				;
 
-d_p_form 		:	BI_ENT lista_id BI_DEF_TYPEVAR d_tipo 
+d_p_form 		:	BI_ENT lista_id BI_DEF_TYPEVAR d_tipo
+				{
+					#ifdef _DEBUG
+						printf("d_p_form: BI_ENT lista_id BI_DEF_TYPEVAR d_tipo\n");
+					#endif
+				}
 				|	BI_SAL lista_id BI_DEF_TYPEVAR d_tipo
+				{
+					#ifdef _DEBUG
+						printf("d_p_form: BI_SAL lista_id BI_DEF_TYPEVAR d_tipo\n");
+					#endif
+				}
 				| 	BI_E_S lista_id BI_DEF_TYPEVAR d_tipo
+				{
+					#ifdef _DEBUG
+						printf("d_p_form: BI_E_S lista_id BI_DEF_TYPEVAR d_tipo\n");
+					#endif
+				}
 				;
 
 accion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
+				{
+					#ifdef _DEBUG
+						printf("accion_ll\n");
+					#endif
+				}
 				;
 
 funcion_ll		:	BI_IDENTIFICADOR BI_PAR_APER l_ll BI_PAR_CIER
+				{
+					#ifdef _DEBUG
+						printf("funcion_ll\n");
+					#endif
+				}
 				;
 
 l_ll			:	expresion BI_SEPARADOR l_ll
+				{
+					#ifdef _DEBUG
+						printf("l_ll: expresion BI_SEPARADOR l_ll\n");
+					#endif
+				}
 				|	expresion
+				{
+					#ifdef _DEBUG
+						printf("l_ll: expresion\n");
+					#endif
+				}
 				;
 
 
