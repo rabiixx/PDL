@@ -221,10 +221,12 @@ declaracion_var		:	BI_VAR lista_d_var BI_FVAR
 					}
 					;
 
+
+
 /* Declaraciones de tipos */
 
 
-/* 
+/*
 
 	x = 
 
@@ -408,6 +410,17 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
   *	x, y, z : suma; 
   *	x, y, z : d_tipo;
   */
+
+  /*
+  	gramatica hack
+
+  	A -> declaracion_var
+	declaracion_var -> var lista_d_var fvar
+	lista_d_var -> id id1 ; lista_d_var 
+	lista_d_var -> ''
+	id1 ->  , id id1
+	id1 -> : int
+*/
 lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var 
 				| 	lista_id BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_d_var
 				|	/* cadena vacia */
@@ -434,7 +447,7 @@ lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var
   * Finalmente volvera a aplicar la misma reduccion: lista_id = x, lista_id (BI_ID BI_SEP lista_id) quedando la pila
   * finalemente asi: lista_id.
   * Al aplicar la reduccion, se añade el identificador a la tabla de simbolos. Posteriormente habra que especificar 
-  * el tipo de identificador (entero,, char ...)
+  * el tipo de identificador (entero, char ...)
   */
 
 
