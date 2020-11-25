@@ -523,7 +523,7 @@ lista_id 		:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo
 				{
 
 					if ( $3 == UNKNOWN_SYMBOL ) {
-						fprintf(stderr, "Unknown symbol: \e[1;36m%s\e[0m\n", $3);
+						fprintf(stderr, "Unknown symbol: \e[1;36m%d\e[0m\n", $3);
 					} else {
 						Symbol * symbol = new_symbol( $1 );
 						if ( add_symbol( st, symbol ) == -1 ) {
@@ -544,7 +544,7 @@ lista_id 		:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo
 					  */
 					
 					if ( $3 == UNKNOWN_SYMBOL ) {
-						fprintf(stderr, "Cant assign given type to \e[1;36m%s\e[0m\n", $3);
+						fprintf(stderr, "Cant assign given type to \e[1;36m%d\e[0m\n", $3);
 					} else {
 
 						Symbol *symbol = new_symbol( $1 );
@@ -958,7 +958,9 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 				}
 				|	operando
 				{
-
+					#ifdef _DEBUG
+						printf("exp_a_b: operando\n");
+					#endif
 				}
 				|	exp_a_b BI_O M exp_a_b
 				{
@@ -1210,9 +1212,6 @@ operando		:	BI_IDENTIFICADOR
 					{
 						fprintf(stderr, "Error: Symbol %s doesnt exist in symbom table", $1);
 					}
-
-
-					
 				}
 				|	operando BI_PUNTO operando
 				{
@@ -1243,7 +1242,7 @@ instrucciones 	:	instruccion BI_COMP_SEQ instrucciones
 						printf("instrucciones: instruccion BI_COMP_SEQ instrucciones\n");
 					#endif
 				}
-				|	instruccion
+				|	/********/
 				{
 					#ifdef _DEBUG
 						printf("instrucciones: instruccion\n");
@@ -1397,7 +1396,7 @@ iteracion 		:	it_cota_fija
 						printf("iteracion: it_cota_exp\n");
 					#endif
 				}
-				;
+				; 
 /* meintras M exp hacer M inst fmientras */
 it_cota_exp		:	BI_MIENTRAS M expresion BI_HACER M instrucciones BI_FMIENTRAS
 				{
@@ -1424,9 +1423,8 @@ it_cota_exp		:	BI_MIENTRAS M expresion BI_HACER M instrucciones BI_FMIENTRAS
 						Quad *quad = new_quad( QUAD_OP_GOTO, QUAD_OP_VOID, QUAD_OP_VOID, $2);
 						gen( qt, quad );
 					}
-					
-					$$->nextlist = $3->falselist;
 
+					$$->nextlist = $3->falselist;
 				}
 				;
 
