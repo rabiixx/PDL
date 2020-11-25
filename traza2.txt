@@ -1,0 +1,111 @@
+[1;36mScanner --> [0mPalabra reservada algoritmo detectada: algoritmo
+[1;36mScanner --> [0mIdentificador: intercambio
+[1;36mScanner --> [0m*Token composicion sequencial(;) detectada: ;
+[1;36mScanner --> [0mPalabra reservada ent detectada: ent
+[1;36mScanner --> [0mIdentificador: a
+[1;36mScanner --> [0m*Token separador(,) detectada: ,
+[1;36mScanner --> [0mIdentificador: b
+[1;36mScanner --> [0m*Token definicion de tipo de variable (:) detectada: :
+[1;36mScanner --> [0mPalabra reservada entero detectada: entero
+tipo_base entero
+d_tipo: tipo_base
+new_symbol(b)
+0. NUM_SYS: 0
+ADD SYMBOL: 0
+1. NUM_SYS: 0
+2. NUM_SYS: 1
+new_symbol(a)
+0. NUM_SYS: 1
+ADD SYMBOL: 1
+1. NUM_SYS: 1
+2. NUM_SYS: 2
+[1;36mScanner --> [0m*Token composicion sequencial(;) detectada: ;
+{Prec: a= A AND b = B} - Comentario detectado
+decl_ent
+decl_ent_sal: decl_ent
+cabecera_alg
+[1;36mScanner --> [0mPalabra reservada var detectada: var
+[1;36mScanner --> [0mIdentificador: aux
+[1;36mScanner --> [0m*Token separador(,) detectada: ,
+[1;36mScanner --> [0mIdentificador: aux2
+[1;36mScanner --> [0m*Token definicion de tipo de variable (:) detectada: :
+[1;36mScanner --> [0mPalabra reservada entero detectada: entero
+tipo_base entero
+d_tipo: tipo_base
+new_symbol(aux2)
+0. NUM_SYS: 2
+ADD SYMBOL: 2
+1. NUM_SYS: 2
+2. NUM_SYS: 3
+new_symbol(aux)
+0. NUM_SYS: 3
+ADD SYMBOL: 3
+1. NUM_SYS: 3
+2. NUM_SYS: 4
+[1;36mScanner --> [0m*Token composicion sequencial(;) detectada: ;
+[1;36mScanner --> [0mIdentificador: j
+[1;36mScanner --> [0m*Token definicion de tipo de variable (:) detectada: :
+[1;36mScanner --> [0mPalabra reservada real detectada: real
+tipo_base real
+d_tipo: tipo_base
+new_symbol(j)
+0. NUM_SYS: 4
+ADD SYMBOL: 4
+1. NUM_SYS: 4
+2. NUM_SYS: 5
+[1;36mScanner --> [0m*Token composicion sequencial(;) detectada: ;
+[1;36mScanner --> [0mPalabra reservada fvar detectada: fvar
+declaraciones_var
+[1;36mScanner --> [0mIdentificador: aux
+declaraciones
+[1;36mScanner --> [0m*Token asignacion(:=) detectada: :=
+operando: identificador
+[1;36mScanner --> [0mIdentificador: a
+[1;36mScanner --> [0m*Token composicion sequencial(;) detectada: ;
+operando: identificador
+expresion exp_a_b
+asignacion
+instruccion: asignacion
+[1;36mScanner --> [0mIdentificador: a
+[1;36mScanner --> [0m*Token asignacion(:=) detectada: :=
+operando: identificador
+[1;36mScanner --> [0mIdentificador: b
+[1;36mScanner --> [0m*Token composicion sequencial(;) detectada: ;
+operando: identificador
+expresion exp_a_b
+asignacion
+instruccion: asignacion
+[1;36mScanner --> [0mIdentificador: b
+[1;36mScanner --> [0m*Token asignacion(:=) detectada: :=
+operando: identificador
+[1;36mScanner --> [0mIdentificador: aux
+{Post: b=A AND a = B} - Comentario detectado
+operando: identificador
+expresion exp_a_b
+asignacion
+instruccion: asignacion
+instrucciones: instruccion
+instrucciones: instruccion BI_COMP_SEQ instrucciones
+instrucciones: instruccion BI_COMP_SEQ instrucciones
+bloque
+bloque_alg
+[1;36mScanner --> [0mPalabra reservada falgoritmo detectada: falgoritmo
+desc_algoritmo
+=================================================
+|                  [4;31m[1;31mQuadruples Table[0m                 |
+=================================================
+[1;32m   Operating[0m[1;33m   Operator1[0m[1;34m   Operator2[0m[1;35m       Result[0m
+=================================================
+|[42m       19  [0m|[43m        1  [0m|[44m       29  [0m|[45m        3  [0m|
+|[42m       19  [0m|[43m        0  [0m|[44m       29  [0m|[45m        1  [0m|
+|[42m       19  [0m|[43m        3  [0m|[44m       29  [0m|[45m        0  [0m|
+=================================================
+|                  [4;31m[1;31mSymbol Table[0m                 |
+=================================================
+[1;32m          id[0m[1;33m        name[0m[1;34m        type[0m
+=================================================
+|[42m        4  [0m|[43m        j  [0m|[44m        2  [0m
+|[42m        1  [0m|[43m        a  [0m|[44m        1  [0m
+|[42m        0  [0m|[43m        b  [0m|[44m        1  [0m
+|[42m        2  [0m|[43m     aux2  [0m|[44m        1  [0m
+|[42m        3  [0m|[43m      aux  [0m|[44m        1  [0m

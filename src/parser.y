@@ -28,17 +28,13 @@
 
 %union {
 	char *sval;
-	Data_type data_type;
-	Exp_a_b *exp;
+	Data_type data_type;		/* Data Types */
+	Exp_a_b *exp;				/* Boolean/Atihmetic expressions */
+	Inst *inst;					/* Instructions */
 	int next_quad;
 	Quad_op_code oprel_val;
 }
 
-/*	%union {
-		char id;
-		Data_type type;
-	} type_d_tipo;
-*/
 
 %token BI_COMENTARIO
 %token BI_LIT_ENTERO
@@ -123,12 +119,23 @@
 
 %type <data_type> tipo_base 
 %type <data_type> literal
-%type <typo_d_tipo> d_tipo
+%type <data_type> lista_id
+%type <data_type> d_tipo
+
 %type <exp> exp_a_b
 %type <exp> expresion
 %type <exp> operando
+%type <exp> asignacion_para
 %type <next_quad> M
 %type <oprel_val> oprel
+ 
+%type <inst> alternativa			/* if statement 	*/
+%type <inst> lista_opciones			/* else statement 	*/
+//%type <inst> iteracion
+%type <inst> it_cota_exp			/* while statement 	*/
+%type <inst> it_cota_fija			/* for statement 	*/
+%type <inst> instrucciones
+%type <inst> instruccion
 
 /*=======================================
 =            Dudas Generales            =
@@ -152,6 +159,22 @@
 
  	Esto es la llamada a una funcion ?? 
  	Si es asi, no se le pueden pasar ni strings ni caracteres
+
+4. En la sentencia for:
+	
+	it_cota_fija	:	BI_PARA BI_IDENTIFICADOR BI_ASIGNACION expresion BI_HASTA expresion BI_HACER instrucciones BI_FPARA
+
+	Se puede medificar la parte de: BI_IDENTIFICADOR BI_ASIGNACION --> asignacion :	operando BI_ASIGNACION expresion ???????
+	Esto permitiria que en el for se pudieran usar cualquier operando
+
+	operando	:	BI_IDENTIFICADOR
+				|	operando BI_PUNTO operando
+				|	operando BI_INI_ARRAY expresion BI_FIN_ARRAY
+				|	operando BI_REF
+				;
+
+*/
+
 
 /*=====  End of Dudas Generales  ======*/
 
@@ -245,29 +268,14 @@ declaraciones	:	declaracion_tipo declaraciones
 				;
 
 /* Declaraciones */
-
-/* Ejemplos de declracion_tipo 
-
-tipo
-
-	x = 
-
-
-ftipo;
-*/
-declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO BI_COMP_SEQ
+declaracion_tipo	:	BI_TIPO lista_d_tipo BI_FTIPO
 					{
 						#ifdef _DEBUG
 							printf("declaracion_tipo\n");
 						#endif
 					}
 					;
-/* 
-const
-	
-fconst;
-*/
-
+					
 declaracion_cte		:	BI_CONST lista_d_cte BI_FCONST
 					{
 						#ifdef _DEBUG
@@ -328,6 +336,7 @@ State analiysis
 
 d_tipo 			:	tipo_base 						/* base case */
 				{
+					$$ = $1;
 					#ifdef _DEBUG
 						printf("d_tipo: tipo_base\n");
 					#endif
@@ -335,17 +344,15 @@ d_tipo 			:	tipo_base 						/* base case */
 				|	BI_IDENTIFICADOR				/* base case */
 				{
 					#ifdef _DEBUG
-						printf("d_tipo: BI_IDENTIFICADOR");
-						printf("debug: d_tipo");
+						printf("debug: d_tipo: BI_IDENTIFICADOR");
 					#endif
-					/*cchar *type = get_type( st, $1 );
+
+					Data_type type = get_symbol_type( st, $1 );
+					$$ = type;
 
 					if ( type == UNKNOWN_SYMBOL ) {
-						printf("Error: Unknown symbol %s", $1);
-					} else {
-						$$ = type;
-					}*/
-
+						fprintf(stderr, "Unknown symbol: \e[1;36m%s\e[0m\n", $1);
+					}
 
 				}
 				|	BI_REF d_tipo{}								/* recursive by d_tipo */
@@ -499,134 +506,57 @@ lista_d_cte		:	BI_IDENTIFICADOR BI_CREACION_TIPO literal BI_COMP_SEQ lista_d_cte
 					  * We insert the identifier into the symbol table and we define its scope and type.
 					  * in this case scope will be, const. The type is returned by literal grammar rule 
 					  */
-					add_symbol( st, new_symbol( $1 ) );
-					//set_attr(st, $1, "scope", "cte");
+					Symbol *symbol = new_symbol( $1 );
+					symbol->scope = "CONST";
+					add_symbol( st, symbol );
 					set_symbol_type(st, $1, $3);
+
 				}
 				|	/* cadena vacia */
 				;
 
-/** 
-  *	x, y, z : suma; 
-  *	x, y, z : d_tipo;
-  */
-lista_d_var		:	lista_id BI_DEF_TYPEVAR BI_IDENTIFICADOR BI_COMP_SEQ lista_d_var {
-
-				/* Debug */
-				if ( lookup(st, $3) ) {
-
-					Data_type type;
-
-					if ( ( type = get_symbol_type(st, $3) ) ) {
-						
-						/* 
-						 * Now we need to assign type to all identifiers reduced by lista_id grammar rule.
-						 * Those identifiers have been added to symbol table and they have been added to 
-						 * stack. For each identifier, we set the type and we remove it from the stack.
-						 */
-
-						/*while ( !esNulaPila( stack ) ) {
-
-							char *id = cima( stack );
-
-							if ( set_attr(st, id, type) == -1 ) {
-								printf("Identifier %s is not in the symbol table", id);
-							}
-
-							desapilar( stack );
-
-						}*/
-
-					} else {
-						printf("Symbol %s type is not defined\n", $3);
-					}
-
-
-				} else {
-					printf("The symbol %s doesnt seem to be decalred\n", $3);
-				}
-
-
-				/* 
-				 * get_attr() function includes lookup, so its not necessary 
-				 * to make a lookup before get_attr(). In this case is done for
-				 * debugginf reesons 
-				 */
-				if ( get_symbol_type(st, $3) ) {
-
-				} else {
-					printf("Symbol %s type is not defined\n", $3);
-				}
-
-
-}
-				| 	lista_id BI_DEF_TYPEVAR d_tipo BI_COMP_SEQ lista_d_var
-				|	/* cadena vacia */
+lista_d_var		:	lista_id BI_COMP_SEQ lista_d_var {}
+				|	/* empty */
 				;
-/**
-  * Bison antes de realizar un reduccion comprueba cual es el proximo valor.
-  * En caso de que dicho valor pueda utilizarse para una reduccion mayor, 
-  * no aplica la reduccion y lo añade a la pile del Parser.
-  * Ejemplo:
-  * Supongamo la siguiente expresion: "x, y" <==> BI_ID BI_COMA BI_ID
-  * Bison leera un identificador y podria aplicar la siguiente reduccion: lista_id = BI_ID
-  * En caso de que la aplicara la expresion quedaria tal que asi: lista_id , y <==> lista_id BI_COMA BI_ID
-  * Como podemos ver, no existe ninguna regla de la gramatica por la cual la expresion pueda ser reducida y por
-  * lo tanto sa liado bastante. Por ello, antes de realizar reducciones Bison realizar ciertas comprobaciones 
-  * con el fin de evitar este tipo de situaciones.
-  *
-  * En este caso la reduccion se aplicaria de la siguiente manera. Soponiendo la sigueinte expresion: x, y, z
-  * BI_ID BI_SEP lista_id ==> BI_ID BI_SEP BI_ID BI_SEP ==> BI_ID BI_SEP BI_ID BI_SEP BI_ID
-  * Bison añadira lo siguiente a su pila(izq=primero): \n z , y , x 
-  * A partir de ese punto lo sigueinte que lea sera otro identificador y un salto de linea. Por tanto, realizara
-  * una reduccion por la segunda regla sobre z, quedando la pila tal que asi: pila(izq=primero): lista_id , y , x 
-  * Ahora aplicara una reduccion por la primera regla: lista_id = y, lista_id (BI_ID BI_SEP lista_id) quedando la pila
-  * tal que asi: lista_id , x.
-  * Finalmente volvera a aplicar la misma reduccion: lista_id = x, lista_id (BI_ID BI_SEP lista_id) quedando la pila
-  * finalemente asi: lista_id.
-  * Al aplicar la reduccion, se añade el identificador a la tabla de simbolos. Posteriormente habra que especificar 
-  * el tipo de identificador (entero,, char ...)
-  */
 
-
-
-lista_id 		:	BI_IDENTIFICADOR BI_SEPARADOR lista_id 
+lista_id 		:	BI_IDENTIFICADOR BI_DEF_TYPEVAR d_tipo
 				{
 
-					#ifdef _DEBUG
-						printf("lista_id: BI_IDENTIFICADOR BI_SEPARADOR lista_id\n");
-					#endif
-
-					if ( !lookup(st, $1) ) {
-
-						add_symbol( st, new_symbol( $1 ) );
-						
-						/* 
-						 * We add identifiers to stack, to be able to set their type
-						 * when we know it 
-						 */
-						//apilar(stack, $1);
-
-
+					if ( $3 == UNKNOWN_SYMBOL ) {
+						fprintf(stderr, "Unknown symbol: \e[1;36m%s\e[0m\n", $3);
 					} else {
-						printf("Identifier alredy exists");
+						Symbol * symbol = new_symbol( $1 );
+						if ( add_symbol( st, symbol ) == -1 ) {
+							fprintf(stderr, "Symbol \e[1;36m%s\e[0m already exists\n", $1);	
+						} else {
+							set_symbol_type( st, $1, $3 );
+						}
 					}
+					
+					$$ = $3;
+
 				}
-				|	BI_IDENTIFICADOR
+				|	BI_IDENTIFICADOR BI_SEPARADOR lista_id
 				{
 
-					#ifdef _DEBUG
-						printf("lista_id: BI_IDENTIFICADOR\n");
-					#endif
-
-					if ( !lookup(st, $1) ) {
-						
-						add_symbol( st, new_symbol( $1 ) );
-						//apilar(stack, $1);
-
+					/** lista_id devuelve el tipo de dato. En caso de que el
+					  * tipo sea ivalido devolvemos UNKNOWN_SYMBOL 
+					  */
+					
+					if ( $3 == UNKNOWN_SYMBOL ) {
+						fprintf(stderr, "Cant assign given type to \e[1;36m%s\e[0m\n", $3);
 					} else {
-						printf("Identifier alredy exists");
+
+						Symbol *symbol = new_symbol( $1 );
+						if ( add_symbol( st, symbol ) == -1 ) {
+							fprintf(stderr, "Symbol \e[1;36m%s\e[0m already exists\n", $1);	
+						} else {
+							set_symbol_type( st, $1, $3 );
+						}
 					}
+
+					$$ = $3;					
+
 				}
 				;
 
@@ -1120,7 +1050,7 @@ exp_a_b			:	exp_a_b BI_SUMA exp_a_b
 					 * Production 5: E --> id1 relop id2
 					 * { 	
 					 *		E.truelist := makelist( nextaddr )
-					 * 		E.falselist := makelist( nextaddr + 1)
+					 * 		E.falselist := makelist( nextaddr + 1 )
 					 *		emit( 'if' id1.place relop.op id2.place 'goto_')
 					 *		emit( 'goto_' )
 					 * }
@@ -1398,20 +1328,59 @@ asignacion 		:	operando BI_ASIGNACION expresion
 				
 				}
 				;
+/*
 
-alternativa		:	BI_SI expresion BI_ENTONCES instrucciones lista_opciones BI_FSI
+	si expresion entonces inst lista_opciones fsi
+	
+	si expresion entonces inst
+	[] expresion entonces inst 
+	fsi
+
+	si expresion entonces
+		BI_CONTINUAR;
+		asignacion;
+		alternativa;
+		iteracion;
+		accion_ll;
+	fsi
+
+
+*/
+
+alternativa		:	BI_SI expresion BI_ENTONCES M instrucciones lista_opciones BI_FSI
 				{
 					#ifdef _DEBUG
 						printf("alternativa\n");
 					#endif
+
+					backpatch( $2->truelist, $4 );
+
+					if ( $5->nextlist ) {
+						$$->nextlist = merge( $2->falselist , $5->nextlist );
+					} else {
+						Quad *quad = new_quad(QUAD_OP_GOTO, $2->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
+						gen( qt, quad );
+						$$->nextlist = merge( $2->falselist, makelist( quad ) ); 
+					}
+
 				}
 				;
 
-lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES instrucciones lista_opciones
+lista_opciones 	:	BI_SINOSI expresion BI_ENTONCES M instrucciones lista_opciones
 				{
 					#ifdef _DEBUG
 						printf("lista_opciones\n");
 					#endif
+
+					backpatch( $2->truelist, $4 );
+
+					if ( $5->nextlist ) {
+						$$->nextlist = merge( $2->falselist , $5->nextlist );
+					} else {
+						Quad *quad = new_quad(QUAD_OP_GOTO, $2->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
+						gen( qt, quad );
+						$$->nextlist = merge( $2->falselist, makelist( quad ) ); 
+					}
 				}
 				|	/* cadena vacia */
 				;
@@ -1429,21 +1398,101 @@ iteracion 		:	it_cota_fija
 					#endif
 				}
 				;
-
-it_cota_exp		:	BI_MIENTRAS expresion BI_HACER instrucciones BI_FMIENTRAS
+/* meintras M exp hacer M inst fmientras */
+it_cota_exp		:	BI_MIENTRAS M expresion BI_HACER M instrucciones BI_FMIENTRAS
 				{
 					#ifdef _DEBUG
 						printf("it_cota_exp\n");
 					#endif
+					/**
+					 * 	S -> mientras M1 E hacer M2 S1
+					 * 
+					 * 	backpatch( E.truelist, M2.quad )
+					 * 	if !empty( S1.nextlist )
+					 *		backpatch( S1.nextlist, M1.quad)
+					 *	else if empty( S1.nextlist )
+					 *		gen( goto M1.quad );
+					 *	fi
+					 *	S.nextlist = E.falselist
+					 *
+					 */
+					
+					backpatch( $3->truelist, $5 );
+					if ( $6->nextlist ) {
+						backpatch( $6->nextlist, $5 );
+					} else {
+						Quad *quad = new_quad( QUAD_OP_GOTO, QUAD_OP_VOID, QUAD_OP_VOID, $2);
+						gen( qt, quad );
+					}
+					
+					$$->nextlist = $3->falselist;
+
 				}
 				;
 
-it_cota_fija	:	BI_PARA BI_IDENTIFICADOR BI_ASIGNACION expresion 
-					BI_HASTA expresion BI_HACER instrucciones BI_FPARA
+/**
+  * para i := 1 hasta 10 hacer 
+  *		i := i + 1;
+  *	fpara
+  * BI_IDENTIFICADOR BI_ASIGNACION expresion es lo mismo que la asignacion, incluso podriamos sustituirlo por asignacion.
+  * Si lo sustituimos la gramarica permitiria que el BI_IDENTIFICADOR fuera cualquier tipo de operando 
+  */
+
+// it_cota_fija	:	BI_PARA BI_IDENTIFICADOR BI_ASIGNACION expresion BI_HASTA expresion BI_HACER M instrucciones BI_FPARA
+it_cota_fija	:	BI_PARA M asignacion_para BI_HASTA expresion BI_HACER M instrucciones BI_FPARA
 				{
 					#ifdef _DEBUG
 						printf("it_cota_fija\n");
 					#endif
+					
+					/**
+					  *	We need a tmp_symbol and tmp_exp to reference the for statement condition.
+					  * The condition seems like: id <= expresion ==> id oprel expresion.
+					  */				 
+					Exp_a_b *tmp_exp = new_exp_a_b(BOOLEAN_EXP);
+					tmp_exp->s = new_symbol("_tmp");
+					tmp_exp->s->type = DATA_TYPE_BOOLEAN;
+					add_symbol( st, tmp_exp->s );
+
+					//Quad *quad1 = new_quad( QUAD_OP_LT, $2->s->id, $5->s->id, QUAD_OP_NOGOTO );
+					Quad *quad1 = new_quad( QUAD_OP_LE, $3->s->id, $5->s->id, QUAD_OP_NOGOTO );
+					Quad *quad2 = new_quad(QUAD_OP_GOTO, tmp_exp->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
+
+					gen( qt, quad1 );
+					gen( qt, quad2 );
+
+					tmp_exp->truelist = makelist( quad1 );
+					tmp_exp->falselist = makelist( quad2 );
+
+					/** Si la condicion es cierta deberia ejecutar las instrucciones. Para
+					 * ello añadimos la etiquete M */
+					backpatch( tmp_exp->truelist , $7 );
+
+					if ( $8->nextlist ) {
+						backpatch( $8->nextlist, $2 );
+					} else {
+						Quad *quad = new_quad( QUAD_OP_GOTO, QUAD_OP_VOID, QUAD_OP_VOID, $2 );
+						gen( qt, quad );
+					}
+					
+					$$->nextlist = tmp_exp->falselist;
+
+				}
+				;
+
+
+asignacion_para	: BI_IDENTIFICADOR BI_ASIGNACION expresion
+				{
+					Symbol *symbol = lookup( st, $1 );
+					if ( symbol )
+					{
+						$$ = new_exp_a_b( UNDEFINED_EXP );					
+						$$->s = symbol;
+					}
+					else
+					{
+						fprintf(stderr, "Error: Symbol %s doesnt exist in symbom table", $1);
+					}	
 				}
 				;
 
@@ -1591,8 +1640,10 @@ int main(int argc, char const *argv[])
 		       	ret = yyparse();
 		    } while ( !feof( yyin ) );
 
-		    if ( ret == 0 ) { print_quadruples( qt ); }
-			//stack = nuevaPila( &stack );
+		    if ( ret == 0 ) { 
+		    	print_quadruples( qt ); 
+		    	print_symbol_table( st );
+		    }
 
 		} else {
 			printf("Error: Not supported input file extension.\n\n");

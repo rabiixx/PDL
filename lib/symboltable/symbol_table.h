@@ -1,6 +1,7 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
+#include <time.h>
 #include "../util.h"
 
 /*====================================
@@ -54,16 +55,13 @@ typedef struct Symbol {
 	} value;
 } Symbol;
 
-unsigned int NUM_SYM;
-
-
 /*----------  Function Declaration  ----------*/
 
 void init_symbol_table( Symbol *table[] );
 
 Symbol *new_symbol(char *name);
 
-void add_symbol(Symbol *table[], Symbol *Symbol);
+int add_symbol(Symbol *table[], Symbol *Symbol);
 
 int remove_symbol(Symbol *table[], const char *name);
 
@@ -77,7 +75,16 @@ int set_symbol_type(Symbol *table[], char *name, Data_type type);
 
 static unsigned int hash(const char *str);
 
-void print_symbol_table(Symbol *table[]);
+
+/* Show Symbol Table */
+void print_st_title( char *title );
+
+void print_st_header( char *header[] );
+
+void print_st_row( Symbol *s );
+
+void print_symbol_table( Symbol *table[] );
+
 
 /*=====  Symbol Table  ======*/
 

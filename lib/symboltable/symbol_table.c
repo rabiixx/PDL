@@ -4,6 +4,8 @@
 
 #include "symbol_table.h"
 
+unsigned int NUM_SYM = 0;
+
 static unsigned int hash(const char *str) {
 
 	int sum = 0;
@@ -21,39 +23,84 @@ void init_symbol_table( Symbol *table[] ) {
 
 }
 
+/* Return system time. Gonna be used for tmp variables naming */
+char *gen_tmp_name() {
+
+	char *name = (char*) malloc( sizeof(char) * 20 );
+	strcpy(name, "_tmp_");
+	
+	time_t rawtime;
+	struct tm *timeinfo;
+    char buffer[80];
+
+	time( &rawtime );
+	timeinfo = localtime( &rawtime );
+
+	strftime(buffer, 80, "%X", timeinfo);
+
+	char *p;
+	while ( p = strchr(buffer, ':' ) ) {
+		*p = '_';
+	}
+
+	strcat(name, buffer);
+
+	return name;
+}
+
 
 Symbol *new_symbol( char *name ) {
+
+
+	printf("new_symbol(%s)\n", name);
 
 	Symbol *s = (Symbol*) calloc(1, sizeof(Symbol));
 
 	s->name = (char*) calloc( strlen( name ), sizeof( char ) );
-	strcpy(s->name, name);
+
 	
+	if ( strcmp( name, "_tmp") == 0 )
+		strcpy( s->name, gen_tmp_name() );
+	else
+		strcpy(s->name, name);
+
 	s->next = NULL;
 
 	return s;
 }
 
-void add_symbol(Symbol *table[], Symbol *symbol) {
+int add_symbol(Symbol *table[], Symbol *symbol) {
+	printf("0. NUM_SYS: %d\n", NUM_SYM);
 
-	const unsigned int index = hash( symbol->name );
+	if (  lookup( table, symbol->name) ){ return -1; }
+	else {
 	
-	if ( table[ index ] == NULL )
-	{
-		table[ index ] = symbol;
-		NUM_SYM = 0;
-		table[ index ]->id = NUM_SYM++;
+		const unsigned int index = hash( symbol->name );
+		
+		if ( table[ index ] == NULL )
+		{
+			table[ index ] = symbol;
+			table[ index ]->id = NUM_SYM;
+			printf("ADD SYMBOL: %d\n", NUM_SYM);
+		}
+		else
+		{
+
+			Symbol *tmp = table[ index ];
+
+			while ( tmp->next != NULL ) { tmp = tmp->next; }
+
+			tmp->next = symbol;
+			tmp->next->id = NUM_SYM;
+			printf("ADD SYMBOL: %d\n", NUM_SYM);
+		}
+
+		printf("1. NUM_SYS: %d\n", NUM_SYM);
+		NUM_SYM++;
+		printf("2. NUM_SYS: %d\n", NUM_SYM);
 	}
-	else
-	{
 
-		Symbol *tmp = table[ index ];
-
-		while ( tmp->next != NULL ) { tmp = tmp->next; }
-
-		tmp->next = symbol;
-		tmp->next->id = NUM_SYM++;
-	}
+	return 0;
 	
 }
 
@@ -148,74 +195,61 @@ Data_type get_symbol_type(Symbol *table[], char *name) {
 	( s ) ? s->type : UNKNOWN_SYMBOL;
 }
 
-
-void print_symbol_table(Symbol *table[])
-{
-
-	for (int i = 0; i < HT_SIZE; ++i)
-	{
-
-		printf("%p: symbol_table[%d]: %p\n", &table[i], i, table[i]);
-		if ( table[i] )
-		{
-			Symbol *tmp = table[i];
-			while ( tmp != NULL ) {
-				printf("\t%p: %s\n", tmp, tmp->name);
-				tmp = tmp->next;
-			}
-		}
+void print_st_title( char *title ) {
+	for (int i = 0; i < 49	; ++i){
+		printf("=");
 	}
+	printf("\n");
+
+
+	printf("%1c%18c\e[4;31m\e[1;31m%12s\e[0m%17c%1c\n", '|', ' ', title, ' ', '|');
+
+	for (int i = 0; i < 49	; ++i){
+		printf("=");
+	}
+	printf("\n");
+}
+
+void print_st_header( char *header[] ) {
+
+	printf("\e[1;32m%12s\e[0m", header[0]);
+	printf("\e[1;33m%12s\e[0m", header[1]);
+	printf("\e[1;34m%12s\e[0m\n", header[2]);
+
+	for (int i = 0; i < 49; ++i){
+		printf("=");
+	}
+
+	printf("\n");
+}
+
+void print_st_row( Symbol *s ) {
+
+	printf("%1c\e[42m%9d%2s\e[0m", '|', s->id, "");
+	printf("%1c\e[43m%9s%2s\e[0m", '|', s->name, "");
+	printf("%1c\e[44m%9d%2s\e[0m\n", '|', s->type, "");
 
 }
 
-/*int main(int argc, char const *argv[])
-{
+void print_symbol_table( Symbol *table[] ) {
 
-	Symbol *table[ 5 ];
-
-	init_symbol_table( table );
-
-	add_symbol(table, "rabiixx");	// 4
-	add_symbol(table, "rabiixx2");	// 4
-	add_symbol(table, "rabiixx13");	// 4
-	add_symbol(table, "root");		// 2
-	add_symbol(table, "rabiixx16");	// 2
-	add_symbol(table, "rabiixx11");	// 2
-	add_symbol(table, "rabiixx14");	// 0
+	char *title = "Symbol Table";
+	char * header[3] = 	{
+							"id",
+							"name",
+							"type"
+						};
 
 
-	print_symbol_table(table);
-	
-	if ( lookup(table, "rabiixx") )
-	{
-		printf("symbol exist \n");
-	} else {
-		printf("symbol not exist \n");
+	print_st_title( title );
+	print_st_header( header );
+
+	for (int i = 0; i < HT_SIZE; ++i) {
+
+		Symbol *aux = table[i];
+		while ( aux ) {
+			print_st_row( aux );
+			aux = aux->next;
+		}
 	}
-
-
-	if ( lookup(table, "rabiixx2") )
-	{
-		printf("symbol exist \n");
-	} else {
-		printf("symbol not exist \n");
-	}
-
-	if ( lookup(table, "rabiixx19") )
-	{
-		printf("symbol exist \n");
-	} else {
-		printf("symbol not exist \n");
-	}
-
-
-	printf("\n\n");
-
-	remove_symbol(table, "rabiixx");
-	
-	printf("\n\n");
-	print_symbol_table(table);
-
-
-	return 0;
-}*/
+}

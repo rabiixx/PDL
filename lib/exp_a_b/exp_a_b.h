@@ -4,13 +4,18 @@
 #include "../symboltable/symbol_table.h"
 #include "../quadruples/quadruples.h"
 
-typedef struct _exp_a_b
-{
+typedef struct _exp_a_b {
 	Expression_type type;
 	Symbol *s;
 	LinkedList *truelist;
 	LinkedList *falselist;
 } Exp_a_b;
+
+
+typedef struct _inst {
+	LinkedList *nextlist;
+	int size;
+} Inst;
 
 
 Exp_a_b *new_exp_a_b( Expression_type type );

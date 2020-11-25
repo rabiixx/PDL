@@ -253,7 +253,7 @@ void print_row( Quad *q ) {
 
 void print_quadruples( QuadTable *qt ) {
 
-	char *title = "Symbol Table";
+	char *title = "Quadruples Table";
 	char * header[4] = 	{
 								"Operating",
 								"Operator1",

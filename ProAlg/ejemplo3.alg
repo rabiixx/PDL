@@ -4,7 +4,13 @@ algoritmo sumacomb;
 {Prec: n= N AND m = M AND M >= N >0}
 	var
 		i, comb: entero;
+		j : real;
 	fvar
+	{const
+		c : entero;
+		d : real;
+	const}
+
 	i:= 0;
 	suma:= 0;
 	comb:= m;
