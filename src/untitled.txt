@@ -1,0 +1,94 @@
+E -> E1 and M E2
+
+backpatch(E1.true,M.quad);
+
+E.false:=merge(E1.false,E2.false);
+
+E.true:=E2.true
+******************
+
+$$ = new_exp_a_b(BOOLEAN_EXP);
+$$->s = new_symbol("_tmp");
+$$->s->type = DATA_TYPE_BOOLEAN;
+add_symbol( st, $$->s );
+
+backpatch($1->truelist, $3);
+$$->truelist = $4->truelist;
+$$->falselist = merge($1->falselist, $4->falselist);
+
+***************************
+E -> id1 oprel id2
+
+quad1 = gen( if id1.val oprel.val id2.val goto);
+quad2 = gen(goto);
+E.true := makelist(quad1);
+E.false := makelist(quad2);
+
+*****************************************
+if ( a > b and c == d ) {
+	M inst
+}
+M2 inst
+
+backpatch(E.falselist, M2)
+*****************************************
+/* We create new tmp variable and add to symbol table*/
+$$->s = new_symbol("_tmp");
+$$->s->type = DATA_TYPE_BOOLEAN;
+add_symbol( st, $$->s );
+
+/* We generate new quadruples */ 
+Quad *quad1 = new_quad($2, $1->s->id, $3->s->id, QUAD_OP_NOGOTO);
+Quad *quad2 = new_quad(QUAD_OP_GOTO, $$->s->id, QUAD_OP_FALSE, QUAD_OP_NOGOTO);
+
+gen( qt, quad1 );
+gen( qt, quad2 );
+
+$$->truelist = makelist( quad1 );
+$$->falselist = makelist( quad2 );
+
+*****************************************
+E1
+	1	< a b goto3
+	2	null tmp1 null goto6
+	3	== c d goto
+	4	null tmp2 null goto6
+	5 = a b a
+M2	6 
+
+
+***********************
+
+alternativa -> BI_SI expresion BI_ENTONCES M instrucciones lista_opciones BI_FSI M
+lista_opciones -> M BI_SINOSI expresion BI_ENTONCES M instrucciones lista_opciones | /* cadena vacia */
+
+
+if ( a > b )
+	M3 hcvg
+else if (a < b )
+	M6 asdas
+else if ( a == b )
+	M9 asdas
+	/**/
+fi
+
+3 - backpatch( E3.truelist, M9 ) --> 7	> a b goto9
+2 - backpatch( E3.truelist, M6 ) --> 4	< a b goto6
+
+E1 -> a > b <==> id oprel id
+E2 -> a < b <==> id oprel id
+E3 -> a == b <==> id oprel id
+E3.truelist = 7
+E3.falselist = 8
+tabla quad
+
+	1	> a b goto_
+	2	null tmp1 null goto_
+	3  	instrucciones1
+	4	< a b goto_
+	5	null tmp2 null goto_
+	6  	instrucciones2
+	7	> a b goto_
+	8	null tmp3 null goto_
+	9  	instrucciones3
+	10	fin
